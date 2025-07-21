@@ -1,0 +1,107 @@
+//@theme "gruvbox-light"
+/* @theme "one-light" */
+
+configuration {
+
+threads: 0;
+terminal: "rofi-sensible-terminal";
+show-icons: true;
+
+kb-row-up:                      "Up,Control+k,Shift+Tab,Shift+ISO_Left_Tab";
+kb-row-down:                    "Down,Control+j";
+kb-accept-entry:                "Control+l,Return,KP_Enter";
+kb-mode-next:                   "Control+n,Shift+Right,Control+Tab";
+kb-mode-previous:               "Shift+Left,Control+Shift+Tab,Control+p";
+kb-remove-char-back:            "BackSpace";
+kb-page-prev: "Control+u";
+kb-page-next: "Control+d";
+kb-remove-char-forward: "Delete";
+kb-toggle-case-sensitivity: "grave,dead_grave,Control+i";
+kb-toggle-sort: "Control+s";
+kb-clear-line: "Control+BackSpace";
+kb-remove-word-back: "Control+w,Control+h";
+kb-mode-complete: "Control+m";
+/*	kb-row-select: "Control+space"; → autocompletion*/ 
+/*	kb-move-front: "Control+a";*/
+/*	kb-move-end: "Control+e";*/
+/* conflicts */
+kb-remove-to-sol: "";
+kb-remove-to-eol: "";
+
+  timeout {
+      action: "kb-cancel";
+      delay:  0;
+  }
+  filebrowser {
+      directories-first: true;
+      sorting-method:    "name";
+  }
+}
+
+/* DEFAULT - most important*/
+/*	ssh-client: "ssh";*/
+/*	ssh-command: "{terminal} -e {ssh-client} {host} [-p {port}]";*/
+/*	run-command: "{cmd}";*/
+/*	run-list-command: "";*/
+/*	run-shell-command: "{terminal} -e {cmd}";*/
+
+/*	icon-theme: ;*/
+/*	combi-modi: "window,run";*/
+/*	modi: "window,run,ssh";*/
+/*	font: "mono 12";*/
+/*	drun-match-fields: "name,generic,exec,categories,keywords";*/
+/*	drun-categories: ;*/
+/*	drun-show-actions: false;*/
+/*	drun-url-launcher: "xdg-open";*/
+/*	ignored-prefixes: "";*/
+/*	sort: false;*/
+/*	sorting-method: "normal";*/
+/*	case-sensitive: false;*/
+/*	cycle: true;*/
+/*	sidebar-mode: false;*/
+/*	hover-select: false;*/
+/*	auto-select: false;*/
+
+/*	kb-primary-paste: "Control+V,Shift+Insert";*/
+/*	kb-secondary-paste: "Control+v,Insert";*/
+/*	kb-move-word-back: "Alt+b,Control+Left";*/
+/*	kb-move-word-forward: "Alt+f,Control+Right";*/
+/*	kb-move-char-back: "Left,Control+b";*/
+/*	kb-move-char-forward: "Right,Control+f";*/
+/*	kb-remove-word-forward: "Control+Alt+d";*/
+/*	kb-remove-char-forward: "Delete,Control+d";*/
+/*	kb-remove-char-back: "BackSpace,Shift+BackSpace,Control+h";*/
+/*	kb-remove-to-sol: "Control+u";*/
+/*	kb-accept-entry: "Control+j,Control+m,Return,KP_Enter";*/
+/*	kb-accept-custom: "Control+Return";*/
+/*	kb-accept-custom-alt: "Control+Shift+Return";*/
+/*	kb-accept-alt: "Shift+Return";*/
+/*	kb-delete-entry: "Shift+Delete";*/
+/*	kb-mode-next: "Shift+Right,Control+Tab";*/
+/*	kb-mode-previous: "Shift+Left,Control+ISO_Left_Tab";*/
+/*	kb-row-left: "Control+Page_Up";*/
+/*	kb-row-right: "Control+Page_Down";*/
+/*	kb-row-up: "Up,Control+p,ISO_Left_Tab";*/
+/*	kb-row-down: "Down,Control+n";*/
+/*	kb-row-tab: "Tab";*/
+/*	kb-page-prev: "Page_Up";*/
+/*	kb-page-next: "Page_Down";*/
+/*	kb-row-first: "Home,KP_Home";*/
+/*	kb-row-last: "End,KP_End";*/
+/*	kb-screenshot: "Alt+S";*/
+/*	kb-ellipsize: "Alt+period";*/
+/*	kb-cancel: "Escape,Control+g,Control+bracketleft";*/
+/*	kb-custom-1: "Alt+1";*/
+/*	kb-custom-10: "Alt+0";*/
+/*	kb-select-1: "Super+1";*/
+/*	kb-select-10: "Super+0";*/
+/*	ml-row-left: "ScrollLeft";*/
+/*	ml-row-right: "ScrollRight";*/
+/*	ml-row-up: "ScrollUp";*/
+/*	ml-row-down: "ScrollDown";*/
+/*	me-select-entry: "MousePrimary";*/
+/*	me-accept-entry: "MouseDPrimary";*/
+/*	me-accept-custom: "Control+MouseDPrimary";*/
+
+//@theme "/usr/share/rofi/themes/Arc.rasi"
+@theme "/home/miro/.config/rofi/themes/squared-everforest.rasi"

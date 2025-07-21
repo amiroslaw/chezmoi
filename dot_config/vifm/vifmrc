@@ -1,0 +1,581 @@
+" vim: filetype=vim :
+" DEPENDENCY
+" fd, rg, fzf, patool or atool, xclip, dua, trash-cli, eza, pdfunite, udevil
+"sxiv,tree, meld dragon-drop tesseract
+"
+" TODO
+" change separete command from keybinding `command!`, it will be posiible to see it in command list `:com`, or just execute it form command mode
+
+" :com[mand] command_name action
+" Use %% if you need to put a percent sign in your command.
+" The following macros can be used in a command
+" %a is replaced with the user arguments.
+" %c the current file under the cursor.
+" %C the current file under the cursor in the other directory.
+" %f the current selected file, or files.
+" %F the current selected file, or files in the other directory.
+" %b same as %f %F.
+" %d the current directory name.
+" %D the other window directory name.
+" %m run the command in a menu window
+" %i ignor output
+" modifiers
+
+" :p - full path
+" :~ - relative to the home directory
+" :. - relative to current directory
+" :h - head of the file name
+" :t - tail of the fil
+" name
+" :r - root of the file name (without last extension)
+" :e - extension of the file name (last one)
+" :s?pat?sub? - substitute the first occurrence of pat with sub. You can use any character for '?', but it must not occur in pat or sub.
+" :gs?pat?sub? - like :s, but substitutes all occurrences of pat with sub.
+
+" The file type is for the default programs to be used with
+" a file extension.
+" :filetype pattern1,pattern2 defaultprogram,program2
+" :fileviewer pattern1,pattern2 consoleviewer
+" The other programs for the file type can be accessed with the :file command
+" The command macros %f, %F, %d, %F may be used in the commands.
+" The %a macro is ignored.  To use a % you must put %%.
+
+set vicmd=nvim
+
+" With this option turned on you can run partially entered commands with unambiguous beginning using :! (e.g. :!Te instead of :!Terminal or :!Te<tab>).
+set fastrun
+
+" This makes vifm perform file operations on its own instead of relying on standard utilities like `cp`.  While using `cp` and alike is a more universal solution, it's also much slower when processing large amounts of files and doesn't support progress measuring.
+set syscalls
+
+" Trash Directory
+" The default is to move files that are deleted with dd or :d to the trash directory.  If you change this you will not be able to move files by deleting them and then using p to put the file in the new location. I recommend not changing this until you are familiar with vifm. This probably shouldn't be an option. set trashdir
+set trash
+" This is how many directories to store in the directory history.
+set history=100
+" Maximum number of changes that can be undone.
+set undolevels=100
+" Follow links on l or Enter.
+set followlinks
+" With this option turned on you can run partially entered commands with unambiguous beginning using :! (e.g. :!Te instead of :!Terminal or :!Te<tab>).
+set nofastrun
+" Natural sort of (version) numbers within text.
+set nosortnumbers
+" If you would like to run an executable file when you press return on the file name set this.
+set norunexec
+
+" Use KiB, MiB, ... instead of K, M, ...
+set noiec
+
+" Selected color scheme https://vifm.info/colorschemes.shtml
+colorscheme near-default
+" colorscheme gruvebox
+
+" The FUSE_HOME directory will be used as a root dir for all FUSE mounts. Unless it exists with write/exec permissions set, vifm will attempt to create it.
+set fusehome=/tmp/vifm_FUSE
+
+" Format for displaying time in file list. For example:
+" set timefmt=%m/%d-%H:%M
+" See man date or man strftime for details.
+set timefmt=\ %Y/%m/%d\ %H:%M
+
+
+" What should be saved automatically between vifm runs Like in vi
+" set vifminfo=options,filetypes,commands,bookmarks,tui,state,cs,chistory,shistory,dirstack,registers,phistory
+set vifminfo=bookmarks,chistory,shistory,phistory,savedirs,dhistory
+
+"""""""""" my config
+"""""""
+" viewcolumn - lua plugin - brakes modification column for sorting by e.g. modification
+" set viewcolumns=-{NameLink},8.7{LsSize}
+set relativenumber
+set mouse=a
+"don't create shortcut with d,y,p key
+" , can be use for commands/scripts
+set ignorecase
+set smartcase
+set sort=+iname
+" search while typing
+set incsearch
+set scrolloff=8
+
+" Show list of matches on tab completion in command-line mode
+set wildmenu
+" Display completions in a form of popup with descriptions of the matches
+set wildstyle=popup
+
+" Display suggestions in normal, visual and view modes for keys, marks and
+set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
+"disable delete confirmation 
+set confirm-=delete
+" Total size of selected files To get the total size of selected files change %s to %E, %T-alias
+set statusline="  %T%= %A %10u:%-7g %15E %20d  "
+" set statusline=#statusbar#fmt " plugin but with error
+
+autocmd DirEnter * !fasder -A %d %i
+
+" Use ripgrep instead of grep wiht smart case
+set grepprg=rg\ --color=never\ -SHn\ %i\ %a\ %s
+" Use fd instead of find
+set findprg=fd\ --color=never\ %p\ %s
+" set grepprg="grep\ -n\ -H\ -I\ -r\ -i\ %i\ %a %s"
+" set findprg="find %s %a -print -prune"
+
+nmap <C-A-f> :find <space> 
+nmap <C-s> :grep <space>
+" finder
+" sometimes doesn't work with I param
+" command! fzf :execute '!fzf 2>&0 %%IU' | normal! gf
+                " \| let $FZF_PICK = term('fd | fzf --preview-window 40% --preview "bat --style=numbers --color=always --line-range :500 {}" 2>/dev/tty')
+nmap <C-f> :fzfFind <cr> 
+command! fzfFind : set noquickview
+                \| let $PICK = term('fd | fzf --preview "bat --style=numbers --color=always --line-range :500 {}" 2>/dev/tty')
+                \| if $PICK != ''
+                \|     execute 'goto' fnameescape($PICK)
+                \| endif
+nmap <A-f> :fzfCdh <cr>
+command! fzfCdh :execute 'cd' fnameescape(term('fd --hidden --type d | fzf 2> /dev/tty'))
+" grep -v cache - remove cache dir
+nmap <C-j> :fzfFasd <cr> 
+command! fzfFasd : set noquickview
+                \| let $PICK = term('fasder -Rld | fzf 2>/dev/tty')
+                \| if $PICK != ''
+                \|     execute 'cd ' fnameescape($PICK)
+                \| endif
+
+" read bookmarks from custom list 
+" command! fzfBookmarks :exe "normal! :bmarks\r:write ~/.local/share/vifm/fzf-read/bookmarks\rq"
+                   " \ | execute 'cd "'.system('cat ~/.local/share/vifm/fzf-read/bookmarks | sed "s/:.*//" |  fzf 2>/dev/tty').'"'
+" nmap ,b :fzfBookmarks <cr> 
+
+" I don't have locate
+" command! fzfLocate : set noquickview
+"                   \| let $FZF_PICK = term('locate $HOME | fzf --height 10 2>/dev/tty')
+"                   \| if $FZF_PICK != ''
+"                   \|     execute 'goto' fnameescape($FZF_PICK)
+"                   \| endif
+" nmap <A-l> :FZFlocate <cr> 
+" multiselection 
+" command! fzfMulti :execute fd --hidden --type f | fzf -1 -m 2> /dev/tty | xargs -o nvim -p
+" nmap <a-j> :fzfMulti <cr> 
+
+" nmap , <nop> " help disappears quickly 
+nmap ,c :write | edit ~/.config/vifm/vifmrc | restart<cr>
+nmap ,r :reload<cr>
+command! reload :write | restart
+nmap ,x :run<cr>
+command! run !! ./%f
+" thumbnail preview. Each piced (`m`) files will be selected in vifm. IDK how to change it for pqiv - maybe by keybinding
+nmap ti :thumbnail<cr>
+command! thumbnail :select! !sxiv -oqt %d %i
+" Open file in the background using its default program
+nmap ,b :file &<cr>l
+
+" custom loop- finish command and push enter
+noremap il :!for f in %f; do  "$f"; done<A-B><A-B><Left>
+
+"local filter; zr to clear
+nmap . =
+" nmap <A-.> zr <cr> mapping with dot, doesn't work
+
+"archive
+"atool don't work with rar?
+nmap rr	:unpack<cr>
+command! unpack atool -x %f &>/dev/null &
+nmap RR	:!atool --extract-to=%D %f <cr>
+nmap rl	:packList <cr> 
+command! packList atool -l %f %m
+nmap rp :Pack 7z <cr>
+" nmap rc	:!atool -a %d:t.7z %f <cr> 
+" nmap rr	:!patool extract %f <cr>
+" nmap RR	:!patool extract --outdir %D %f <cr>
+" nmap rc	:!patool create %d:t.7z %f <cr> 
+" nmap rl	:!patool list %f %m <cr> 
+
+" magicimage display resolution of image
+nmap ii	:!identify %f %S <cr> 
+
+nmap cx	:chmod+x<cr>
+
+nmap cp	:pdfCombine<cr>
+command! pdfCombine pdfunite %f %d:t.pdf 
+nmap cP	:pdfToText <cr>
+command! pdfToText pdftotext %c %c:r
+" remove spaces from filename
+noremap c- :removeSpaces <cr>
+command! removeSpaces echo %f:gs? ?^? | xargs -n1 | xargs -r -I@ -P 0  sh -c 'V="@"; mv "${V//^/ }" "${V//^/-}"'
+noremap ct :ocr <cr>
+command! ocr echo %f:gs? ?^? | xargs -n1 | xargs -r -I @ -P 0 sh -c 'V="@"; tesseract "${V//^/ }" "${V//^/ }"'
+command! ocrPL echo %f:gs? ?^? | xargs -n1 | xargs -r -I @ -P 0 sh -c 'V="@"; tesseract -l pol "${V//^/ }" "${V//^/ }"'
+noremap cT :!for i in %f; do tesseract "$i"  "${i%%}"; done <cr>
+" noremap ct :!echo %f | xargs -n1 | xargs -r -I @ -P 0  tesseract "@" "@" <cr>
+"dragon dr - drag from and dR drop to
+" will drag all selected files, cos it doesn't have multiple selection option
+nmap dr :!dragon-drop -a %f <cr> 
+" nmap dR :!dragon-drop %f <cr> 
+nmap dR :!dragon-pull.sh <cr>
+" ffmpeg
+command! ffmpegSegment !for i in %f; do  ffmpeg -i "$i" -f segment -segment_time 900 -c copy "${i%%.*}-%%02d.mp3"; done 
+noremap cm :ffmpegSegment <cr>
+
+" diff
+nmap ,d :diffMeld<cr>
+command! diffMeld meld %c %C %i
+nmap ,D :diffVim<cr>
+command! diffVim nvim -d %f %F
+nmap ,c :compare listall<cr>
+command! checkout ~/.bin/checkout.lua %d
+nnoremap ,b :checkout <cr>
+" nnoremap ,c :!~/.bin/checkout.lua %d <cr>
+" git log preview for a file
+nnoremap ,l :if &previewprg == '' | set previewprg='git log --color -- %c 2>&1' | view! | else | set previewprg='' | view | endif<cr>
+
+" finding the "N" most recently committed/modified or largest files e.g. :xc 4
+command! xc :set viewcolumns=*{name}..,24{mtime}| zzzInternalXC %a
+command! xm :set viewcolumns=*{name}..,24{mtime}| zzzInternalXM %a
+command! xs :set viewcolumns=*{name}..,8{size}|   zzzInternalXS %a
+command! zzzInternalXC git log --name-only --format=%%n -- %d | CDUP=`git rev-parse --show-cdup` perl -lne 'print if /./ and s(^)($ENV{CDUP}) and -f and not $seen{$_}++' | head -%a %U
+command! zzzInternalXM find -type f -print0 | xargs -0 ls -tr | tail -%a | tac %U
+command! zzzInternalXS find -type f -print0 | xargs -0 ls -Sr | tail -%a | tac %U
+" the 'zzz' is so they will show up last when I hit ':<Tab>'
+" also, notice the %% in the format paramater in zzzInternalXC
+
+nmap cc :copyTxtToFile <cr> 
+command! copyTxtToFile cat %c >> %C
+nmap <C-c> :copyTxtToClip <cr> 
+command! copyTxtToClip cat %c | xclip -sel clip
+nmap <C-v> :appendTextFromClip <cr>
+command! appendTextFromClip xclip -o -selection clipboard >> %c
+nmap <F1> :command <cr>
+"change name without extension
+nmap <F2> cW
+nmap <S-F2> cW<c-a>
+" trash-cli or rm-improved
+nmap <delete> :!trash-put %f<cr>
+nmap DD :!rm -rf %f<cr>
+"open in file manager
+nmap <F3> :! wezterm start --cwd %d %i & <cr> 
+" opens in different terminal- has different pane list
+" nmap <F3> :! wezterm cli spawn --pane-id $WEZTERM_PANE --cwd %d %i & <cr>
+" open shell
+nmap X :shell <cr>
+"open in file manager
+nmap <F4> :! pcmanfm %d %i & <cr>
+" copy files to the opposite pane
+nmap <F5> :!cp -r %f %D<cr>
+" move files to the opposite pane
+nmap <F6> :!mv %f %D &<cr>
+"make dir and cd - form plugin, nested directory allowed 
+nmap <F7> :MkCd <space> 
+" make dir from selected file name
+nmap cd :mkdir %c:r <cr> 
+nmap <F8> :touch <space> 
+nmap cf :touch %c.txt <space> 
+nmap <A-1> :! mkdir -p 1 && mv %f 1 <cr>
+nmap <A-2> :! mkdir -p 2 && mv %f 2 <cr>
+nmap <A-3> :! mkdir -p 3 && mv %f 3 <cr>
+nmap <A-4> :! mkdir -p 4 && mv %f 4 <cr>
+nmap <A-5> :! mkdir -p 5 && mv %f 5 <cr>
+" nmap <F9> :! setsid -f nvim-qt %f <cr>
+nmap O :! fasder -A %f && nvim-qt %f <cr>
+nmap md :!fasder -A %f && typora %f &<cr>
+
+"COMAND VIFM
+" shortcut list
+nmap <C-F1> :nmap <cr>
+nmap ; :
+nmap <silent> <space> tj
+" move the cursor in the other window 
+nnoremap <silent> J <space>j<space> 
+nnoremap <silent> K <space>k<space>
+"select all
+nmap aa ggvG<cr>
+"unselect all
+nmap au vv<cr>
+nmap I :invert s <cr>
+nmap <A-s>	:sync <cr>
+nmap S	:sort <cr>
+nmap U	:undolist <cr>
+"podglad w panelu, maybe change to tw
+nmap w	:view <cr>
+" mount device mount by m
+nmap <A-m> :media <cr>
+" symbolic link, maybe change to cl
+nmap al :alink<cr>
+
+"history dir
+nmap o :history <cr>
+"  c-i would override tab
+nmap <A-o> :histnext <cr>
+nmap <C-o> :histprev <cr> 
+nmap <A-h> :history cmd <cr>
+" reopens the last visible menu
+nmap <A-h> :copen <cr>
+" show command  history
+" nmap <A-h> :history cmd <cr>
+" history search 
+nmap <C-h> :history search <cr>
+
+" VIEWS
+" toggle one panel
+nmap to :vs!<cr>
+" nmap to :only<cr>
+nmap tr :tree! <cr>
+" ranger like
+nnoremap <silent> tm :set millerview!<cr>
+"dirs size
+nmap td :diskSpace<cr>
+command! diskSpace dua i
+nmap T :!tree -h %c %m<cr>
+nmap tD :!df df -h %m 2> /dev/null <cr>
+"tabs
+nmap tt :tabnew <cr>
+nmap <C-n> :tabnext <cr>
+nmap <C-p> :tabprevious <cr>
+
+" grow/shrink window by 4 columns at a time 
+nnoremap > 4<c-w>< 
+nnoremap < 4<c-w>>
+
+" CLIPBOARD COPY
+" yank current directory path into the clipboard
+" nnoremap yd :!echo -n %d | xclip -sel clip %i<cr>
+nnoremap yd :yankPathRoot <cr>
+command! yankPathRoot echo -n %d | xclip -sel clip %i
+" yank current file path into the clipboard
+nnoremap yp :yankPath <cr>
+command! yankPath echo -n %c:p | xclip -sel clip %i
+" yank current filename without path into the clipboard
+nnoremap yn :yankName <cr>
+command! yankName echo -n %c | xclip -sel clip %i
+" yank root of current file's name (without extension) into the clipboard
+nnoremap yr :yankRootName <cr>
+command! yankPathRoot echo -n %c:r | xclip -sel clip %i
+" copy and paste - xclip tool
+nnoremap yc :copyFile <cr>
+command! copyFile xclip-copyfile %f
+nnoremap yx :cutFile <cr>
+command! cutFile xclip-cutfile %f
+nnoremap yv :pasteFile <cr>
+command! pasteFile xclip-pastefile
+
+" OPENING FILES
+":filetype, but this command is ignored if not running in X. In X :filextype is equal to :filetype. 
+" or xdg-open or dragon-drag-and-drop
+" associacja :f  wybieramy program gdy mamy kilka ustawionych
+" 2>/dev/null but better use %i
+" Pdf need poppler and libcaca
+filextype {*.pdf},<application/pdf> zathura %c %i &, pqiv %c, xreader %c
+
+" PostScript
+filextype {*.ps,*.eps,*.ps.gz},<application/postscript> zathura %f, pqiv %f,
+
+" Audio
+filetype {*.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus},<audio/*>
+       \ {Play using mpv}
+       \ mpv --no-video %f,
+       \ {Play using ffplay}
+       \ ffplay -nodisp -autoexit %c,
+
+" Video
+filextype {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,*.fl[icv],*.m2v,*.mov,*.webm,*.mts,*.m4v,*.r[am],*.qt,*.divx,*.as[fx]},<video/*>
+		\ mpv %f %i,
+        \ smplayer %f %i,
+		\ pqiv  %f %i,
+        \ ffplay -fs -autoexit %f,
+
+filextype {*.m3u},<video/*>
+		\ mpv --profile=stream %f %i,
+		\ mpv %f %i,
+
+" Web
+filextype {*.html,*.htm},<text/html>
+        \ {Open with qutebrowser}
+        \ qutebrowser %f %i &,
+        \ firefox %f &,
+        \ code %f %i,
+		\ w3m %c
+filetype {*.html,*.htm},<text/html> links, nvim, lynx
+
+" Man page
+filetype {*.[1-8]},<text/troff> man ./%c
+
+filetype {*.7z,*.zip,*.zip,*.jar,*.war,*.ear,*.oxt,*.apkg,*.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,*.txz},
+			\ file-roller %f &>/dev/null &
+
+" Office files
+filextype {*.odt,*.ods,*.doc,*.docx,*.xls,*.xlsx,*.csv,*.odp,*.pptx,*.ppt},
+         \<application/vnd.openxmlformats-officedocument.*,application/msword,application/vnd.ms-excel>
+        \ libreoffice %f &
+
+"e-book
+filextype {*.cbr,*cbz} pqiv %f,
+filextype {*.mobi,*.epub,*azw3,*azw,*pobi} 
+		\ foliate %f %i,
+		\ FBReader %f %i,
+		\ ebook-viewer %f %i, 
+		\ xreader %f %i,
+		" \ bookworm %f %i,
+
+filetype {*.md,*.txt,*.adoc,*.lua,*.csv,*.java,*.ts,*.css,*.js,*.ks} fasder -A %f && nvim %f
+filextype *.md,*.txt
+        \ {Open with typora}
+        \ typora %f %i,
+        \ {Open with mousepad}
+        \ mousepad %f %i,
+
+"Check hash sum MD5 SHA1 SHA256 SHA512
+filetype *.md5 md5sum -c %f %S,
+filetype *.sha1 sha1sum -c %f %S,
+filetype *.sha256 sha256sum -c %f %S,
+filetype *.sha512 sha512sum -c %f %S,
+ 
+" Djvu
+filextype {*.djvu},<image/vnd.djvu>
+        \ pqiv %f %i,
+        \ zathura %f %i,
+
+" Directories
+filextype */
+        \ nemo %f &,
+
+" Images
+filextype {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.webp,*.webm,*.svg,*avif},<image/*>
+        \ pqiv -f %f %i,
+        \ sxiv -fa %f %i,
+		" \ echo %f > ~/test,
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" viewers                                        "
+""""""""""""""""""""""""""""""""""""""""""""""""""
+fileviewer {*.[1-8]},<text/troff> man ./%c | col -b
+fileviewer *.7z,*.bz2,*.cab,*.cpio,*.deb,*.gz,
+        \*.msi,*.pkg,*.rar,*.tar,*.tgz,*.xz,*.zip
+        \ als %f | less
+fileviewer {*.doc},<application/msword> catdoc %c
+fileviewer {*.docx},<application/vnd.openxmlformats-officedocument.wordprocessingml.document> docx2txt.pl %f -
+"or with unoconv
+" fileviewer *.odt,*.doc,*.docx unoconv -f text --stdout %c 
+" fileviewer *.ods,*.xls,*.xlsx unoconv -f csv --stdout %c
+
+" fileviewer {*.mp3},<audio/mpeg> mp3info
+" fileviewer {*.flac},<audio/flac> soxi
+" fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk %c -
+" fileviewer {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,*.fl[icv],*.m2v,*.mov,*.webm,*.mts,*.m4v,*.r[am],*.qt,*.divx,*.as[fx]},<video/*>
+"          \ ffprobe -pretty %c 2>&1
+
+" ueberzug
+" https://github.com/vifm/vifm/tree/master/data/plugins/ueberzug - DEPENDENCIES
+fileviewer <image/gif>
+	\ #ueberzug#image_no_cache %px %py %pw %ph
+	\ %pc
+	\ #ueberzug#clear
+
+" Otherwise, use the video fileviewer for gifs
+" fileviewer <video/*>,<image/gif>
+fileviewer <video/*>
+	\ #ueberzug#video %px %py %pw %ph
+	\ %pc
+	\ #ueberzug#clear
+
+fileviewer <image/*>
+	\ #ueberzug#image %px %py %pw %ph
+	" or \ #ueberzug#image_no_cache %px %py %pw %ph
+	\ %pc
+	\ #ueberzug#clear
+fileviewer <audio/*>
+	\ #ueberzug#audio %px %py %pw %ph
+	\ %pc
+	\ #ueberzug#clear
+fileviewer <font/*>
+	\ #ueberzug#djvu %px %py %pw %ph
+	\ %pc
+	\ #ueberzug#clear
+
+fileviewer *.pdf
+	\ #ueberzug#pdf %px %py %pw %ph
+	\ %pc
+	\ #ueberzug#clear
+fileviewer *.epub
+	\ #ueberzug#epub %px %py %pw %ph
+	\ %pc
+	\ #ueberzug#clear
+fileviewer *.djvu
+	\ #ueberzug#djvu %px %py %pw %ph
+	\ %pc
+	\ #ueberzug#clear
+
+fileviewer *.cbz
+	\ #ueberzug#cbz %px %py %pw %ph
+	\ %pc
+	\ #ueberzug#clear
+fileviewer *.cbt
+	\ #ueberzug#cbt %px %py %pw %ph %c
+	\ %pc
+	\ #ueberzug#clear
+fileviewer *.cbr
+	\ #ueberzug#cbr %px %py %pw %ph %c
+	\ %pc
+	\ #ueberzug#clear
+fileviewer *.cb7
+	\ #ueberzug#cb7 %px %py %pw %ph %c
+	\ %pc
+	\ #ueberzug#clear
+" imgcat
+" problems with webp and avif, that should work in wezterm
+" fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*webp,*avif wezterm imgcat --width %pw --height %ph %c:p %pd
+" sixel needs sixel lib 
+" fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*webp,*avif
+"          \ img2sixel -S -w $((%pw*9)) %c %pd,
+"          \ convert -identify %f -verbose /dev/null
+
+" kitty 
+" fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*avif},<image/*>
+" 	\ kitty +icat --place %pwx%ph@%pxx%py  --silent %c
+" 	\ %pc
+" 	\ kitty icat --clear --silent %pd
+	 " \ identify %f
+
+" enable tree colors in folder preview
+fileviewer */,.*/ eza --color=always --tree --level=5 %c/
+
+" bat viewer HAVE to be on the bottom
+" fileviewer {*.md,*.txt,*.adoc,*.lua,*.csv,*.html,*.htm,*.java,*.kt,*.kts,*.sh,*.js,*.ts,*.css,*.scss,*.json,*.yml,*.yaml,*.toml} bat --color always --plain %c
+fileviewer *[^/],.*[^/] bat --color always --plain %c
+
+" BOOKMARKS {{{
+ 
+" show all bookmarks
+nmap bb :marks <cr> 
+" :mark mark /full/directory/path [filename]
+mark a /tmp
+mark A /etc/apt
+mark b /home/miro/.bin
+mark c /home/miro/.config
+mark C /home/miro/Code
+mark d /home/miro/Downloads
+mark D /home/miro/Documents
+mark e /home/miro/Ext
+mark q /home/miro/.config/qutebrowser
+mark h /home/miro 
+mark i /home/miro/Documents/Nauka/inwestycje
+mark k /media/multimedia/kursy/Spring
+mark l /home/miro/.local
+mark m /media/multimedia
+mark M /media/multi/.mumia
+mark n /home/miro/Documents/notebook
+mark o /home/miro/Pictures
+mark p /home/miro/Code/Projects
+mark P /home/miro/Musics/PODCASTS
+mark r /run/media/miro
+" mark s /home/miro/Code/SourceCode
+mark s /home/miro/Documents/share/Screens
+mark t /home/miro/.local/share/vifm/Trash
+mark T /home/miro/.local/share/Trash
+mark u /home/miro/Documents/Ustawienia
+mark v /home/miro/Videos
+mark y /home/miro/Videos/YouTube
+mark w /media/winD
+mark W /media/winC
+" }}} 
+
+" vim: foldmethod=marker

@@ -1,0 +1,23 @@
+README.adoc
+old/
+.config/ytfzf
+.config/ncmpcpp
+.config/broot
+.config/stylua
+.config/ncmpcpp
+
+{{ if eq .chezmoi.hostname "pc" }}
+{{ else if eq .chezmoi.hostname "laptop" }}
+~/Code/.megaignore
+.config/rtorrent/
+.config/nfacurve/
+.config/solaar/
+.bin/audio.sh
+.bin/backup-daily.sh
+.bin/backup-monthly.sh
+.bin/backup-weekly.sh
+.bin/screenlayout
+{{ else }}
+{{ end }}
+
+# vim:ft=gotmpl

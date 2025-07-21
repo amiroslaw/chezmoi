@@ -1,0 +1,75 @@
+{
+  "grammar-append": {
+    "type": "chat",
+    "opts": {
+      "template": "Modify the following {{lang}} text to improve only grammar and spelling. Don't note about 'modified text'. Don't wrap the answer with quotation marks.:  \n\n{{input}}",
+      "strategy": "replace",
+      "params": {
+        "model": "qwen2.5:3b",
+        "temperature": 0.3
+      }
+    },
+    "args": {
+      "lang": {
+        "type": "string",
+        "optional": "true",
+        "default": "english"
+      }
+    }
+  },
+  "grammar-append-explain": {
+    "type": "chat",
+    "opts": {
+      "template": "Modify the following {{lang}} text to improve only grammar and spelling. Don't note about 'modified text'. Don't wrap the answer with quotation marks. Explain nontrivial mistakes.:  \n\n{{input}}",
+      "strategy": "replace",
+      "params": {
+        "model": "qwen2.5:3b",
+        "temperature": 0.3
+      }
+    },
+    "args": {
+      "lang": {
+        "type": "string",
+        "optional": "true",
+        "default": "english"
+      }
+    }
+  },
+  "translate-append": {
+    "type": "chat",
+    "opts": {
+      "template": "Translate this into {{lang}}:\n\n{{input}}",
+      "strategy": "replace",
+      "params": {
+        "model": "qwen2.5:3b",
+        "temperature": 0.3
+      }
+    },
+    "args": {
+      "lang": {
+        "type": "string",
+        "optional": "true",
+        "default": "english"
+      }
+    }
+  },
+  "format-adoc": {
+    "type": "chat",
+    "opts": {
+      "template": "Render the following text as a asciidoc {{what}}. Remove `|` from the end of the each row, align borders. Append and prepend `|===` to the table. Do not add notes, headings or additional words: \n
+	  {{input}}",
+      "strategy": "replace",
+      "params": {
+        "model": "qwen2.5:3b"
+      }
+    },
+    "args": {
+      "what": {
+        "type": "string",
+        "optional": "false",
+        "default": "table"
+      }
+    }
+  }
+
+}

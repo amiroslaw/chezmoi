@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+
+sudo zypper install -y hyprland  hyprland-devel hyprland-qtutils hyprpolkitagent hyprsunset xwayland qt5-wayland qt6-wayland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
+# hyprlock
+
+sudo zypper install -y --no-recommends grim slurp swayimg wl-clipboard cliphist
+
+{{ if eq .chezmoi.hostname "pc" }}
+{{ else if eq .chezmoi.hostname "laptop" }}
+{{ end }}
+
+# vi: ft=bash
+

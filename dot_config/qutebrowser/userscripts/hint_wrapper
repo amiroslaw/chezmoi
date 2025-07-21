@@ -1,0 +1,15 @@
+#!/usr/bin/luajit
+-- workaround for passing an argument for userscript in a hint command
+-- https://github.com/qutebrowser/qutebrowser/issues/3400
+
+local quteFifo = os.getenv 'QUTE_FIFO'
+
+local hintType = arg[1]
+local scryptName = arg[2]
+local argument = arg[3]
+
+local file = io.open('/tmp/qb-arg', 'w')
+file:write(argument)
+file:close()
+io.open(quteFifo, 'a'):write('hint ' .. hintType .. ' userscript ' .. scryptName)
+

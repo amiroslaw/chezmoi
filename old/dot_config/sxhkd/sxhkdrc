@@ -1,0 +1,467 @@
+﻿# NEVER allow to have commented line started with space before your keybinding
+# add comments - they will be visible in bspwm-help, and prevent bugs
+# doesn't work env vars form zsh - only form .profile
+# kitty ma flagi --title i --name a st -c -t/T i -n; wezterm --class; class to nazwa na statusbar
+# sudo -A or gksu - popup with password
+# pattern for 3 actions
+# super + {_,shift,ctrl} + z 
+#super + {_,shift + }{1-9,0} dwa zakresy
+#	bspc {desktop -f,node -d} '^{1-9,10}'
+ # \~fullscreen "~\" toggle
+# aviailable
+# super + ctrl + f 
+# unused 
+# b - balance
+
+# make sxhkd reload its configuration files:
+super + Home
+	pkill -USR1 -x sxhkd
+	# bspc wm -r ?
+
+super + Return
+	$TERMINAL
+
+super + shift + Return
+	$TERM_LT
+
+# Show manual; keybindings
+super + {ctrl,shift} + F1
+	{$ROFI/bspwm-help, mp rofi}
+
+# scratchpad
+F12
+	scratchpad.sh dropdown "wezterm start --class dropdown"
+
+super + {_,shift,ctrl} + z
+     whid {last, hide, dmenu}
+
+# notification
+super + {_,shift} + Escape
+	{dunstctl close-all,dunstctl history-pop}
+
+#chat --list → list models
+super + {_,shift,ctrl} + r
+	{chat.clj ask --output scratchpad, chat.clj action --action-list --output scratchpad, chat.clj ask --list --output scratchpad, }
+
+# In case bspwmrc fails to execute/you wish have plugged in a new monitor
+#bspwmrc
+
+#
+# Window manipulation
+# ______________
+
+# Close/kill window
+super + {_,shift,ctrl} + q
+	{ bspc node -c, qu.clj kill-any, bspc node -k }
+
+# floating/all tile/all floating
+super + {_,shift,ctrl} + space
+	{bspc node -t \~floating && window-placer $(bspc query -T -d | grep -o '"state":"floating"' | wc -l), \
+	bspcp tile, bspcp float }
+# super + shift + @space - release
+	# {bspc node -t floating && window-placer $(bspc query -T -d | grep -o '"state":"floating"' | wc -l),bspc node -t tiled}
+
+# Toggle tiling mode of window, but save layout
+super + shift + ctrl + space
+	bspc node -t \~pseudo_tiled
+
+# Toggle monocle/fullscreen mode
+super + {_,shift} + f 
+	{bspc desktop -l next, bspc node -t \~fullscreen}
+#
+#### FLAGS
+# ______________    
+# sticky works only on the one monitor
+super + a ; {l,m,s,p}
+	bspc node -g {locked,marked,sticky,private}
+
+super + shift + a
+	bspc node -f any.urgent
+
+#
+# Window moving and splitting
+# ______________    
+
+## Workspaces
+super + {1-9,0}
+	bspc desktop -f ^{1-9,10}
+# bspc desktop -f "$(bspc query -D | sed -n "{1-9,10} p")"
+# move node to workspace and follow
+super + shift + {1-9,0}
+    bspc node -d '^{1-9,10}' --follow
+# id=$(bspc query -N -n); bspc node -d ^{1-9,10}; bspc node -f ${id}
+	
+# Select previous / next active desktop
+super + {p,n}
+	bspc desktop -f {prev,next}.occupied
+
+# Select previous / next active desktop
+super + ctrl + {p,n}
+	bspc desktop -f {prev,next}
+
+# move node to next workspace and follow
+super + shift + {n,p}
+    id=$(bspc query -N -n focused); \
+    bspc node -m {prev,next}; \
+    bspc node -f ${id}
+	
+# cycle windows in the same desktop
+alt + {_,shift} + Tab
+    bspc node -f {next,prev}.local
+
+# go to the last workspace, monitor 
+super + {_,shift} + Tab
+	bspc {desktop,monitor} -f last
+
+super + {h,j,k,l}
+    focusmover {west,south,north,east}
+# bspc node -f {west,south,north,east}
+
+super + {Left,Down,Up,Right}
+    focusmover {west,south,north,east}
+        	
+# moves floating windows instead of changing 
+super + shift + {h,j,k,l}
+	euclid_mover {west,south,north,east}
+# windowgrabber {west,south,north,east}
+	
+# breaks in floating windows
+super + shift + {Left,Down,Up,Right}
+	bspc node -s {west,south,north,east}
+
+# SWAP
+# ______________    
+
+# swap-windows, windowpromoter  Move current window to largest space or preselected area if there is one.
+super + {_,shift} + w
+	{~/.config/bspwm/bspc-swap-windows.sh, windowpromoter}
+
+# swap with the biggest/smallest node
+super + ctrl + w
+	bspc node -s smallest.local
+	# bspc node -s {biggest,smallest}.local
+
+# swap with the first window in selected desktop
+super + ctrl + {1-9,0}
+	bspc node -s $(bspc query -N -n .window -d {1-9,0})
+
+#
+# Layout manipulation/desktop level controls
+# ______________    
+
+# resize	
+super + ctrl + {h,j,k,l}
+	bspwm_resize.sh {west,south,north,east}
+
+super + ctrl + {Left,Down,Up,Right}
+	bspwm_resize.sh {west,south,north,east}
+
+# Toggle Balance tree
+super + {_,shift} + b
+	bspc node @/ -{B,E}
+
+# Rotate leaves of tree
+super + {bracketright,bracketleft}
+	bspc node @/ -R {90,270}
+
+# Mirror and flip leaves of tree
+super + shift + {bracketleft,bracketright}
+	bspc node @/ -F {horizontal,vertical}
+
+#Change window gap
+super + ctrl + shift + g
+	bspc config -d focused window_gap {$gap,$(($gap+$gap)),$(($gap+$gap+$gap))}
+
+super + button{4,5}
+	bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 2 ))
+
+###### PRESELECTION
+# Receptacle 
+super + semicolon ; {h,j,k,l,BackSpace}
+	bspc node --presel-dir {west,south,north,east,cancel}
+
+# send the newest marked node to the newest preselected node trzeba mieć preselected 
+super + a ; b
+	bspc node newest.marked.local -n newest.!automatic.local
+
+# -------------------------------------------------------------------------
+#                       APPLICATIONS
+# -------------------------------------------------------------------------
+# function keys
+super + F{1,2,3,4,5,6,7,8,9,10,11,12}
+	{ firefox, \
+	/opt/idea-IU-212.5284.40/bin/idea.sh, \
+	$TERM_LT -c vifm -e vifm, \
+	pcmanfm, \
+	keecli.sh, \
+	wezterm start --class 'note' --cwd ~/Documents/notebook -- nvim, \
+	scratchpad.sh newsboat "wezterm start --class newsboat -- newsboat", \
+	task sync && scratchpad.sh task "$TERM_LT -c task -n -e task taskwarrior-tui", \
+	todo.lua add, \
+	mpv.lua -o ~/Videos , \
+	sh -c $(ls ~/.bin | rofi -dmenu), \
+	rofi -show power-menu -modi power-menu:$ROFI/power.sh
+	}
+
+# setup.lua add, \
+# scratchpad.sh  "$TERM_LT -c portfolio -n portfolio -e nvim ~/.config/investing/portfolio.yaml", \
+
+# youtube
+super + {_,shift,ctrl} + y
+	{ mpv.lua -o, \
+	qu.clj menu, \
+	yt.clj search --input }
+	#$TERM_LT -n ytfzf -e ytfzf }
+
+# internet
+super + {_,shift,ctrl} + i
+	{ rofi-buku, \ 
+	~/.config/qutebrowser/userscripts/session.sh, \
+	~/.config/qutebrowser/userscripts/session.sh webapp
+	}
+
+# remove video, audio or restore
+super + {shift,ctrl,_} + Delete 
+	{ rmmpv-playing.sh, \
+	rmmpd-playing.sh, \
+	echo 0 | trash-restore "$(trash-list | sort -r | cut -d" " -f3- | rofi -dmenu -threads 0 -monitor -4 -i -l 25 -p "restore" -theme-str 'window \{width:  90%;\}')"
+	}
+
+# linux process
+super + {_,shift,ctrl} + BackSpace
+	{$TERM_LT -t top -c top -e btop,$ROFI/kill,xkill}
+
+# tasks; todo; calendar
+super + u ; {u,c,g,f,i,t,r,p,n,a}
+	{ notify-send options: "c-gcal-add\ng-gamification\nf-timefx\nt-todo\ni-add to inbox\nr-pom repeat\np-pom pause\nn-gcal notify\na-gcal agenda\no-portfolio\ne-edit setup\ns-add setup\nS-show setup\nw-TW-tui\nW-task sync\nm-modify task\nn-newsboat", \
+	gcal-add.lua, \
+	java -jar ~/.bin/grywalizacja.jar, \
+	timefx, \
+	todo.lua add, \
+	todo.lua show, \
+	pomodoro.lua repeat -n, \
+	pomodoro.lua pause -n, \
+	gcal-show.sh, \
+	gcalcli --nocolor agenda --config-folder="/home/miro/.config/gcalcli"  | zenity --text-info, \
+	}
+
+super + u ; {s,S,e,o,m,w,W,b}
+	{ setup.lua add, \
+	setup.lua | zenity --text-info, \
+	$TERM_LT -c 'setup' -e nvim $SETUP, \
+	$TERM_LT -c 'portfolio'  -e nvim ~/.config/investing/portfolio.yaml, \
+	pomodoro.lua modify,\
+	task sync && scratchpad.sh task "$TERM_LT -c task -n task -e taskwarrior-tui", \
+	/home/miro/.config/task/scripts/sync.sh, \
+	scratchpad.sh newsboat "wezterm start --class newsboat -- newsboat", \
+	}
+
+super + {shift,ctrl} + u
+	{ scratchpad.sh newsboat "wezterm start --class newsboat -- newsboat", \
+		task sync && scratchpad.sh task "$TERM_LT -c task -n task -e taskwarrior-tui" }
+# pomodoro
+super + {_,shift, ctrl} + x
+	{ pomodoro.lua add -n, pomodoro.lua stop -n && task sync, pomodoro.lua menu -n }
+
+# open media or dir with xdg-open; tui apps 
+super + o ; {o,j,d,D,v,c,y,z,f,F,b,i,p,u,s}
+	{ notify-send options: "\nj-fasd-dir\nnd(D)-dir(hidden)\nv-videos\nc-course\ny-stream\ni-nmtui\np-ncmcpp\nb-bmenu\nz-fasd\nf(F)-files(hidden)\ns/S/u-ytsearch", \
+		$ROFI/open.sh fasd-dir, \
+		$ROFI/open.sh dir, \
+		$ROFI/open.sh dir-hidden, \
+		mpv.lua -o ~/Videos , \
+		mpv.lua -oL "$COURSES" , \
+		mpv.lua -o, \
+		$ROFI/open.sh fasd, \
+		$ROFI/open.sh file, \
+		$ROFI/open.sh file-hidden, \
+		$TERM_LT -e bmenu, \
+		$TERM_LT -e nmtui, \
+		$TERM_LT -e ncmpcpp, \
+		$TERM_LT -c ytfzf -e ytfzf -u popup.sh, \
+		mpv.lua -y, \
+		}
+
+super + {shift,ctrl} + o
+	{ $ROFI/open.sh fasd, $ROFI/open.sh file }
+
+# { notify-send options: "\nj-fasd-dir\nnd(D)-dir(hidden)\nv-videos\nc-course\ny-stream\ni-nmtui\np-ncmcpp\nb-bmenu\nt-telegram\nz-fasd\nf(F)-files(hidden)", \
+
+# -------------------------------------------------------------------------
+#                       SCRIPTS script in background 
+# -------------------------------------------------------------------------
+# url.lua menu will ask for the number of the links
+super + e ; {e,h,k,K,m,M,v,V,d,D,y,Y,w,W,r,R,g,G,c,i}
+	{notify-send options: "h-help url menu\nm(M)-magnet\nv(V)-video\na(A)-audio dl\ny(Y)-yt dl\ng(G)-gallery-dl\nw(w)-wget\nr-speed reader\nR-read\nc-calendar\nk(K)-kindle\ni-investing", \
+    url.lua --menu --input, \
+    url.lua --kindle --email -n 1,  url.lua --kindle --email -n 10, \
+    url.lua --tor -n 1,  url.lua --tor -n 10, \
+    url.lua --mpvFullscreen -n 1,  url.lua --mpvFullscreen -n 10, \
+    url.lua --dlAudio -n 1,  url.lua --dlAudio -n 10, \
+    url.lua --dlVideo -n 1,  url.lua --dlVideo -n 10,  \
+    url.lua --wget -n 1, url.lua --wget -n 10,  \
+    url.lua --speed -n 1, url.lua --read -n 1,  \
+    url.lua --gallery -n 1,  url.lua --gallery -n 10,  \
+	gcal-show.sh, investing-cli -n
+}
+# last optins doesn't work
+
+# -------------------------------------------------------------------------
+#                       SEARCH
+# -------------------------------------------------------------------------
+super + {_, shift,ctrl} + g
+	{search.lua --google -c, search.lua --google -p, search.lua --brave -c}
+
+super + s ; {s,h,g,G,b,B,u,U,y,Y,m,M}
+	{ notify-send options: " (capital-clipboard):\nh-help menu\ng-google\nb-brave\nu-duckduck\ny-yt\nm-maps\nw-wiki\nc-ceneo\no-cenowarka\na-allegro\nz-amazon\ns-so\nf-filmweb\nd-diki\nl-deepL\nr-translator\np-pl-en trans\ne-en-pl trans\nx-tuxi\nt-tor\ni-info from cheatsh", \
+	search.lua --menu -input, \
+	search.lua --google -p, search.lua --google -c, \
+	search.lua --brave -p, search.lua --brave -c, \
+	search.lua --dd -p, search.lua --dd -c, \
+	search.lua --yt -p, search.lua --yt -c, \
+	search.lua --maps -p, search.lua --maps -c}
+
+super + s ; {w,W,c,C,o,O,a,A,z,Z,f,F,x,X,t,T}
+	{ search.lua --wiki -p, search.lua --wiki -c, \
+	search.lua --ceneo -p, search.lua --ceneo -c, \
+	search.lua --cenowarka -p, search.lua --cenowarka -c, \
+	search.lua --allegro -p, search.lua --allegro -c, \
+	search.lua --amazon -p, search.lua --amazon -c, \
+	search.lua --filmweb -p, search.lua --filmweb -c, \
+	search.lua --tuxi --input, search.lua --tuxi -c, \
+	search.lua --tor -p, search.lua --tor -c }
+
+super + s ; {d,D,l,L,r,R,p,P,e,E,i,I}
+	{ search.lua --diki -p, search.lua --diki -c, \
+	search.lua --deepl -p, search.lua --deepl -c, \
+	search.lua --translator -p, search.lua --translator -c, \
+	search.lua --plen -p, search.lua --plen -c, \
+	search.lua --enpl -p, search.lua --enpl -c, \
+	search.lua --cheat --input, search.lua --cheat -p }
+# search.lua so primary, search.lua so clip, \ anti bot checker
+
+
+# -------------------------------------------------------------------------
+#                       CLIPBOARD, NOTES 
+# -------------------------------------------------------------------------
+# clipster and notes; add J nad fix previous-copy primary
+super + c ; {c,g,p,P,r,R,j,J,n,N,k,K,l,L,w,o,O}
+	{notify-send options: "g-gui\np-(prim)selection\nr[R]-remove clip/sel\nj[J]-join clip/sel\nn(N)-next clip/sel\nk(K)-note from clip\nl(L)-note from sel\nw -write note\no-summary\nO-analise", \
+	clipster -sc, \
+	$ROFI/clipster/roficlip-primary, \
+	clipster -po, \
+	clipster -cr, clipster -r, \
+	clipster.lua --join --clipboard, clipster.lua --join --primary, \
+	clipster.lua --next --clipboard, clipster.lua --next --primary, \
+	note.lua clip 1, note.lua clip, \
+	note.lua sel 1, note.lua sel, \
+	note.lua write, \
+	chat.clj action --output scratchpad, \
+	chat.clj text --output scratchpad
+	}
+
+# clipboard, paste second from the clipboard or first from selection
+super + {_,shift,ctrl} + v
+	{$ROFI/clipster/roficlip, clipster.lua --next --clipboard, xdotool click --clearmodifiers 2}
+
+# nchat, left click - stopped work like with `u`
+super + {shift,ctrl} + c
+	{ scratchpad.sh chat "wezterm start --class chat -- nchat", \ 
+		xdotool click --clearmodifiers 1 }
+
+#
+# ROFI 
+# ______________    
+
+# rofi calc are in aur repo, top brakes rofi 
+super + d
+	rofi -modi window,calc,filebrowser -show window -show-icons -sidebar-mode -monitor -4
+
+super + shift + d
+	rofi -modi drun,keys,run -show drun -show-icons -sidebar-mode -monitor -4 -matching fuzzy
+
+# mount 
+super + ctrl + d
+	$ROFI/mount-launcher.sh
+
+alt + space
+	 $ROFI/expander/expander.sh
+
+# translator 
+super + {_,shift,ctrl} + t
+	{	search.lua --enpl -c, \
+		$ROFI/tran/trans-launcher.sh, \
+		search.lua --enpl -p
+	}
+
+# rofi scripts TODO path or delete
+# super + ctrl + d
+	 # $ROFI/mbmain
+# bindsym $mod+shift+d exec --no-startup-id "rofi -modi window,top,drun -show window -show-icons -sidebar-mode -terminal st"
+
+#
+# MEDIA KEYS
+# ______________    
+# audio and mpd
+# volume manipulation
+super + {equal,plus}
+	pactl set-sink-volume "$(pacmd list-sinks | grep '* index' | awk '\{print $3\}')" +{5,15}%
+super + {_,shift} + minus
+	pactl set-sink-volume "$(pacmd list-sinks | grep '* index' | awk '\{print $3\}')" -{5,15}% 
+XF86Audio{Raise,Lower}Volume
+	pactl set-sink-volume 0 {+,-}10%
+
+#  toggle volume or audio channel 
+super + {_,shift,ctrl} + slash
+	{ amixer sset Master toggle, audio.sh toggle, audio.sh }
+XF86AudioMute
+	pactl set-sink-mute "$(pacmd list-sinks | grep '* index' | awk '\{print $3\}')" toggle
+super + m
+	mpc toggle
+
+# start mpd
+super + shift + m
+	if ! pidof -x mpd; then mpd && mpc update; fi && scratchpad.sh music "wezterm start --class music -- rmpc" 
+	#if ! pidof -x mpd; then mpd && mpc update; fi && scratchpad.sh music "$TERM_LT -c music -n music -e ncmpcpp" 
+
+# Changes to next/previous tracks
+super + {comma,period}
+	mpc {prev,next}
+# Restart track
+super + ctrl + period
+	mpc seek 0%
+
+# Seek foward in song
+super + shift + {comma,period}
+	mpc seek {-,+}50
+# super + {_,shift +} bracketright - zajęte
+	# mpc seek +{10,120}
+# Seek backward in song
+# super + {_,shift +} bracketleft
+	# mpc seek -{10,120}
+# Increase volume, chyba cudzysłowy nie działają 
+
+# screenshot.sh in ext
+#
+# KEYPAD
+# ______________    
+# KP_Insert 
+
+# działa na 0 jak i KP0 😐
+# KP_Begin
+	# xdotool click --clearmodifiers 1
+	# xdotool key space
+
+# -------------------------------------------------------------------------
+#                       OLD
+# -------------------------------------------------------------------------
+	# { gksu net-restart.sh, \
+	# nmcli device wifi connect $(awk '\{print $1\}' $PRIVATE/wifi) password $(awk '\{print $2\}' $PRIVATE/wifi)}
+
+# expand/contract a window 
+#alt + control + shift + {h,j,k,l}
+#  bspc node -z {left -20 0 || bspc node -z right -20 0, \
+#                bottom 0 20 || bspc node -z top 0 20,\
+#                top 0 -20 || bspc node -z bottom 0 -20,\
+#                right 20 0 || bspc node -z left 20 0}
+

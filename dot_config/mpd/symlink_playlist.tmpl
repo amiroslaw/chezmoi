@@ -1,0 +1,7 @@
+{{ if eq .chezmoi.hostname "laptop" }}
+/home/miro/Documents/Ustawienia/private/mpd-playlists-laptop
+{{ else if eq .chezmoi.hostname "pc" }}
+/home/miro/Documents/Ustawienia/private/mpd-playlists-pc
+{{ else }}
+{{ end }}
+

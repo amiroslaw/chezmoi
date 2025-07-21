@@ -1,0 +1,32 @@
+# device specific
+# runs each terminal instance
+# paths
+export USER_HOME="/home/miro"
+export VISUAL="nvim"
+export TOR_WATCH="$HOME/Downloads/.torrenty"
+export NOTE="$HOME/Documents/notebook"
+export SETUP="$NOTE/Finance/Inwestycje/setup.adoc"
+export CONFIG="$HOME/Documents/Ustawienia"
+export PRIVATE="$HOME/Documents/Ustawienia/private"
+export GUI_EDITOR=/usr/bin/nvim-qt
+export BACKUP_LOG="$HOME/Documents/Ustawienia/logs/borg-pc"
+
+{{ if eq .chezmoi.hostname "laptop" }}
+export OLLAMA_API_HOST="http://$(cat "$PRIVATE/ip4pc"):11434"
+
+{{ else if eq .chezmoi.hostname "pc" }}
+export TOR_DIR="/media/multi/Downloads"
+export BACKUP="/media/winD/backup-borg/daily"
+export COURSES="/media/multimedia/kursy"
+{{ else }}
+{{ end }}
+# Default Apps
+# export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+# source $HOME/.profile
+# export LC_ALL=en_US.UTF-8
+# export LANGUAGE=en_US.UTF-8
+# export LANG=en_US.UTF-8
+# export LC_CTYPE=en_US.UTF-8
+# export LC_ALL=C
+
+# vi: ft=zsh

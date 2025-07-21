@@ -1,0 +1,145 @@
+#|
+layers
+|#
+
+(defcfg
+linux-dev (/dev/input/by-id/usb-Microsoft_Microsoft®_2.4GHz_Transceiver_v9.0-event-kbd /dev/input/by-path/platform-i8042-serio-0-event-kbd)
+  process-unmapped-keys yes
+	danger-enable-cmd yes
+ sequence-timeout 3000
+)
+
+#|
+(deflayer name
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _              _              _    _    _ 
+)
+(deflayer name
+  XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX
+  XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX
+  XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX
+  XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX
+  XX    XX    XX              XX              XX    XX    XX
+)
+|#
+
+(defsrc
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet lalt           spc            ralt cmp rctl
+)
+
+(deflayer base
+  @grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w     e    r    t    y    u    i    o    p    [    ]    \
+  @cap  @alt_a   @met_s	@ctl_d @sft_f g   @chh @chj @ctl_k @met_l @alt_; '    ret
+  @lsft z    x    c    v    b    n    m    ,    .    /    @rsft
+  lctl lmet @lalt           @spc            ralt cmp rmet
+) ;; ms sculpt with aplication key
+
+(deflayer numbers
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  _    S-4    S-=    S-9  S-0    S-2    S-\    -    =      S--    S-8    '    ret
+  _    S-1    S-3    S-[  S-]    S-`    S-7    [    ]    S-5    S-6    _
+  _    _    _              _              _    _    _ 
+)
+;; _    $    +    \(    \)    @    |    -    =    \_    *    '    ret
+;; _    !    #    {    }    ~    &    [    ]    %    ^    @mdf
+
+(deflayer navigation ;; plus media
+  XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX
+  XX    XX    XX    XX    XX    XX    C-c   C-z	C-x   C-v  S-ins  XX    XX   XX
+  XX    XX    mute    vold  volu    XX    left down   up   rght   ret   XX    XX    
+  XX    XX    XX    XX    XX    XX    home	pgdn pgup	end	  ins   XX
+  XX    XX    XX              XX              XX    XX    XX 
+)
+;; S-ins; C-z: pase select, undo
+
+(defalias
+  ;; lcrt (tap-hold-release 200 200 sldr lcrt)
+  lsft (tap-hold-press 200 200 bspc lsft) ;;  left bracket
+  rsft (tap-hold-press 200 200 S-0 rsft) ;; right bracket
+  grv (tap-hold-press 200 200 grv lrld) ;; reload on hold
+  cap (tap-hold-press 200 200 esc (layer-while-held navigation)) ;; esc
+  spc (tap-hold 200 200 spc (layer-while-held numbers))
+ ;; enter (switch  ((and u i)) ret break)
+  ;; spc (one-shot 500 (layer-while-held numbers))
+)
+
+(defalias
+  ;; maybe tap-hold-press
+	alt_a (tap-hold 200 200 a lalt)
+    met_s (tap-hold 200 200 s lmet)
+    ctl_d (tap-hold 200 200 d lctl)
+    sft_f (tap-hold 200 200 f lsft)
+;; right hand
+    sft_j (tap-hold 200 200 j rsft)
+    ctl_k (tap-hold 200 200 k rctl)
+    met_l (tap-hold 200 200 l rmet)
+    alt_; (tap-hold 200 200 ; lalt)
+)
+;; combos
+(defalias
+  chj (chord jh j)
+  chh (chord jh h)
+)
+;; jk will block c-s bind for homerow mods
+(defchords jh 100
+  (j    ) @sft_j
+  (   h ) h
+  (j  h ) ret ;; enter
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                  APPLICATIONS                  ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(deflayer apps
+  XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX
+  XX    XX    XX    @news    XX    @tw    @yt    XX    @qb    XX    @fm    XX    XX    XX
+  XX    @audio @off @rofi @vifm    XX    @clip    @chat @kee     @qu   XX    XX    XX
+  XX    @todo  @pom  @idea    @video    XX    @note    XX    XX    XX    XX    XX
+  XX    XX    ret              XX              XX    XX    XX
+)
+
+(defalias ;; common apps scripts
+  ;; without setsid apps will be terminated when kanata is killed
+  apps (one-shot 500 (layer-while-held apps))
+  lalt (tap-hold-release 200 200 @apps lalt)
+  ;; url (cmd )
+;; order matters
+	rofi(cmd rofi -modi drun,keys,run -show drun -show-icons -sidebar-mode -monitor -4 -matching fuzzy)
+  qu (cmd qu.clj menu)
+  yt (cmd setsid mpv.lua -o)
+  qb (cmd setsid /home/miro/.config/qutebrowser/userscripts/session.sh)
+  pom (cmd sh -c "task sync && pomodoro.lua add -n")
+  note (cmd setsid wezterm start --class 'note' --cwd /home/miro/Documents/notebook -- nvim)
+  idea (cmd setsid /home/miro/Ext/idea-IU-233.14015.106/bin/idea.sh)
+  vifm (cmd setsid xst -c vifm -e vifm)
+  chat (cmd setsid scratchpad.sh chat "wezterm start --class chat -- nchat")
+  audio (cmd audio.sh toggle)
+  clip (cmd "/home/miro/.config/rofi/scripts/clipster/roficlip" )
+  off (cmd rofi -show power-menu -modi power-menu:~/.config/rofi/scripts/power.sh)
+  news (cmd setsid scratchpad.sh newsboat "wezterm start --class newsboat -- newsboat")
+  tw (cmd setsid scratchpad.sh task "xst -c task -n task -e taskwarrior-tui")
+  kee (cmd setsid keecli.sh)
+  video (cmd setsid mpv.lua -o /home/miro/Videos)
+  todo (cmd todo.lua add)
+  fm (cmd setsid pcmanfm )
+  ;; scripts (cmd sh -c "$(ls ~/.bin | rofi -dmenu)")
+)
+
+;; (defseq 
+;;   url (e u)
+;;   test (e t)
+;; )
+;; (defvar
+;; )
+
+;; vim:filetype=lisp

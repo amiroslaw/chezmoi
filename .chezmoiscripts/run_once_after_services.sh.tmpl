@@ -1,0 +1,26 @@
+#!/bin/sh
+set -e
+
+systemctl enable --user --now pueued.service
+sudo systemctl enable --now NetworkManager.service             
+# sudo systemctl enable --now NetworkManager-dispatcher.service  
+# sudo systemctl enable --now NetworkManager-wait-online.service 
+{{ if eq .chezmoi.hostname "pc" }}
+systemctl enable --user --now ollama.service               
+sudo systemctl enable --now lm_sensors.service 
+# sudo systemctl enable --now nvidia-hibernate.service           
+# sudo systemctl enable --now nvidia-resume.service              
+# sudo systemctl enable --now nvidia-suspend.service             
+{{ else if eq .chezmoi.hostname "laptop" }}
+# Optimizes power usage on laptops by applying advanced power management settings.      
+sudo systemctl enable --now tlp.service 
+sudo systemctl enable --now bluetooth
+{{ end }}
+
+# systemctl enable --user --now pulseaudio.service   for x11
+# with --user you don't need sudo
+# systemctl enable --user --now 
+# To enable the daemon type `systemctl --user enable pueued.service`
+# To start the daemon type `systemctl --user start pueued.service`
+
+# vi: ft=gotmpl

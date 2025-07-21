@@ -1,0 +1,11 @@
+-d:node_modules
+-d:node_tmp
+-d:build
+-d:target
+-d:out
+-d:bin
+-d:.git
+-d:.idea
+-s:*
+-d:dist
+-d:.DS_Store

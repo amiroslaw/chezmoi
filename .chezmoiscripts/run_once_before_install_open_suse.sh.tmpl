@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+
+sudo zypper install -y go rust
+sudo zypper install -y curl gawk git ImageMagick wget btop xdg-user-dirs xdg-utils mpv mpv-mpris vifm 7zip pueue qutebrowser vifm zsh
+# sudo zypper install -y fd rg dua timewarrior task rofi-buku btop fzf lazygit newsboat
+sudo zypper install -y --no-recommends NetworkManager-applet playerctl  
+
+{{ if eq .chezmoi.hostname "pc" }}
+sudo zypper install -y --no-recommends pavucontrol
+{{ else if eq .chezmoi.hostname "laptop" }}
+sudo zypper install -y --no-recommends blueman bluez
+# Optimizes power usage on laptops by applying advanced power management settings.      
+{{ end }}
+
+# vi: ft=bash
+

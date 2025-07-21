@@ -1,0 +1,19 @@
+#!/bin/bash
+# process website thought firefox's web reader and send it on the kindle device 
+# dependencies readability-cli, xclip, mailx
+
+link=$1
+if [ -z "$1" ]
+  then
+	link=$(xclip -o -sel clip)
+fi
+kindle_email={{- .mail.kindle -}}
+title=$(readable "$link" -p title | sed "s/\//-/")
+echo "$title"
+mkdir -p /tmp/kindle
+readable "$link" -p html-title,length,html-content | pandoc --from html --to docx --output /tmp/kindle/"${title}.docx"
+# html doesn't work, and has links instead of the images
+# readable $link -p html-title,length,html-content > /tmp/kindle/"${title}.html"
+echo "${title}\nKindle article from readability-cli" | mailx -v -s "Kindle" -a /tmp/kindle/"${title}.docx" $kindle_email
+
+# vi: ft=bash

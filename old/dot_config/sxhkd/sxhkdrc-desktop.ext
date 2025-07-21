@@ -1,0 +1,6 @@
+super + Print
+	screenshot.lua --menu
+
+{_,ctrl,shift,ctrl+shift} + Print
+	screenshot.lua {active-window,region,monitor1,active-window -o=clipboard}
+

@@ -1,0 +1,715 @@
+# todo
+# clipster --nul -ocn 2 | xclip -sel clip - nie wiem czy -nul nie dodaje specjalnego znaku 
+# WAŻNE jak podajemy ścieżkę to po = nie dawać spacji
+# kolumna musi być escapowana w awk "{print \$1}"
+# type 'alias' → shows command for the alias
+#alias =''
+# https://github.com/Bash-it/bash-it/blob/master/aliases/available/docker.aliases.bash
+
+#{{{ Dependencies
+# devour
+# dragon-drop
+# borg
+# xprop
+# xrandr
+# stow
+# vifm
+# youtube-dl
+# atool
+# trans
+# gcalcli
+# eza
+# broot
+#}}}
+
+#{{{ variables
+path_script=~/Documents/Ustawienia/skrypty/moje
+path_conf=~/Documents/Ustawienia/sync
+path_note=~/Documents/notebook
+java8=~/.sdkman/candidates/java/8.0.171-oracle/bin/java
+#}}}
+
+#{{{ scripts
+alias remind='$path_script/remind.sh'
+alias mag='$path_script/magnet.sh "$(xclip -o -selection clipboard)"'
+alias crypto='investing-cli -t CRYPTO -p -k $(cat $PRIVATE/yahoo)'
+alias yahoo-key='cd $PRIVATE && java -jar $PRIVATE/selenium.jar yahoo'
+alias selenium='cd $PRIVATE && java -jar $PRIVATE/selenium.jar '
+alias gra='gamification'
+alias grat='gamification t -d yesterday'
+#}}}
+
+# {{{ config files
+alias batalias='bat ~/.config/aliases'
+alias cfaliases='nvim ~/.config/aliases'
+alias cfportfolio='nvim ~/.config/investing/portfolio.yaml'
+alias cftask='nvim ~/.config/task/taskrc'
+alias cfidea='nvim ~/.config/ideavim//ideavimrc'
+alias cfpqiv='nvim ~/.config/pqivrc'
+alias cfalacritty='nvim ~/.config/alacritty/alacritty.yml'
+alias cfwez='nvim ~/.config/wezterm/wezterm.lua'
+alias cfwezkey='nvim ~/.config/wezterm/key.lua'
+alias cfvi='nvim ~/.config/nvim/init.lua'
+alias cfviplug='nvim ~/.config/nvim/lua/plugins.lua'
+alias cfvifm='nvim ~/.config/vifm/vifmrc'
+alias cftermite='nvim ~/.config/termite/config'
+alias cfpolybar='nvim ~/.config/polybar/config'
+alias cfmpd='nvim ~/.config/mpd/mpd.conf'
+alias cfmpv='nvim ~/.config/mpv/input.conf'
+alias cfncmpcpp='nvim ~/.ncmpcpp/config'
+alias cfzsh='nvim ~/.zshrc'
+alias cftmux='nvim ~/.tmux.conf'
+alias cfsxiv='nvim ~/.config/sxiv/exec/key-handler'
+alias cfbspwm='nvim ~/.config/bspwm/bspwmrc'
+alias cfautostart='nvim ~/.config/bspwm/autostart'
+alias cfsxhkd='nvim ~/.config/sxhkd/sxhkdrc'
+alias cfkitty='nvim ~/.config/kitty/kitty.conf'
+alias cfbroot='nvim ~/.config/broot/conf.toml'
+alias cfqute='nvim ~/.config/qutebrowser/config.py'
+alias cfnews='nvim ~/.config/newsboat/config'
+alias cfnchat='nvim ~/.nchat/key.conf'
+alias cfurl='nvim ~/.config/newsboat/urls'
+alias cfkanata='nvim ~/.config/kanata/kanata.kbd'
+alias cfw3m='nvim ~/.w3m/keymap'
+#}}}
+
+# {{{ RÓŹNE
+# copy last command
+alias CC='$(fc -l -n -1) | xclip -sel clip'
+alias setup='$EDITOR "$NOTE"/finance/inwestycje/setup.adoc'
+alias weather='curl wttr.in/warszawa | grep -v "New feature" | grep -v Follow'
+alias cl='clear'
+alias se='sudoedit'
+alias permissionX='sudo chmod -R +x'
+alias zathuraBlist='less ~/.local/share/zathura/bookmarks'
+# grepextend pattern path/.
+alias grepextend='grep -inrC 3'
+alias ifrestart='sudo ifconfig wlp3s0f0u2 down && sudo ifconfig wlp3s0f0u2 up'
+alias psa='ps -A | grep '
+# swallow?
+alias sw='devour xdg-open '
+alias timer='hyperfine'
+
+#get class name
+alias xpro='xprop | grep CLASS'
+alias monitoron='xrandr --output DVI-I-0 --auto --right-of DVI-D-0 && polybar ext &'
+alias monitoroff='xrandr --output DVI-I-0 --off'
+
+# }}}
+
+#{{{ SYSTEM
+alias _='sudo'
+alias shut='sudo shutdown -h now'
+# get error messages from journalctl
+alias log='journalctl -b'
+alias logerr="journalctl -p 3 -xb"
+alias logwatch='journalctl -b -n 200 -f'
+
+# navi
+alias sysstat='systemctl status '
+alias sysrestart='sudo systemctl restart '
+alias sysstop='sudo systemctl stop '
+
+alias diskls='lsblk'
+# pacman
+alias pacr='~/.bin/pac -r'
+alias paci='~/.bin/pac -i'
+alias pacq='~/.bin/pac -q'
+alias pacupdate='paru -Syyu'
+alias paclog='grep -iE "installed|upgraded" /var/log/pacman.log | tac | less'
+# alias pacinst='paru --bottomup'
+# alias pacuninstall='paru -Rns $(paru -Qet | awk "{print \$1}" | fzf)'
+# alias pacinfo='paru -Qii $(paru -Qet | awk "{print \$1}" | fzf)'
+# alias pacsearch='pacman -Ss'
+# alias pacupdate='sudo pacman -Syyu'
+# alias pacremove='sudo pacman -Rns'
+#}}}
+
+#{{{ Programs alias
+alias v='nvim'
+alias nn='navi'
+alias nb='newsboat'
+alias pp='xclip-pastefile'
+alias yy='xclip-copyfile'
+alias cc='xclip-cutfile'
+alias vl='nvim $(ls -tp | grep -v /$ | head -1)'
+alias vg='grep_open'
+alias vc='changed_files'
+alias tor='stty stop undef && stty start undef && screen -x tor'
+alias huliomail='tmpmail -g Huliofff@1secmail.org && tmpmail -r'
+alias ping='prettyping'
+alias rest='wuzz'
+# alias viswap_rm= 'rm ~/.local/share/nvim/swap/*'
+# alias viswap='rm ~/.local/share/nvim/swap/*'
+alias viswap_rm='rm -f ~/.local/state/nvim/swap/*'
+alias cad='chezmoi add'
+alias ced='chezmoi edit'
+alias cap='chezmoi apply'
+alias cea='chezmoi edit --apply'
+alias ccd='chezmoi cd'
+alias cdi='chezmoi diff'
+alias cme='chezmoi merge'
+alias cst='chezmoi status'
+alias cls='chezmoi list --tree'
+alias fm='vifm'
+alias exodus='~/Exe/program_files/Exodus/Exodus &'
+alias duh='du -sh '
+alias dudepth='du -h --max-depth'
+alias gs='groovysh'
+alias coin='coinmon -p ~/.config/coinmon/portfolio.json -s 1,2,3,4,5,7 -c pln'
+alias df='df -h --output=source,fstype,size,used,avail,pcent,target -x tmpfs -x devtmpfs'
+alias speed='speedtest'
+alias music='ncmpcpp'
+alias drag-drop='dragon-drop -t'
+alias drag-pull='dragon-pull.sh'
+alias open='xdg-open '
+alias op='xdg-open '
+alias di='dua interactive'
+# replace
+alias fasd='fasder' 
+alias neofetch='fastfetch'
+#}}}
+
+#{{{ Organization
+alias t='task'
+alias ta='task add +in'
+alias tan='~/.config/task/scripts/tan.sh'
+alias td='task done '
+alias tm='task modify '
+alias tbd='task burndown.daily'
+alias tbw='task burndown.weekly'
+alias tc='task calendar'
+alias tsu='task summary'
+alias tal='task add dep:"$(task +LATEST uuids)"'
+alias tu='task sync && taskwarrior-tui'
+alias ts='task sync'
+alias ti='timew'
+alias tit='timew summary :ids'
+alias tiy='timew summary :ids :yesterday'
+alias tiw='timew summary :week :ids'
+alias tia='gamification s -f -s slim -d lastweek'
+alias tip='timew percentage'
+alias tidi='timew dist'
+alias in='$EDITOR "$NOTE"/tasks/inbox.adoc'
+#}}}
+
+#{{{ Programy coś wykonują
+# curl cheat.sh/java/compute+map
+alias pul='pueue status columns=id,status,label'
+alias pue='pueue status columns=status,command'
+alias pull='pueue log'
+alias rmsl='find . -xtype l -delete' # remove broken symlinks form the directory
+alias cht='curl cheat.sh/'
+alias chtj='curl cheat.sh/java/'
+alias yt='youtube-viewer -C'
+alias yts='youtube-viewer -C -SV'
+alias ytm='youtube-viewer -C -n'
+alias ytaudio='youtube-dl -x --audio-format mp3 '
+alias ytlisten='mpv --no-video "$(xclip -o -selection clipboard)"'
+alias mpvlist='cd ~/Templates/mpvlists && mpv --profile=stream "$(ls -tp | grep -e "video" | rofi -dmenu)"'
+alias mpvlistpopup='cd ~/Templates/mpvlists && mpv --x11-name=videopopup --profile=stream-popup "$(ls -tp | grep -e "video" | rofi -dmenu)"'
+alias mpvlistauido='cd ~/Templates/mpvlists && st -c audio -e mpv --ytdl --no-video --cache=yes --demuxer-max-bytes=500M --demuxer-max-back-bytes=100M --input-ipc-server=/tmp/mpvsocket "$(ls -tp | grep -e "audio" | rofi -dmenu)"'
+alias qbmpvvideo='mpv.lua --videoplay -r'
+alias qbmpvaudio='mpv.lua --audioplay -r'
+alias kindlecp-run='cp /run/media/miro/Kindle/documents/My\ Clippings.txt ~/Documents/notatki/kindle/clippings-$(date -u +"%Y-%m-%d").txt'
+alias kindlecp-media='cp /media/Kindle/documents/My\ Clippings.txt ~/Documents/notatki/kindle/clippings-$(date -u +"%Y-%m-%d").txt'
+alias kindle-open='cd ~/Documents/notatki/kindle && nvim $(ls -c | head -n 1)'
+alias torrentRm='rm /media/multi/Downloads/.pobierane/rtorrent.lock'
+alias scan='sudo clamscan -r --bell -i '
+alias lamp-start='sudo /opt/lampp/lampp start'
+alias lamp-stop='sudo /opt/lampp/lampp stop'
+alias lamp-manager='sudo /opt/lampp/manager-linux-x64.run &'
+alias rozpakuj='atool extract'
+alias pakuj='atool create'
+alias pl='atool -l'
+alias ffmpeg-speed-up='for i in *.mp3; do ffmpeg -i $i -filter:a "atempo=1.3" -vn sp-$i; done'
+alias ffmpeg-segment='for i in *.mp3; do ffmpeg -i "$i" -f segment -segment_time 900 -c copy "${i%%.*}-%02d.mp3"; done'
+alias icat='kitty +kitten icat '
+#slowniki
+# alias plen='~/.local/share/trans -shell pl:en -show-original n  -show-prompt-message n -show-languages n -play'
+alias plen='trans -shell pl:en -show-original n  -show-prompt-message n -show-languages n -play'
+alias enpl='trans -shell en:pl -show-original n  -show-prompt-message n -show-languages n -play -speak'
+alias dic='trans -sp en: -show-prompt-message n -show-languages n'
+alias irr='cat $path_note/Home/Angielski/irregular.adoc | grep'
+alias backup_note='cp -r $path_note ~/Templates/backup/note/notebook-$(date -u +"%Y-%m-%d")'
+#}}}
+
+# gcalcli {{{
+alias kal='gcalcli quick --config-folder="/home/miro/.config/gcalcli"'
+alias kalw='gcalcli calw --config-folder="/home/miro/.config/gcalcli"'
+alias kalm='gcalcli calm --config-folder="/home/miro/.config/gcalcli"'
+alias kala='gcalcli agenda --config-folder="/home/miro/.config/gcalcli"'
+alias kals='gcalcli search'
+# #}}}
+
+#{{{ Dev
+alias -g jv='java -version'
+alias -g jp='javap -v -l -p -c -s'
+alias js='~/.sdkman/candidates/java/10.0.1-oracle/bin/jshell'
+alias psj='ps aux | grep "[j]ava"'
+alias manative='mvn -Pnative native:compile -Dmaven.test.skip=true'
+# mavend
+alias mai='mvnd install'
+alias mapac='mvnd package'
+alias mainstc='mvnd clean install'
+alias mapacc='mvnd clean package'
+alias mainstct='mvnd clean install -Dmaven.test.skip=true'
+alias mapacct='mvnd clean package -Dmaven.test.skip=true'
+alias mat='mvnd clean package -Dmaven.test.skip=true -DskipTests'
+alias matree='mvn dependency:tree'
+alias mapom='mvn help:effective-pom'
+
+# # docker
+# alias dk='docker'
+# alias dkp='docker ps'
+# alias dkpa='docker ps -a'
+# alias dkpaq='docker ps -a -q'
+# alias dkb='docker build -t'
+# alias dkbnc='docker build --no-cache -t'
+# alias dkr='docker run --rm'
+# alias dkrti='docker run --rm -ti'
+# alias dkrd='docker run -d'
+# alias dkrp8='docker run --rm -p 8080:8080'
+# alias dkrp9='docker run --rm -p 9080:9080'
+# alias dks='docker start'
+# alias dkt='docker stop'
+# alias dktt='docker stop $(docker ps -q)'
+# alias dkk='docker kill'
+# alias dkkk='docker kill $(docker ps -q)'
+# alias dkrm='docker rm'
+# alias dkri='docker rmi'
+# alias dke='docker exec -ti'
+# alias dkl='docker logs -f'
+# alias dki='docker images'
+# alias dkpu='docker pull'
+# alias dkph='docker push'
+# alias dkin='docker inspect'
+# alias dkn='docker network'
+# alias dkc='docker-compose'
+# alias dkcu='docker-compose up'
+# alias dkclean='docker ps -q -a -f status=exited | xargs -r docker rm && docker images -q -f dangling=true | xargs -r docker rmi'
+
+#}}}
+
+# {{{ GIT
+# https://github.com/Bash-it/bash-it/blob/master/aliases/available/git.aliases.bash
+alias lg='lazygit'
+alias addup='git add -u'
+alias addall='git add .'
+alias gbranch='git branch'
+# alias gcheck='git checkout'
+alias gcheck='checkout.lua .'
+alias gclone='git clone'
+alias gcommit='git commit -am'
+alias gfetch='git fetch'
+alias gdiff='git diff'
+alias gpull='git pull origin'
+alias gpush='git push origin'
+alias grebase='git pull --rebase origin'
+alias gstash='git stash save'
+alias gst='git status'  # 'status' is protected name so using 'stat' instead
+alias glog="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset'"
+# }}}
+
+#{{{ go to 
+# z fasd_cd
+# c broot
+# ch back
+alias cdt='cd ~/.local/share/Trash'
+alias cdhtdoc='cd /opt/lampp/htdocs/'
+alias cdn='cd ~/Documents/notebook && nvim'
+alias cdd='cd ~/Documents'
+alias cdp='cd ~/Downloads'
+alias cdb='cd ~/.bin'
+alias cdv='cd ~/Videos'
+alias cdM='cd /media/multi'
+alias cdm='cd ~/Musics'
+alias cdD='cd /media/winD'
+alias cdC='cd /media/winC'
+alias cdh='cd ~'
+alias cdc='cd ~/.config'
+alias cdq='cd ~/.config/qutebrowser'
+alias cds='cd ~/Code/SourceCode'
+# back to previous directory
+alias ch='cd -'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+#}}}
+
+#{{{ list of the files/directories
+alias l='eza --icons'
+alias la='eza --icons -la'
+alias ll='eza --icons -l' #long
+alias lt='eza --icons --tree'
+alias lr='eza --icons --recurse'
+alias ld='eza --only-dirs'
+alias treeh='tree -Ch'
+# sort by size
+alias lls='eza --icons -l -ssize --reverse'
+alias brs='br --sizes'
+alias brh='br --hidden'
+#}}}
+
+#{{{ potwierdzenie/progres
+alias cp='cp -iv'
+alias rmdir='rm -Irv'
+alias mv='mv -iv'
+alias mkdir="mkdir -vp"
+alias Rm='rm -iv'
+#}}}
+
+# {{{ FZF
+alias fn='nvim -o "$(fd --type f | fzf)"'
+alias fnh='nvim -o "$(fd --hidden --type f | fzf)"'
+alias ffh='"$(fd --hidden --type f | fzf)"'
+alias fp='rg --files | fzf --preview="bat {} --color=always"'
+alias fb='bat "$(fd --type f | fzf)"'
+alias fbh='bat "$(fd --hidden --type f | fzf)"'
+alias hc="	fc -ln 0 |	awk '!a[\$0]++' |	fzf --tac |	xclip -selection clipboard" # copy command from history
+# dubbled keys in key-bindings.zsh 
+alias ff='"$(fd --type f | fzf)"'
+alias fcd='cd "$(fd --type d | fzf)"'
+alias fcdh='cd "$(fd --hidden --type d | fzf)"'
+# execute, I have shortcut for this 
+# fz mv # To move files. You can write the destination after selecting the files.
+fz() {
+    sels=( "${(@f)$(fd "${fd_default[@]}" "${@:2}"| fzf)}" )
+    test -n "$sels" && print -z -- "$1 ${sels[@]:q:q}"
+}
+# grep with fzf
+fs() {
+  if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
+  rg --hidden --files-with-matches --no-messages "$1" | fzf --preview "bat --style=numbers --color=always --line-range :500 {}"
+  # rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}"
+}
+
+fo() {
+    # save newline separated string into an array
+    mapfile -t website <<< "$(buku -p -f 5 | column -ts$'\t' | fzf --multi)"
+
+    for i in "${website[@]}"; do
+        index="$(echo "$i" | awk '{print $1}')"
+        buku -p "$index"
+        buku -o "$index"
+    done
+}
+
+# }}}
+
+
+#ZSH
+# {{{ ZSH extensions 
+# open files based on their extensions in default app
+# devour swallows 
+alias -s {tex,txt,md,adoc,java,html}=nvim
+alias -s html=w3m
+alias -s {avi,mp4,webm,m3u,mkv}='devour mpv --profile stream '
+alias -s pdf='devour zathura'
+alias -s {mp3,flac,og}='mpv --no-video'
+alias -s {jpg,JPG,jpeg,png,PNG,gif}='devour pqiv'  
+alias -s {ods,ODS,odt,ODT,odp,ODP,doc,DOC,docx,DOCX,xls,XLS,xlsx,XLSX,xlsm,XLSM,ppt,PPT,pptx,PPTX,csv,CSV}='devour libreoffice'
+alias -s {zip,ZIP,war,WAR,gz,tgz}="atool -l"
+alias -s {jar,JAR}="java -jar"
+#}}}
+
+# {{{ ZSH global
+# append previous command: new_string old_cmd
+alias -g R='!-1'
+# append all previous arguments: new_string old_arguments
+alias -g A='!*'
+
+# alias -g jj='java -jar'
+alias -g G='| grep'
+alias -g H='| head'
+alias -g T='| tail'
+alias -g SN='| sort -n'
+alias -g L='| less'
+alias -g W='| wc'
+alias -g Jq='| jq .'
+alias -g Fx='| fx'
+alias -g N=' | nvim - +"file /tmp/nvim-pipe$(date +%s)"'
+
+# copy terminal output into clipboard
+alias -g C='| xclip -sel clip'
+# copy line np. ls | yank -l or yank < file.txt
+alias -g CL='| yank -l'
+alias -g P='$(xclip -o -selection clipboard)'
+alias -g PP='$(xclip -o -selection primary)'
+# czasami dać enter;  przy F można dodawać * np ls * F; D to wybór pliku/katalogu z użyciem fzf np. cat D
+# http://www.zzapper.co.uk/zshtips.html
+alias -g ND='*(/om[1])' 	      # newest directory
+alias -g NF='*(.om[1])' 	      # newest file
+alias -g LL="2>&1 | less"
+alias -g NUL="> /dev/null 2>&1" # alias -g NE="2> /dev/null"
+alias -g TB="| nc termbin.com 9999" # share output of the terminal
+alias -g COL='| column -t' # format into tabelar 
+alias -g X='| xargs'
+alias -g X0='| xargs -0'  
+alias -g A1="| awk '{print \$1}'"
+# FZF
+alias -g D='$(fd --file=d | fzf)'
+alias -g F='| fzf '
+alias -g H='$(fd --hidden | fzf) '
+
+# env, przy uruchomieniu terminalu od razu wywołuje 
+# alias -g E=" ${(P)$(env | awk -F '=' '{print $1}' | fzf)}"
+# alias -g grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
+
+
+
+#}}}
+
+#{{{ Navi
+alias nn='navi'
+# Search using tldr/cheatsh
+alias nc="navi --cheatsh"
+alias nt="navi --tldr"
+# aliases using query 
+navialias() {
+    navi --query "$1" --best-match
+}
+alias nln="navialias 'create symlink'"
+#}}}
+
+#{{{ FUNCTIONS
+# Runs when tab is pressed after ,
+# I have plugin for it so I don't know, how it will be useful
+_fzf_comprun() {
+    local command=$1
+    shift
+
+    case "$command" in
+    cd) fzf "$@" --preview 'exa -TFl --group-directories-first --icons --git -L 2 --no-user {}' ;;
+    nvim) fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' ;;
+    vim) fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' ;;
+    *) fzf "$@" ;;
+    esac
+}
+# alias mkcd='take'
+take () {
+  case "$1" in /*) :;; *) set -- "./$1";; esac
+  mkdir -p "$1" && cd "$1"
+  }
+
+# "I'm feeling lucky" 
+# deep broot cd of broot
+function c {
+    br -h --only-folders --cmd "$1;:cd"
+}
+# fasder
+jj () {
+	if [ "$#" -gt 0 ]; then
+		cd "$(fasder -de 'printf %s' "$@")" || return 1
+	else
+		cd -
+	fi
+}
+
+wypakuj () {
+    if [ -f $1 ] ; then
+      case $1 in
+        *.tar.bz2)   tar xjf $1     ;;
+        *.tar.gz)    tar xzf $1     ;;
+        *.bz2)       bunzip2 $1     ;;
+        *.rar)       unrar e $1     ;;
+        *.gz)        gunzip $1      ;;
+        *.tar)       tar xf $1      ;;
+        *.tbz2)      tar xjf $1     ;;
+        *.tgz)       tar xzf $1     ;;
+        *.zip)       unzip $1       ;;
+        *.Z)         uncompress $1  ;;
+        *.7z)        7z x $1        ;;
+        *)     echo "'$1' cannot be extracted via extract()" ;;
+         esac
+     else
+         echo "'$1' is not a valid file"
+     fi
+}
+
+# pueue queue - some keymaps doesn't work; even alt
+pu() {
+  set -f
+  local PUEUE_TASKS="pueue status --json | jq -c '.tasks' | jq -r '.[] | \"\(.id | tostring | (\" \" * (2 - length)) + .) | \(.group) | \(.path[-15:]) | \(.status) | \(.command[-15:]) | \(.start[:19])\"'"
+  local header="p:pause | s:start | r:restart | x:kill | l:log | f:reload"
+
+local bind="\
+ctrl-p:execute-silent(echo {} | cut -d'|' -f1 | xargs pueue pause > /dev/null)+reload^$PUEUE_TASKS^,\
+ctrl-s:execute-silent(echo {} | cut -d'|' -f1 | xargs pueue start > /dev/null)+reload^$PUEUE_TASKS^,\
+ctrl-r:execute-silent(echo {} | cut -d'|' -f1 | xargs pueue restart -ik > /dev/null)+reload^$PUEUE_TASKS^,\
+alt-x:execute-silent(echo {} | cut -d'|' -f1 | xargs pueue kill > /dev/null)+reload^$PUEUE_TASKS^,\
+ctrl-l:execute-silent(echo {} | cut -d'|' -f1 | xargs pueue log | less > /dev/tty),\
+ctrl-f:reload^$PUEUE_TASKS^\
+"
+
+  echo $PUEUE_TASKS | sh | fzf --header "${header}" -m \
+    --preview="echo {} | cut -d'|' -f1 | xargs pueue log | bat -l log --style=rule,numbers --color=always -r ':200'" \
+    --bind="$bind"
+  set +f
+}
+
+# fzf sdkman
+sju() {
+   sdk use java $(sdk list java | grep 'installed\|local only' | grep -v '>>>' | awk '{print $NF}' | fzf)
+   echo "change GRAALVM_HOME env !!"
+ }
+sjd() {
+   sdk default java $(sdk list java | grep 'installed\|local only' | awk '{print $NF}' | fzf)
+   echo "change GRAALVM_HOME env !!"
+ }
+sji() {
+   sdk install java $(sdk list java | tail -n +6 | head -n -5 | grep -v 'installed\|local only' | awk '{print $NF}' | fzf)
+   echo "change GRAALVM_HOME env !!"
+ }
+alias sdki='sdk install'
+alias sdkr='sdk uninstall'
+alias sdkls='sdk list'
+alias sdku='sdk use'
+alias sdkd='sdk default'
+alias sdkc='sdk current'
+alias sdkup='sdk upgrade'
+
+
+# show files which contain a term
+grep_open() {
+    local editor="$EDITOR"
+    if [ "$EDITOR" = "vim" ] || [ "$EDITOR" = "nvim" ]; then
+        local editor="$EDITOR +/$1 +'norm! n'"
+    fi
+    rg -l "$1" | fzf --bind "enter:execute($editor + {})"
+}
+
+# show staged and unstaged file changes
+changed_files() {
+    git status --short | awk '{print $2}' | fzf \
+        --preview "git diff --cached -- {} | delta --width \$FZF_PREVIEW_COLUMNS && git diff -- {} | \
+        delta --width \$FZF_PREVIEW_COLUMNS && git diff --no-index -- /dev/null {} | delta --width \$FZF_PREVIEW_COLUMNS" \
+        --bind "enter:execute($EDITOR {})"
+}
+
+# review changed files on this branch
+review_changes() {
+    local base_branch="${1:-}"
+
+    if [ -z "$base_branch" ]; then
+        base_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+        [ -z "$base_branch" ] && base_branch="main"
+    fi
+
+    git diff --name-only "$base_branch"...HEAD | fzf \
+        --preview "git diff $base_branch...HEAD -- {} | delta --width \$FZF_PREVIEW_COLUMNS" \
+        --bind "enter:execute($EDITOR {})"
+}
+
+
+# needs github client
+# Show diff for argument PR number for current repo
+pr_diff() {
+    gh pr diff "$1" | delta
+}
+
+# Show PR files for argument PR number for current repo
+pr_files() {
+    gh pr diff "$1" --name-only | fzf \
+        --bind "enter:execute($EDITOR {})"
+}
+
+stopwatch(){
+now=$(date +%s)sec
+while true; do
+     # printf "%s\r" $(TZ=UTC date --date now-$now +%H:%M:%S.%N)
+     printf "%s\r" $(TZ=UTC date --date now-$now +%H:%M:%S)
+     sleep 0.1
+  done
+}
+
+#}}}
+
+#{{{ bindkey
+# Automatically Expanding Global Aliases (Space key to expand)
+globalias() {
+  if [[ $LBUFFER =~ '[A-Z0-9]+$' ]]; then
+    zle _expand_alias
+    zle expand-word
+  fi
+  zle self-insert
+}
+zle -N globalias
+bindkey " " globalias                 # space key to expand globalalias
+# bindkey "^ " magic-space            # control-space to bypass completion
+bindkey "^[[Z" magic-space            # shift-tab to bypass completion
+bindkey -M isearch " " magic-space    # normal space during searches
+#}}}
+
+#{{{ old
+## job
+# alias vpn='cd /home/miro/eversis/amiroslaw/eversis-pfs-node1-UDP4-1195-amiroslaw && sudo openvpn --config eversis-pfs-node1-UDP4-1195-amiroslaw.ovpn --auth-user-pass pass.txt'
+
+# alias zadView='cat $path_note/ZADANIA/today.todo' i have script for this
+# alias cfconky='nvim ~/.config/conky/conky_todo'
+# function zadAdd() { 
+# 	echo "add task"
+# 	read task
+# 	echo "- [ ]" $task >> $NOTE/ZADANIA/today.todo
+# }
+# alias dic='python ~/Exe/ProgramFile/dictator-0.9.7/dictator_start.py&'      
+# alias kee='kpcli --kdb ~/Documents/Ustawienia/personal/KeePass2.kdbx'
+# alias pom='~/Documents/Ustawienia/sync/pomodoro/pomodoro'
+# alias pomres='~/Documents/Ustawienia/sync/pomodoro/pomodoro-resume &'
+
+#backup
+# alias backdaily='$path_script/borg/daily.sh'
+# alias backweekly='$path_script/borg/weekly.sh'
+# alias backmonthly='$path_script/borg/monthly.sh'
+# alias backup='rsync -avrP --delete'
+# alias backdaily=/etc/cron.daily/backup_daily.sh
+# alias backweekly=/etc/cron.weekly/backup_weekly.sh
+#APT
+# alias apinstall='sudo aptitude install'
+# alias purge='sudo aptitude purge'
+# alias search='aptitude search'
+# alias show='aptitude show'
+# alias update='sudo aptitude update'
+# alias remove='sudo aptitude remove'
+# alias clean='sudo apt-get clean && sudo apt-get autoclean && sudo apt-get autoremove'
+
+# alias scrot='scrot "%m-%d_$p_sc.png"'
+#
+# alias copygreenclip='greenclip print | head | xclip -sel clip'
+# alias magnetcreate='cd ~/Downloads/.torrenty && magnet_to_torrent $(xclip -o -selection clipboard)'
+# from oh-my-zsh /usr/share/oh-my-zsh/lib/directories
+# alias lsa='ls -lah'
+# alias l='ls -lah'
+# alias ll='ls -lh'
+# alias la='ls -lAh'
+# alias la='lsd -la'
+# alias ll='lsd -l' #long
+# alias lt='lsd --tree'
+# alias lr='lsd -r'
+# alias ld='lsd -la | grep ^d'
+# alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/ /'\'' -e '\''s/-/|/'\'''
+# only hidden
+# alias l.='ls -dB .* --color=auto'
+# sort with human 
+# alias lh='ls -lhSsGB'
+# ls only directory
+# alias lsf='ls -Gl | grep ^d'
+# alias lsd='ls -Gal | grep ^d'
+#
+# alias mp='mocp -p'
+# alias ms='mocp -s'
+# alias mn='mocp -f'
+# alias mr='mocp -r'
+# alias pms='mpsyt'
+# alias rad='curseradio'
+# alias t='todo.sh'
+# alias ta='todo.sh add +x '
+# alias tt='todo.sh ls @t'
+# alias td='todo.sh done '
+#}}}
+
+
+
+# vim: foldmethod=marker

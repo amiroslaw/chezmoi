@@ -1,0 +1,130 @@
+# vim:ft=python
+# [Created by task 2.6.2 9/8/2022 23:26:18]
+# For more documentation, see https://taskwarrior.org or try 'man task', 'man task-color',
+# 'man task-sync' or 'man taskrc'
+#   variable=      -- By specifying no value, this means no default
+#   variable=$HOME/task You can also refence environment variables:
+# Use the command 'task show' to see all defaults and overrides
+
+# Files
+editor=nvim
+data.location=~/.local/share/task
+hooks.location=~/.config/task/hooks
+
+weekstart=monday
+calendar.holidays=full
+search.case.sensitive=0
+
+# -------------------------------------------------------------------------
+#                       context
+# -------------------------------------------------------------------------
+alias.rep=+rou
+context.routine.read=+rou
+context.routine.write=+rou
+context.inbox.read=+in
+context.inbox.write=+in
+context.finance.read=+fin
+context.finance.write=+fin
+context.code.read=+cod
+context.code.write=+cod
+context.career.read=+car
+context.career.write=+car
+context.personal.read=+per
+context.personal.write=+per
+context.laptop.read=+lap
+context.laptop.write=+lap
+context.kindle.read=+kin
+context.kindle.write=+kin
+context.listen.read=+lis
+context.listen.write=+lis
+context.easy.read=+eas
+context.easy.write=+eas
+
+# -------------------------------------------------------------------------
+#                       reports
+# -------------------------------------------------------------------------
+# projects; niby wyświela listę po t project??
+report.pro.description= Project sorting
+report.pro.columns  =   id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.pro.filter   =   stat:pending project
+report.pro.labels   =   ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.pro.sort=project+/,urgency-
+
+alias.in=inbox
+report.inbox.description= Inbox
+report.inbox.columns  =   id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.inbox.filter   =   status:pending -WAITING +in
+report.inbox.labels   =   ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.inbox.sort=project+/,urgency-/,start.age+
+
+# OVERRIDED
+report.minimal.columns=id,project,tags.list,description.count
+report.minimal.sort=urgency-/,project+
+
+# I don't use it
+report.pomodoro.description = Active tasks for pomodoro
+report.pomodoro.columns = id,start.age,start,tags,project,description
+report.pomodoro.labels = ID,Active,Started,Tags,Project,Description
+report.pomodoro.filter = status:pending and +ACTIVE
+# report.pomodoro.columns = uuid.short,start.age,start,tags,project,description
+# report.pomodoro.labels = UUID,Active,Started,Tags,Project,Description
+
+# -------------------------------------------------------------------------
+#                       urgency
+# -------------------------------------------------------------------------
+urgency.user.tag.car.coefficient=6
+urgency.user.tag.cod.coefficient=4
+urgency.user.tag.fin.coefficient=2
+urgency.user.tag.in.coefficient=-5
+urgency.user.tag.next.coefficient=15
+urgency.uda.priority.H.coefficient=10
+urgency.uda.priority.M.coefficient=6
+urgency.uda.priority.L.coefficient=-3
+urgency.due.coefficient=20
+urgency.blocking.coefficient =2.0
+urgency.blocked.coefficient = -8.0
+urgency.tags.coefficient=0 # Just because its tagged/annotated doesn't mean its important
+# urgency.annotations.coefficient=0
+
+# -------------------------------------------------------------------------
+#                       TUI
+# -------------------------------------------------------------------------
+uda.taskwarrior-tui.task-report.next.filter=stat:pending
+uda.taskwarrior-tui.shortcuts.1=~/.config/task/scripts/tui.lua view
+uda.taskwarrior-tui.shortcuts.2=~/.config/task/scripts/tui.lua add-tag
+uda.taskwarrior-tui.shortcuts.3=~/.config/task/scripts/tui.lua priority
+uda.taskwarrior-tui.shortcuts.4=~/.config/task/scripts/tui.lua add-project
+uda.taskwarrior-tui.shortcuts.5=~/.config/task/scripts/tui.lua rm-inbox
+uda.taskwarrior-tui.shortcuts.6=~/.config/task/scripts/tui.lua url
+uda.taskwarrior-tui.shortcuts.7=~/.config/task/scripts/tui.lua rm-tag
+uda.taskwarrior-tui.shortcuts.8=~/.config/task/scripts/tui.lua duplicate
+uda.taskwarrior-tui.shortcuts.9=task sync
+# 0 can't be bind
+# doesn't work
+uda.taskwarrior-tui.keyconfig.shortcut1=n
+
+# Color theme (uncomment one to use)
+#include light-16.theme
+#include light-256.theme
+#include dark-16.theme
+#include dark-256.theme
+#include dark-red-256.theme
+#include dark-green-256.theme
+include dark-blue-256.theme
+#include dark-violets-256.theme
+# include dark-yellow-green.theme
+#include dark-gray-256.theme
+#include dark-gray-blue-256.theme
+#include solarized-dark-256.theme
+#include solarized-light-256.theme
+#include no-color.theme
+news.version=3.1.0
+
+sync.local.server_dir={{- env "PRIVATE" -}}task/
+{{ if eq .chezmoi.hostname "pc" }}
+recurrence=1
+{{ else }}
+recurrence=0
+{{ end }}
+# include ~/Documents/Ustawienia/private/task/wingtask/wingtask-config
+# include ~/Documents/Ustawienia/private/task/test/wingtask-config

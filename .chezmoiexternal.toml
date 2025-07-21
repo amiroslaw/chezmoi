@@ -1,0 +1,12 @@
+
+["tmp-chezmoi/fasder"]
+	type = "git-repo" 
+	url = "https://github.com/wyne/fasder.git"
+["tmp-chezmoi/kanata"]
+	type = "git-repo" 
+	url = "https://github.com/jtroo/kanata.git"
+[".config/zgenom"]
+	type = "git-repo" 
+	url = "https://github.com/jandamm/zgenom.git"
+
+# files
