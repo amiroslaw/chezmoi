@@ -7,38 +7,6 @@ unset TERMCAP
 # Man is much better than us at figuring this out
 unset MANPATH
 
-# Set our default path
-export SELENIUM="$HOME/Ext/selenium/chromedriver"
-# PATH="/usr/local/sbin:/usr/local/bin:/usr/bin/core_perl:/usr/bin:$HOME/.config/bspwm/panel:$HOME/.bin:$HOME/.local/share/gem/ruby/2.7.0/bin:$SELENIUM"
-export GRAALVM_HOME="$HOME/.local/share/sdkman/candidates/java/23.1.1.r21-nik"
-PATH="/usr/local/sbin:/usr/local/bin:/usr/bin/core_perl:/usr/bin:$HOME/.config/bspwm/panel:$HOME/.bin:$HOME/.local/share/gem/ruby/2.7.0/bin:$GRAALVM_HOME/bin:$SELENIUM:$(go env GOPATH)/bin"
-export PATH
-
-export NIK=~/.local/share/sdkman/candidates/java/23.r20-nik/bin/native-image
-export NIK_HOME=~/.local/share/sdkman/candidates/java/23.r20-nik
-
-# paths
-export LUA_INIT="@$HOME/Documents/dotfiles/common/scripts/.bin/lua/init.lua"
-export BABASHKA_PRELOADS='(load-file (str (System/getenv "HOME") "/Documents/dotfiles/common/scripts/.bin/clj/init.clj"))'
-## changing default config folder
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_STATE_HOME="$HOME/.local/state"
-export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_CONFIG_DIRS=/usr/etc/xdg:/etc/xdg
-export XDG_DOWNLOAD_DIR="$HOME/Downloads"
-export GTK2_RC_FILES="$HOME/.config/gtkrc-2.0"
-# export GTK3_RC_FILES=/home/miro/.config/gtkrc-3.0
-export UNCRUSTIFY_CONFIG="$XDG_CONFIG_HOME"/uncrustify/uncrustify.cfg
-export SCREENRC="$XDG_CONFIG_HOME"/screen/screenrc
-export SDKMAN_DIR="$XDG_DATA_HOME"/sdkman
-export GOPATH="$XDG_DATA_HOME"/go
-export GNUPGHOME="$XDG_DATA_HOME"/gnupg
-export CARGO_HOME="$XDG_DATA_HOME"/cargo
-export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
-export HISTFILE="${XDG_STATE_HOME}"/bash/history
-export ROFI="$HOME/.config/rofi/scripts"
-
 # Default Apps
 export EDITOR="nvim"
 export VISUAL="nvim"
@@ -51,9 +19,9 @@ export DISPLAY=:0
 export TERMINAL="wezterm"
 export TERM_FONT=" --config font_size=%d "
 export TERM_RUN=' start --class "%s" -- %s '
-export TERM_LT="st"
+export TERM_LT="foot"
 export TERM_LT_FONT=" -f 'UbuntuMono Nerd Font:size=%d' "
-export TERM_LT_RUN=' -n "%s" -e %s'
+export TERM_LT_RUN=' -T "%s" -e %s'
 export BROWSER="qutebrowser"
 # export BROWSER="org.qutebrowser.qutebrowser.desktop"
 export READER="zathura"
@@ -77,7 +45,6 @@ export CLIPSTER_HISTORY_SIZE=1000
 # export PANEL_FIFO PANEL_HEIGHT PANEL_FONT_FAMILY
 # export BSPWM_SOCKET="/tmp/bspwm-socket"
 # export GRAVEYARD="$HOME/.local/share/Trash"
-# export SCRIPTS="$HOME/Documents/dotfiles/common/scripts/.bin"
 # didn't move
 # export GRADLE_USER_HOME="$XDG_DATA_HOME"/gradle
 # compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-"$ZSH_VERSION"

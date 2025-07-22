@@ -1,4 +1,4 @@
-#!/usr/bin/luajit
+#!/usr/bin/env luajit
 local gumbo = require 'gumbo'
 
 local CONST = enum({
@@ -23,7 +23,7 @@ end
 local function copy(txt)
 	local txt = txt and txt or CONST.selectedTxt
 	assert(writef(txt, CONST.clipFile), 'Did not copy to clipboard - IO error')
-	assert(os.execute('xclip -sel clip -i ' .. CONST.clipFile) == 0, 'Did not copy to clipboard -xclip')
+	assert(os.execute('wl-copy ' .. CONST.clipFile) == 0, 'Did not copy to clipboard -xclip')
 end
 
 local function splitSentences()
@@ -47,7 +47,7 @@ function adoc()
 	local out,ok,  err = run('pandoc --wrap=none --from html --to asciidoc --output ' .. CONST.clipFile .. ' ' .. CONST.clipFileHtml)
 	
 	if ok then
-		assert(os.execute('xclip -sel clip -i ' .. CONST.clipFile) == 0, 'Did not copy to clipboard -xclip')
+		assert(os.execute('wl-copy ' .. CONST.clipFile) == 0, 'Did not copy to clipboard -xclip')
 	else
 		log(err, 'ERROR')
 		writef('message-warning "Could not convert to adoc - copied plain text"', CONST.quteFifo, 'a')

@@ -9,7 +9,7 @@ old/
 {{ else if eq .chezmoi.hostname "laptop" }}
 ~/Code/.megaignore
 .config/rtorrent/
-.config/nfacurve/
+.config/nfancurve/
 .config/solaar/
 .bin/audio.sh
 .bin/backup-daily.sh

@@ -69,6 +69,7 @@ local function execQueue(cmd, group, url)
 	end
 	local url, title = next(url)
 	cmd = (cmd .. '"%s"'):format(title, url)
+	print(cmd)
 	assert(os.execute(cmd) == 0, 'Can not run: ' .. cmd)
 	startQueue(group)
 end
