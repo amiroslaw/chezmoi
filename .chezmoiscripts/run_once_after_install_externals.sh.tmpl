@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-BIN_DIR="{{ .chezmoi.sourceDir }}/bin/"
+BIN_DIR="{{ .chezmoi.sourceDir }}/dot_bin/"
 TMP="$HOME/tmp-chezmoi"
 mkdir -p "$BIN_DIR"
 
@@ -12,21 +12,29 @@ FASDER_FILE="fasder"
 echo "🔨 Building Go project in $FASDER_DIR..."
 cd "$FASDER_DIR"
 go build
-cp "$FASDER_FILE" "$BIN_DIR"
+cp -v --update=none "$FASDER_FILE" "$BIN_DIR"
 echo "✅ Build complete and copied - fasder."
 
 # kanata
-KANATA_DIR="$TMP/kanata/target/release/"
-KANATA_FILE="kanata"
+KANATA_DIR="$TMP/kanata/"
+KANATA_FILE="$TMP/kanata/target/release/kanata"
 echo "🔨 Building Go project in $KANATA_DIR..."
 cd "$KANATA_DIR"
 cargo build --release --features cmd
 # cargo install --features cmd --path .
-cp "$KANATA_FILE" "$BIN_DIR"
+cp -v --update=none cp "$KANATA_FILE" "$BIN_DIR"
 echo "✅ Build complete and copied - kanata."
 
 # https://github.com/jtroo/kanata/wiki/Avoid-using-sudo-on-Linux
-sudo groupadd uinput
+GROUP_NAME="uinput"
+if ! getent group "$GROUP_NAME" > /dev/null; then
+  echo "Group '$GROUP_NAME' does not exist. Creating it now..."
+  sudo groupadd "$GROUP_NAME"
+  echo "Group '$GROUP_NAME' created successfully."
+else
+  echo "Group '$GROUP_NAME' already exists. Skipping creation."
+fi
+
 sudo usermod -aG input "$USER"
 sudo usermod -aG uinput "$USER"
 echo "✅ Added uinput group - kanata."
@@ -34,8 +42,10 @@ KANATA_RULES='/etc/udev/rules.d/99-input.rules'
 sudo touch $KANATA_RULES
 sudo echo 'KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"' | sudo tee $KANATA_RULES
 sudo modprobe uinput
-sudo systemctl --user enable kanata.service
-sudo systemctl --user start kanata.service
+# sudo systemctl --user enable kanata.service
+# sudo systemctl --user start kanata.service
+
+sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
 
 # vi: ft=bash
 

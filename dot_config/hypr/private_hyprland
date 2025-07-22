@@ -1,0 +1,378 @@
+# See https://wiki.hyprland.org/Configuring/Variables/ for more
+
+# Set programs that you use
+$TERMINAL = wezterm
+$TERM_LT = wezterm
+$ROFI = ~/.config/rofi # Adjust if ROFI points to a script or directory
+$PRIVATE = ~/.private # Adjust if PRIVATE points to a script or directory
+$COURSES = ~/Videos/Courses # Adjust if COURSES points to a script or directory
+$SETUP = ~/.config/setup.conf # Adjust if SETUP points to a script or directory
+
+# See https://wiki.hyprland.org/Configuring/Keywords/ for more
+# M = Super (Windows Key)
+# M = MOD
+# R = release (for keybinds that trigger on key release)
+# L = lock (lock keyboard)
+# S = shift
+# C = control
+# A = alt
+# CONVERT
+
+# Show manual; keybindings
+bind = $sup CONTROL, F1, exec, $ROFI/bspwm-help # Assuming bspwm-help is a script and its path is correct
+# Notification
+bind = $sup, Escape, exec, dunstctl close-all
+bind = $sup SHIFT, Escape, exec, dunstctl history-pop
+
+# For similar behavior of switching layouts, you'd define custom layouts and switch between them.
+# fullscreen with panelbar
+bind = $sup SHIFT, F, exec, hyprctl dispatch fullscreen 1
+
+# SWAP
+# The custom swap scripts will need to be evaluated for Hyprland compatibility.
+bind = $sup, W, exec, ~/.config/bspwm/bspc-swap-windows.sh # This script would likely need to be rewritten for Hyprland's IPC.
+bind = $sup SHIFT, W, exec, windowpromoter # This script would likely need to be rewritten for Hyprland's IPC.
+
+# swap with the biggest/smallest node
+# Hyprland doesn't have a direct "biggest/smallest" node concept for swapping. You'd need a script that queries window sizes.
+bind = $sup CONTROL, W, exec, # Custom script to swap with smallest node
+
+# CONVERT END
+
+# Global keybinds
+bind = $sup, Home, exec, pkill -USR1 -x sxhkd # This will no longer reload sxhkd, but if sxhkd is still running it will send the signal. You can remove this if sxhkd is not used for anything else.
+
+# Applications
+bind = $sup, Return, exec, $TERMINAL
+bind = $sup SHIFT, Return, exec, $TERM_LT
+
+# Show manual; keybindings
+bind = $sup CONTROL, F1, exec, $ROFI/bspwm-help # Assuming bspwm-help is a script and its path is correct
+bind = $sup SHIFT, F1, exec, mp rofi # Assuming mp rofi is a valid command
+
+# Scratchpad
+bind = , F12, exec, scratchpad.sh dropdown "wezterm start --class dropdown"
+
+# Whid
+bind = $sup, Z, exec, whid last
+bind = $sup SHIFT, Z, exec, whid hide
+bind = $sup CONTROL, Z, exec, whid dmenu
+
+# Window manipulation
+# Close/kill window
+bind = $sup CONTROL, Q, exec, hyprctl dispatch killactive "" # This also kills the window, same as above. You might want to differentiate.
+
+# Floating/all tile/all floating
+bind = $sup, Space, exec, hyprctl dispatch togglefloating
+# The original bspc node -t ~floating && window-placer logic is more complex.
+# For toggling floating and saving layout, you'll likely need a custom script or a different approach with Hyprland's rules.
+# Hyprland's `togglefloating` applies to the active window.
+bind = $sup SHIFT, Space, exec, bspcp tile # Assuming bspcp tile is a script that can manage tiling in Hyprland (unlikely, you'll need to adapt this)
+bind = $sup CONTROL, Space, exec, bspcp float # Assuming bspcp float is a script that can manage floating in Hyprland (unlikely, you'll need to adapt this)
+
+# Toggle tiling mode of window, but save layout
+# Hyprland does not have a direct "pseudo_tiled" state like bspwm. You would manage this with window rules for specific applications.
+# bind = $sup SHIFT CONTROL, Space, exec, hyprctl dispatch <some_command_to_toggle_pseudo_tiled> # No direct equivalent
+
+# Toggle monocle/fullscreen mode
+bind = $sup, F, exec, hyprctl dispatch fullscreen 1 # Toggles fullscreen on active window
+# bspc desktop -l next is for layout, Hyprland layouts are dynamic.
+
+#### FLAGS
+# sticky works only on the one monitor
+bind = $sup, A, exec, hyprctl dispatch togglefloating # A general toggle for floating, but not "sticky" in the bspwm sense.
+# Hyprland's sticky concept is done via window rules.
+# For "locked", "marked", "private" you'll need custom scripts that interact with Hyprland's internal state if you want to replicate this.
+bind = $sup A, L, exec, # bspc node -g locked -> No direct Hyprland equivalent for "locked" in the bspwm sense.
+bind = $sup A, M, exec, # bspc node -g marked -> No direct Hyprland equivalent for "marked".
+bind = $sup A, S, exec, hyprctl dispatch pin # Hyprland's "pin" might be similar to sticky.
+bind = $sup A, P, exec, # bspc node -g private -> No direct Hyprland equivalent for "private".
+
+bind = $sup SHIFT, A, exec, hyprctl dispatch focusurgent # Focuses the urgent window if one exists.
+
+
+# move node to next workspace and follow
+# Hyprland's `movetoworkspace` does not automatically follow. You'd need a script.
+bind = $sup SHIFT, N, exec, hyprctl dispatch movetoworkspace next; hyprctl dispatch workspace next
+bind = $sup SHIFT, P, exec, hyprctl dispatch movetoworkspace prev; hyprctl dispatch workspace prev
+
+# cycle windows in the same desktop
+bind = $ALT, Tab, cyclenext
+bind = $ALT SHIFT, Tab, cycleprev
+
+# go to the last workspace, monitor
+bind = $sup, Tab, workspace, last
+bind = $sup SHIFT, Tab, focusmonitor, last
+# Move window
+# Hyprland uses `movewindow` for moving the window to a different container or monitor.
+# For moving floating windows, you use `moveactive`.
+bind = $sup SHIFT, H, moveactive, l
+bind = $sup SHIFT, J, moveactive, d
+bind = $sup SHIFT, K, moveactive, u
+bind = $sup SHIFT, L, moveactive, r
+
+bind = $sup SHIFT, Left, moveactive, l
+bind = $sup SHIFT, Down, moveactive, d
+bind = $sup SHIFT, Up, moveactive, u
+bind = $sup SHIFT, Right, moveactive, r
+
+
+# swap with the first window in selected desktop
+# This is complex and would require a script interacting with Hyprland's IPC.
+bind = $sup CONTROL, 1, exec, # Custom script to swap with first window in workspace 1
+bind = $sup CONTROL, 2, exec, # Custom script to swap with first window in workspace 2
+bind = $sup CONTROL, 3, exec, # ...and so on for 3-9, 0
+
+# Toggle Balance tree (Hyprland doesn't have a direct "balance tree" concept)
+# You might be looking for a way to re-arrange windows.
+bind = $sup, B, exec, # No direct equivalent, you'd manage layouts with other commands.
+bind = $sup SHIFT, B, exec, # No direct equivalent.
+
+# Rotate leaves of tree (Hyprland has no "tree" concept for rotation)
+bind = $sup, bracketright, exec, # No direct equivalent
+bind = $sup, bracketleft, exec, # No direct equivalent
+
+# Mirror and flip leaves of tree (Hyprland has no "tree" concept for mirroring/flipping)
+bind = $sup SHIFT, bracketleft, exec, # No direct equivalent
+bind = $sup SHIFT, bracketright, exec, # No direct equivalent
+
+# Change window gap
+bind = $sup CONTROL SHIFT, G, exec, hyprctl dispatch togglegroup
+bind = $sup CONTROL SHIFT, G, exec, hyprctl dispatch changegapsin $gap
+# You'll need to define a default gap in your hyprland.conf for this to make sense.
+# E.g., `general { gaps_in = 5 }`
+# And then use a script to increment/decrement it.
+# E.g., `hyprctl keyword general:gaps_in $(( $(hyprctl getoption general:gaps_in | awk '{print $2}') + 5 ))`
+
+bind = $sup, mouse_button4, exec, hyprctl keyword general:gaps_in $(( $(hyprctl getoption general:gaps_in | awk '{print $2}') + 2 ))
+bind = $sup, mouse_button5, exec, hyprctl keyword general:gaps_in $(( $(hyprctl getoption general:gaps_in | awk '{print $2}') - 2 ))
+
+###### PRESELECTION
+# Receptacle
+# Hyprland doesn't have a direct "presel-dir" concept like bspwm. You'd use `movewindow` or `layoutmsg` for specific layouts.
+bind = $sup, semicolon, exec, # This will require custom logic if you want to replicate bspwm's preselection.
+bind = $sup semicolon, H, exec, hyprctl dispatch layoutmsg preselect l
+bind = $sup semicolon, J, exec, hyprctl dispatch layoutmsg preselect d
+bind = $sup semicolon, K, exec, hyprctl dispatch layoutmsg preselect u
+bind = $sup semicolon, L, exec, hyprctl dispatch layoutmsg preselect r
+bind = $sup semicolon, BackSpace, exec, hyprctl dispatch layoutmsg preselect_clear
+
+# send the newest marked node to the newest preselected node
+# This is highly specific to bspwm's internal state and would require significant scripting for Hyprland.
+bind = $sup A, B, exec, # No direct Hyprland equivalent.
+
+# -------------------------------------------------------------------------
+#                       APPLICATIONS
+# -------------------------------------------------------------------------
+# function keys
+bind = $sup, F1, exec, firefox
+bind = $sup, F2, exec, /opt/idea-IU-212.5284.40/bin/idea.sh
+bind = $sup, F3, exec, $TERM_LT -c vifm -e vifm
+bind = $sup, F4, exec, pcmanfm
+bind = $sup, F5, exec, keecli.sh
+bind = $sup, F6, exec, wezterm start --class 'note' --cwd ~/Documents/notebook -- nvim
+bind = $sup, F7, exec, scratchpad.sh newsboat "wezterm start --class newsboat -- newsboat"
+bind = $sup, F8, exec, task sync && scratchpad.sh task "$TERM_LT -c task -n -e task taskwarrior-tui"
+bind = $sup, F9, exec, todo.lua add
+bind = $sup, F10, exec, mpv.lua -o ~/Videos
+bind = $sup, F11, exec, sh -c $(ls ~/.bin | rofi -dmenu)
+bind = $sup, F12, exec, rofi -show power-menu -modi power-menu:$ROFI/power.sh
+
+# tasks; todo; calendar
+# This section has many sequential keybinds, which need to be broken out individually.
+bind = $sup U, U, exec, notify-send options: "c-gcal-add\ng-gamification\nf-timefx\nt-todo\ni-add to inbox\nr-pom repeat\np-pom pause\nn-gcal notify\na-gcal agenda\no-portfolio\ne-edit setup\ns-add setup\nS-show setup\nw-TW-tui\nW-task sync\nm-modify task\nn-newsboat"
+bind = $sup U, C, exec, gcal-add.lua
+bind = $sup U, G, exec, java -jar ~/.bin/grywalizacja.jar
+bind = $sup U, F, exec, timefx
+bind = $sup U, I, exec, todo.lua add
+bind = $sup U, T, exec, todo.lua show
+bind = $sup U, R, exec, pomodoro.lua repeat -n
+bind = $sup U, P, exec, pomodoro.lua pause -n
+bind = $sup U, N, exec, gcal-show.sh
+bind = $sup U, A, exec, gcalcli --nocolor agenda --config-folder="/home/miro/.config/gcalcli"  | zenity --text-info
+
+bind = $sup U, S, exec, setup.lua add
+bind = $sup U, S, exec, setup.lua | zenity --text-info # This is a duplicate, check your sxhkd for this. The first S will be used.
+bind = $sup U, E, exec, $TERM_LT -c 'setup' -e nvim $SETUP
+bind = $sup U, O, exec, $TERM_LT -c 'portfolio'  -e nvim ~/.config/investing/portfolio.yaml
+bind = $sup U, M, exec, pomodoro.lua modify
+bind = $sup U, W, exec, task sync && scratchpad.sh task "$TERM_LT -c task -n task -e taskwarrior-tui"
+bind = $sup U, W, exec, /home/miro/.config/task/scripts/sync.sh # Duplicate keybinding.
+bind = $sup U, B, exec, scratchpad.sh newsboat "wezterm start --class newsboat -- newsboat"
+
+# open media or dir with xdg-open; tui apps
+bind = $sup O, O, exec, notify-send options: "\nj-fasd-dir\nnd(D)-dir(hidden)\nv-videos\nc-course\ny-stream\ni-nmtui\np-ncmcpp\nb-bmenu\nz-fasd\nf(F)-files(hidden)\ns/S/u-ytsearch"
+bind = $sup O, J, exec, $ROFI/open.sh fasd-dir
+bind = $sup O, D, exec, $ROFI/open.sh dir
+bind = $sup O, D, exec, $ROFI/open.sh dir-hidden # Duplicate keybinding.
+bind = $sup O, V, exec, mpv.lua -o ~/Videos
+bind = $sup O, C, exec, mpv.lua -oL "$COURSES"
+bind = $sup O, Y, exec, mpv.lua -o
+bind = $sup O, Z, exec, $ROFI/open.sh fasd
+bind = $sup O, F, exec, $ROFI/open.sh file
+bind = $sup O, F, exec, $ROFI/open.sh file-hidden # Duplicate keybinding.
+bind = $sup O, B, exec, $TERM_LT -e bmenu
+bind = $sup O, I, exec, $TERM_LT -e nmtui
+bind = $sup O, P, exec, $TERM_LT -e ncmpcpp
+bind = $sup O, U, exec, $TERM_LT -c ytfzf -e ytfzf -u popup.sh
+bind = $sup O, S, exec, mpv.lua -y
+
+bind = $sup SHIFT, O, exec, $ROFI/open.sh fasd
+bind = $sup CONTROL, O, exec, $ROFI/open.sh file
+
+# -------------------------------------------------------------------------
+#                       SCRIPTS script in background
+# -------------------------------------------------------------------------
+# url.lua menu will ask for the number of the links
+# This section has many sequential keybinds and choices, which need to be broken out individually.
+bind = $sup E, E, exec, notify-send options: "h-help url menu\nm(M)-magnet\nv(V)-video\na(A)-audio dl\ny(Y)-yt dl\ng(G)-gallery-dl\nw(w)-wget\nr-speed reader\nR-read\nc-calendar\nk(K)-kindle\ni-investing"
+bind = $sup E, H, exec, url.lua --menu --input
+bind = $sup E, K, exec, url.lua --kindle --email -n 1
+bind = $sup E, K, exec, url.lua --kindle --email -n 10 # Duplicate keybinding.
+bind = $sup E, M, exec, url.lua --tor -n 1
+bind = $sup E, M, exec, url.lua --tor -n 10 # Duplicate keybinding.
+bind = $sup E, V, exec, url.lua --mpvFullscreen -n 1
+bind = $sup E, V, exec, url.lua --mpvFullscreen -n 10 # Duplicate keybinding.
+bind = $sup E, D, exec, url.lua --dlAudio -n 1
+bind = $sup E, D, exec, url.lua --dlAudio -n 10 # Duplicate keybinding.
+bind = $sup E, Y, exec, url.lua --dlVideo -n 1
+bind = $sup E, Y, exec, url.lua --dlVideo -n 10 # Duplicate keybinding.
+bind = $sup E, W, exec, url.lua --wget -n 1
+bind = $sup E, W, exec, url.lua --wget -n 10 # Duplicate keybinding.
+bind = $sup E, R, exec, url.lua --speed -n 1
+bind = $sup E, R, exec, url.lua --read -n 1 # Duplicate keybinding.
+bind = $sup E, G, exec, url.lua --gallery -n 1
+bind = $sup E, G, exec, url.lua --gallery -n 10 # Duplicate keybinding.
+bind = $sup E, C, exec, gcal-show.sh
+bind = $sup E, I, exec, investing-cli -n
+
+# -------------------------------------------------------------------------
+#                       SEARCH
+# -------------------------------------------------------------------------
+bind = $sup, G, exec, search.lua --google -c
+bind = $sup SHIFT, G, exec, search.lua --google -p
+bind = $sup CONTROL, G, exec, search.lua --brave -c
+
+# Search - sequential keybinds need to be broken out
+bind = $sup S, S, exec, notify-send options: " (capital-clipboard):\nh-help menu\ng-google\nb-brave\nu-duckduck\ny-yt\nm-maps\nw-wiki\nc-ceneo\no-cenowarka\na-allegro\nz-amazon\ns-so\nf-filmweb\nd-diki\nl-deepL\nr-translator\np-pl-en trans\ne-en-pl trans\nx-tuxi\nt-tor\ni-info from cheatsh"
+bind = $sup S, H, exec, search.lua --menu -input
+bind = $sup S, G, exec, search.lua --google -p
+bind = $sup S, G, exec, search.lua --google -c # Duplicate keybinding.
+bind = $sup S, B, exec, search.lua --brave -p
+bind = $sup S, B, exec, search.lua --brave -c # Duplicate keybinding.
+bind = $sup S, U, exec, search.lua --dd -p
+bind = $sup S, U, exec, search.lua --dd -c # Duplicate keybinding.
+bind = $sup S, Y, exec, search.lua --yt -p
+bind = $sup S, Y, exec, search.lua --yt -c # Duplicate keybinding.
+bind = $sup S, M, exec, search.lua --maps -p
+bind = $sup S, M, exec, search.lua --maps -c # Duplicate keybinding.
+
+bind = $sup S, W, exec, search.lua --wiki -p
+bind = $sup S, W, exec, search.lua --wiki -c # Duplicate keybinding.
+bind = $sup S, C, exec, search.lua --ceneo -p
+bind = $sup S, C, exec, search.lua --ceneo -c # Duplicate keybinding.
+bind = $sup S, O, exec, search.lua --cenowarka -p
+bind = $sup S, O, exec, search.lua --cenowarka -c # Duplicate keybinding.
+bind = $sup S, A, exec, search.lua --allegro -p
+bind = $sup S, A, exec, search.lua --allegro -c # Duplicate keybinding.
+bind = $sup S, Z, exec, search.lua --amazon -p
+bind = $sup S, Z, exec, search.lua --amazon -c # Duplicate keybinding.
+bind = $sup S, F, exec, search.lua --filmweb -p
+bind = $sup S, F, exec, search.lua --filmweb -c # Duplicate keybinding.
+bind = $sup S, X, exec, search.lua --tuxi --input
+bind = $sup S, X, exec, search.lua --tuxi -c # Duplicate keybinding.
+bind = $sup S, T, exec, search.lua --tor -p
+bind = $sup S, T, exec, search.lua --tor -c # Duplicate keybinding.
+
+bind = $sup S, D, exec, search.lua --diki -p
+bind = $sup S, D, exec, search.lua --diki -c # Duplicate keybinding.
+bind = $sup S, L, exec, search.lua --deepl -p
+bind = $sup S, L, exec, search.lua --deepl -c # Duplicate keybinding.
+bind = $sup S, R, exec, search.lua --translator -p
+bind = $sup S, R, exec, search.lua --translator -c # Duplicate keybinding.
+bind = $sup S, P, exec, search.lua --plen -p
+bind = $sup S, P, exec, search.lua --plen -c # Duplicate keybinding.
+bind = $sup S, E, exec, search.lua --enpl -p
+bind = $sup S, E, exec, search.lua --enpl -c # Duplicate keybinding.
+bind = $sup S, I, exec, search.lua --cheat --input
+bind = $sup S, I, exec, search.lua --cheat -p # Duplicate keybinding.
+
+# -------------------------------------------------------------------------
+#                       CLIPBOARD, NOTES
+# -------------------------------------------------------------------------
+# clipster and notes; add J nad fix previous-copy primary
+# Sequential keybinds need to be broken out
+bind = $sup C, C, exec, notify-send options: "g-gui\np-(prim)selection\nr[R]-remove clip/sel\nj[J]-join clip/sel\nn(N)-next clip/sel\nk(K)-note from clip\nl(L)-note from sel\nw -write note\no-summary\nO-analise"
+bind = $sup C, G, exec, clipster -sc
+bind = $sup C, P, exec, $ROFI/clipster/roficlip-primary
+bind = $sup C, P, exec, clipster -po # Duplicate keybinding.
+bind = $sup C, R, exec, clipster -cr
+bind = $sup C, R, exec, clipster -r # Duplicate keybinding.
+bind = $sup C, J, exec, clipster.lua --join --clipboard
+bind = $sup C, J, exec, clipster.lua --join --primary # Duplicate keybinding.
+bind = $sup C, N, exec, clipster.lua --next --clipboard
+bind = $sup C, N, exec, clipster.lua --next --primary # Duplicate keybinding.
+bind = $sup C, K, exec, note.lua clip 1
+bind = $sup C, K, exec, note.lua clip # Duplicate keybinding.
+bind = $sup C, L, exec, note.lua sel 1
+bind = $sup C, L, exec, note.lua sel # Duplicate keybinding.
+bind = $sup C, W, exec, note.lua write
+bind = $sup C, O, exec, chat.clj action --output scratchpad
+bind = $sup C, O, exec, chat.clj text --output scratchpad # Duplicate keybinding.
+
+# clipboard, paste second from the clipboard or first from selection
+bind = $sup, V, exec, $ROFI/clipster/roficlip
+bind = $sup SHIFT, V, exec, clipster.lua --next --clipboard
+bind = $sup CONTROL, V, exec, xdotool click --clearmodifiers 2
+
+# nchat, left click - stopped work like with `u`
+bind = $sup SHIFT, C, exec, scratchpad.sh chat "wezterm start --class chat -- nchat"
+bind = $sup CONTROL, C, exec, xdotool click --clearmodifiers 1
+
+# ROFI
+bind = $sup, D, exec, rofi -modi window,calc,filebrowser -show window -show-icons -sidebar-mode -monitor -4
+bind = $sup SHIFT, D, exec, rofi -modi drun,keys,run -show drun -show-icons -sidebar-mode -monitor -4 -matching fuzzy
+bind = $sup CONTROL, D, exec, $ROFI/mount-launcher.sh
+bind = $ALT, Space, exec, $ROFI/expander/expander.sh
+
+# translator
+bind = $sup, T, exec, search.lua --enpl -c
+bind = $sup SHIFT, T, exec, $ROFI/tran/trans-launcher.sh
+bind = $sup CONTROL, T, exec, search.lua --enpl -p
+
+# MEDIA KEYS
+# audio and mpd
+# volume manipulation
+bind = $sup, Equal, exec, pactl set-sink-volume "$(pacmd list-sinks | grep '* index' | awk '{print $3}')" +5%
+bind = $sup, Plus, exec, pactl set-sink-volume "$(pacmd list-sinks | grep '* index' | awk '{print $3}')" +15%
+bind = $sup, Minus, exec, pactl set-sink-volume "$(pacmd list-sinks | grep '* index' | awk '{print $3}')" -5%
+bind = $sup SHIFT, Minus, exec, pactl set-sink-volume "$(pacmd list-sinks | grep '* index' | awk '{print $3}')" -15%
+
+bind = , XF86AudioRaiseVolume, exec, pactl set-sink-volume 0 +10%
+bind = , XF86AudioLowerVolume, exec, pactl set-sink-volume 0 -10%
+
+# toggle volume or audio channel
+bind = $sup, Slash, exec, amixer sset Master toggle
+bind = $sup SHIFT, Slash, exec, audio.sh toggle
+bind = $sup CONTROL, Slash, exec, audio.sh
+bind = , XF86AudioMute, exec, pactl set-sink-mute "$(pacmd list-sinks | grep '* index' | awk '{print $3}')" toggle
+
+bind = $sup, M, exec, mpc toggle
+
+# start mpd
+bind = $sup SHIFT, M, exec, if ! pidof -x mpd; then mpd && mpc update; fi && scratchpad.sh music "wezterm start --class music -- rmpc"
+
+# Changes to next/previous tracks
+bind = $sup, Comma, exec, mpc prev
+bind = $sup, Period, exec, mpc next
+# Restart track
+bind = $sup CONTROL, Period, exec, mpc seek 0%
+
+# Seek foward in song
+bind = $sup SHIFT, Comma, exec, mpc seek -50
+bind = $sup SHIFT, Period, exec, mpc seek +50
+
+# KEYPAD
+# You might need to adjust the actual key names depending on your keyboard and Hyprland's interpretation.
+bind = $sup, KP_0, exec, xdotool click --clearmodifiers 1 # KP_Insert
+bind = $sup, KP_5, exec, xdotool key space # KP_Begin

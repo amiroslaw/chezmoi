@@ -4,7 +4,6 @@ old/
 .config/ncmpcpp
 .config/broot
 .config/stylua
-.config/ncmpcpp
 
 {{ if eq .chezmoi.hostname "pc" }}
 {{ else if eq .chezmoi.hostname "laptop" }}

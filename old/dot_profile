@@ -86,12 +86,12 @@ fi
 
 #[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec starx
 # Following automatically calls "startx" when you login:
-[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx -- -keeptty -nolisten tcp > ~/.xorg.log 2>&1
+# [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx -- -keeptty -nolisten tcp > ~/.xorg.log 2>&1
 
 # fix java apps with bspwm
-export _JAVA_AWT_WM_NONREPARENTING=1
-if [ -n "`which wmname`" ]; then
-    wmname LG3D
-fi
+# export _JAVA_AWT_WM_NONREPARENTING=1
+# if [ -n "`which wmname`" ]; then
+#     wmname LG3D
+# fi
 
 # vi: ft=zsh

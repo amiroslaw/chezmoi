@@ -1,13 +1,15 @@
 #!/bin/bash
 set -e
 
-sudo zypper install -y go rust
-sudo zypper install -y curl gawk git ImageMagick wget btop xdg-user-dirs xdg-utils mpv mpv-mpris vifm 7zip pueue qutebrowser vifm zsh
-# sudo zypper install -y fd rg dua timewarrior task rofi-buku btop fzf lazygit newsboat
-sudo zypper install -y --no-recommends NetworkManager-applet playerctl  
+sudo zypper install -y go rust luajit
+sudo zypper install -y curl gawk git ImageMagick wget btop xdg-user-dirs xdg-utils mpv mpv-mpris vifm 7zip pueue qutebrowser vifm zsh fzf fd ripgrep timewarrior taskwarrior btop lazygit git-delta eza tealdeer bat
+sudo zypper install -y meld
+# sudo zypper install -y dua rofi-buku   delta mpd?--no-recommends
+sudo zypper install -y --no-recommends NetworkManager-applet playerctl newsboat clojure
+# clojure installs with java; I could use sdkman and download jar clojure package
 
 {{ if eq .chezmoi.hostname "pc" }}
-sudo zypper install -y --no-recommends pavucontrol
+sudo zypper install -y --no-recommends pavucontrol rmpc
 {{ else if eq .chezmoi.hostname "laptop" }}
 sudo zypper install -y --no-recommends blueman bluez
 # Optimizes power usage on laptops by applying advanced power management settings.      
