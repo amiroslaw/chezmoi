@@ -441,9 +441,9 @@ filextype */
 
 " Images
 filextype {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.webp,*.webm,*.svg,*avif},<image/*>
-        \ pqiv -f %f %i,
-        \ sxiv -fa %f %i,
-		" \ echo %f > ~/test,
+        \ swayimg -f %f %i,
+        "\ pqiv -f %f %i,
+        "\ sxiv -fa %f %i,
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " viewers                                        "
 """"""""""""""""""""""""""""""""""""""""""""""""""
