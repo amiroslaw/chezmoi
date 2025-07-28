@@ -6,7 +6,8 @@
 # if a music file or pdf, it will download,
 # otherwise it opens link in browser.
 if [ -z "$1" ]; then
-	url="$(xclip -o)"
+	url="$(wl-paste)"
+	# url="$(xclip -o)"
 else
 	url="$1"
 fi

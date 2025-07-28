@@ -31,7 +31,8 @@ java8=~/.sdkman/candidates/java/8.0.171-oracle/bin/java
 
 #{{{ scripts
 alias remind='$path_script/remind.sh'
-alias mag='$path_script/magnet.sh "$(xclip -o -selection clipboard)"'
+alias mag='$path_script/magnet.sh  "$(wl-paste)"'
+# alias mag='$path_script/magnet.sh "$(xclip -o -selection clipboard)"'
 alias crypto='investing-cli -t CRYPTO -p -k $(cat $PRIVATE/yahoo)'
 alias yahoo-key='cd $PRIVATE && java -jar $PRIVATE/selenium.jar yahoo'
 alias selenium='cd $PRIVATE && java -jar $PRIVATE/selenium.jar '
@@ -79,7 +80,8 @@ alias cfw3m='chezmoi edit --apply ~/.w3m/keymap'
 
 # {{{ RÓŹNE
 # copy last command
-alias CC='$(fc -l -n -1) | xclip -sel clip'
+# alias CC='$(fc -l -n -1) | xclip -sel clip'
+alias CC='$(fc -l -n -1) | wl-copy'
 alias setup='$EDITOR "$NOTE"/finance/inwestycje/setup.adoc'
 alias weather='curl wttr.in/warszawa | grep -v "New feature" | grep -v Follow'
 alias cl='clear'
@@ -209,7 +211,8 @@ alias yt='youtube-viewer -C'
 alias yts='youtube-viewer -C -SV'
 alias ytm='youtube-viewer -C -n'
 alias ytaudio='youtube-dl -x --audio-format mp3 '
-alias ytlisten='mpv --no-video "$(xclip -o -selection clipboard)"'
+# alias ytlisten='mpv --no-video "$(xclip -o -selection clipboard)"'
+alias ytlisten='mpv --no-video "$(wl-paste)"'
 alias mpvlist='cd ~/Templates/mpvlists && mpv --profile=stream "$(ls -tp | grep -e "video" | rofi -dmenu)"'
 alias mpvlistpopup='cd ~/Templates/mpvlists && mpv --x11-name=videopopup --profile=stream-popup "$(ls -tp | grep -e "video" | rofi -dmenu)"'
 alias mpvlistauido='cd ~/Templates/mpvlists && st -c audio -e mpv --ytdl --no-video --cache=yes --demuxer-max-bytes=500M --demuxer-max-back-bytes=100M --input-ipc-server=/tmp/mpvsocket "$(ls -tp | grep -e "audio" | rofi -dmenu)"'
@@ -372,7 +375,8 @@ alias ffh='"$(fd --hidden --type f | fzf)"'
 alias fp='rg --files | fzf --preview="bat {} --color=always"'
 alias fb='bat "$(fd --type f | fzf)"'
 alias fbh='bat "$(fd --hidden --type f | fzf)"'
-alias hc="	fc -ln 0 |	awk '!a[\$0]++' |	fzf --tac |	xclip -selection clipboard" # copy command from history
+# alias hc="	fc -ln 0 |	awk '!a[\$0]++' |	fzf --tac |	xclip -selection clipboard" # copy command from history
+alias hc="	fc -ln 0 |	awk '!a[\$0]++' |	fzf --tac |	wl-copy" # copy command from history
 # dubbled keys in key-bindings.zsh 
 alias ff='"$(fd --type f | fzf)"'
 alias fcd='cd "$(fd --type d | fzf)"'
@@ -437,11 +441,14 @@ alias -g Fx='| fx'
 alias -g N=' | nvim - +"file /tmp/nvim-pipe$(date +%s)"'
 
 # copy terminal output into clipboard
-alias -g C='| xclip -sel clip'
+# alias -g C='| xclip -sel clip'
+alias -g C='| wl-copy'
 # copy line np. ls | yank -l or yank < file.txt
 alias -g CL='| yank -l'
-alias -g P='$(xclip -o -selection clipboard)'
-alias -g PP='$(xclip -o -selection primary)'
+# alias -g P= '$(xclip -o -selection clipboard)'
+# alias -g PP='$(xclip -o -selection primary)'
+alias -g P="$(wl-paste)"
+alias -g PP="$(wl-paste --primary)"
 # czasami dać enter;  przy F można dodawać * np ls * F; D to wybór pliku/katalogu z użyciem fzf np. cat D
 # http://www.zzapper.co.uk/zshtips.html
 alias -g ND='*(/om[1])' 	      # newest directory

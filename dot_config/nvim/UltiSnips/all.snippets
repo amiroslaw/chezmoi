@@ -56,33 +56,33 @@ endsnippet
 
 snippet comlua "comment for lua" b
 -- -------------------------------------------------------------------------
---                       ${1:`xclip -o -sel clip`}
+--                       ${1:`wl-paste`}
 -- -------------------------------------------------------------------------
 $0
 endsnippet
 
 snippet comment "comment for bash" b
 # -------------------------------------------------------------------------
-#                       ${1:`xclip -o -sel clip`}
+#                       ${1:`wl-paste`}
 # -------------------------------------------------------------------------
 $0
 endsnippet
 
 snippet fold "nvim fold comment" b
 "{{{ $1
-${2:`xclip -o -sel clip`} " }}} 
+${2:`wl-paste`} " }}} 
 $0
 endsnippet
 
 snippet foldbash "nvim fold comment hash" b
 #{{{ $1
-${2:`xclip -o -sel clip`} # }}} 
+${2:`wl-paste`} # }}} 
 $0
 endsnippet
 
 snippet foldlua "nvim fold comment for lua" b
 --{{{ $1
-${2:`xclip -o -sel clip`} -- }}} 
+${2:`wl-paste`} -- }}} 
 $0
 endsnippet
 

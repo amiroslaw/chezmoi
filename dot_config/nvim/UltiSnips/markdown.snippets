@@ -116,12 +116,12 @@ endsnippet
 # Common stuff #
 ################
 snippet link "Link"
-[${1:${VISUAL}}](${2:`xclip -o -sel clip`}) $0
+[${1:${VISUAL}}](${2:`wl-paste`}) $0
 endsnippet
 
 # select and copy link
 snippet linkclip "Link from Selection"
-[${1:`xclip -o -sel prim`}](`xclip -o -sel clip`) $0
+[${1:`xclip -o -sel prim`}](`wl-paste`) $0
 endsnippet
 
 snippet linkemail

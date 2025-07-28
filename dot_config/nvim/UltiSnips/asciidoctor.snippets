@@ -109,7 +109,7 @@ endsnippet
 snippet code "Code from clipboard" !b
 [source,${1:java}]
 ----
-${2:`xclip -o -sel clip`}
+${2:`wl-paste`}
 ----
 $0
 endsnippet
@@ -120,7 +120,7 @@ ${1}
 ====
 [source,${2:java}]
 ----
-${3:`xclip -o -sel clip`}
+${3:`wl-paste`}
 ----
 ====
 $0
@@ -130,14 +130,14 @@ snippet collapse "collapsible code from clipboard" !b
 ${1:title}
 [%collapsible]
 ====
-${2:`xclip -o -sel clip`}
+${2:`wl-paste`}
 ====
 $0
 endsnippet
 
 snippet codemd "Source short (md) Code Block" !b
 \`\`\`${1:java}
-${2:`xclip -o -sel clip`}
+${2:`wl-paste`}
 \`\`\`
 $0
 endsnippet
@@ -186,20 +186,20 @@ endsnippet
 # -------------------------------------------------------------------------
 #                            Links and Images
 # -------------------------------------------------------------------------
-# link:${1:`xclip -o -sel clip`}[${2:${VISUAL}}] $0
-# link:${1:`xclip -o -sel clip`}[${2:`xclip -o -sel prim`}] $0
+# link:${1:`wl-paste`}[${2:${VISUAL}}] $0
+# link:${1:`wl-paste`}[${2:`xclip -o -sel prim`}] $0
 
 snippet link "Link" !w
-`xclip -o -sel clip`[${1:${VISUAL}}] $0
+`wl-paste`[${1:${VISUAL}}] $0
 endsnippet
 
 # select and copy link
 snippet lsel "Link from Selection" !w
-${1:`xclip -o -sel clip`}[${2:`xclip -o -sel prim`}] $0
+${1:`wl-paste`}[${2:`xclip -o -sel prim`}] $0
 endsnippet
 
 snippet file "File link" !w
-file://${1:`xclip -o -sel clip`}[${2:${VISUAL:file ref}}] $0
+file://${1:`wl-paste`}[${2:${VISUAL:file ref}}] $0
 endsnippet
 
 snippet filerel "Relative file link" !w
@@ -232,7 +232,7 @@ endsnippet
 snippet tree "Directories tree" !b
 .${3:Figure}
 [tree,file="${2:alt}"]
-${1:`xclip -o -sel clip`}
+${1:`wl-paste`}
 $0
 endsnippet
 

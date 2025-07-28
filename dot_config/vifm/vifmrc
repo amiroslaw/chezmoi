@@ -133,6 +133,7 @@ command! fzfFind : set noquickview
                 \| if $PICK != ''
                 \|     execute 'goto' fnameescape($PICK)
                 \| endif
+" find hidden
 nmap <A-f> :fzfCdh <cr>
 command! fzfCdh :execute 'cd' fnameescape(term('fd --hidden --type d | fzf 2> /dev/tty'))
 " grep -v cache - remove cache dir
@@ -243,9 +244,11 @@ command! zzzInternalXS find -type f -print0 | xargs -0 ls -Sr | tail -%a | tac %
 nmap cc :copyTxtToFile <cr> 
 command! copyTxtToFile cat %c >> %C
 nmap <C-c> :copyTxtToClip <cr> 
-command! copyTxtToClip cat %c | xclip -sel clip
+"command! copyTxtToClip cat %c | xclip -sel clip
+command! copyTxtToClip cat %c | wl-copy
 nmap <C-v> :appendTextFromClip <cr>
-command! appendTextFromClip xclip -o -selection clipboard >> %c
+command! appendTextFromClip  wl-paste >> %c
+"command! appendTextFromClip xclip -o -selection clipboard >> %c
 nmap <F1> :command <cr>
 "change name without extension
 nmap <F2> cW
@@ -341,16 +344,20 @@ nnoremap < 4<c-w>>
 " yank current directory path into the clipboard
 " nnoremap yd :!echo -n %d | xclip -sel clip %i<cr>
 nnoremap yd :yankPathRoot <cr>
-command! yankPathRoot echo -n %d | xclip -sel clip %i
+"command! yankPathRoot echo -n %d | xclip -sel clip %i
+command! yankPathRoot echo -n %d | wl-copy %i
 " yank current file path into the clipboard
 nnoremap yp :yankPath <cr>
-command! yankPath echo -n %c:p | xclip -sel clip %i
+"command! yankPath echo -n %c:p | xclip -sel clip %i
+command! yankPath echo -n %c:p | wl-copy %i
 " yank current filename without path into the clipboard
 nnoremap yn :yankName <cr>
 command! yankName echo -n %c | xclip -sel clip %i
+"command! yankName echo -n %c | wl-copy %i
 " yank root of current file's name (without extension) into the clipboard
 nnoremap yr :yankRootName <cr>
-command! yankPathRoot echo -n %c:r | xclip -sel clip %i
+command! yankPathRoot echo -n %c:r | wl-copy %i
+"command! yankPathRoot echo -n %c:r | xclip -sel clip %i
 " copy and paste - xclip tool
 nnoremap yc :copyFile <cr>
 command! copyFile xclip-copyfile %f

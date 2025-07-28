@@ -14,7 +14,8 @@ local function getCWD(s)
 end
 
 local function copyX(text)
-  local pipe = io.popen("xclip -silent -in -selection clipboard", "w")
+  -- local pipe = io.popen("xclip -silent -in -selection clipboard", "w")
+  local pipe = io.popen("wl-copy", "w")
   pipe:write(text)
   pipe:close()
   mp.osd_message("Copied: " .. text)

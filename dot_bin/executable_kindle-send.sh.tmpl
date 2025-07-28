@@ -5,7 +5,8 @@
 link=$1
 if [ -z "$1" ]
   then
-	link=$(xclip -o -sel clip)
+	# link=$(xclip -o -sel clip)
+	link=$(wl-paste)
 fi
 kindle_email={{- .mail.kindle -}}
 title=$(readable "$link" -p title | sed "s/\//-/")

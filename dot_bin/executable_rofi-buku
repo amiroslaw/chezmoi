@@ -84,7 +84,8 @@ Use <span color='${help_color}'>${copy}</span> - copty to clipboard, <span color
     elif [[ $val -eq 15 ]]; then
         id=$(getId "$content" "$menu")
         url="$(getUrlFromId "${id}")"
-        echo -n "$url" | xclip -selection clipboard
+        # echo -n "$url" | xclip -selection clipboard
+        echo -n "$url" | wl-copy
     fi
 }
 
@@ -253,7 +254,8 @@ editTags () {
 }
 
 addMark () {
-  inserturl=$(echo -e "$(xclip -o)" | _rofi -p '> ' -mesg "Use URL below or type manually")
+  # inserturl=$(echo -e "$(xclip -o)" | _rofi -p '> ' -mesg "Use URL below or type manually")
+  inserturl=$(echo -e "$(wl-paste)" | _rofi -p '> ' -mesg "Use URL below or type manually")
   val=$?
 
   if [[ $val -eq 1 ]]; then

@@ -91,7 +91,8 @@ local function ocr()
  -- Source: https://askubuntu.com/a/1276441/782646
 -- sed -i 's/\x0c//' "$textFile"
 	-- local xclipCmd = ('echo %q | xclip -selection clip'):format(text) -- lose new lines
-	local xclipCmd = ('xclip -selection clip < %s.txt'):format(textFile)
+	-- local xclipCmd = ('xclip -selection clip < %s.txt'):format(textFile)
+	local xclipCmd = ('wl-copy < %s.txt'):format(textFile)
 	 _, stat, err = run(xclipCmd, 'Could not copy text')
 	assert(stat, err)
 	if text == '' then

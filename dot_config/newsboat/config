@@ -107,7 +107,8 @@ macro W set browser "w3m" ; open-in-browser ; set browser ~/.config/newsboat/lin
 		# setsid -f rdrview -A "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" -B w3m "$url" 
 macro i set browser "sxiv" ; open-in-browser-noninteractively ; set browser ~/.config/newsboat/link.sh
 macro I set browser "sxiv" ; open-all-unread-in-browser ; set browser ~/.config/newsboat/link.sh
-macro c set browser "echo %u | xclip -r -sel c" ; open-in-browser-noninteractively ; set browser ~/.config/newsboat/link.sh
+# macro c set browser "echo %u | xclip -r -sel c" ; open-in-browser-noninteractively ; set browser ~/.config/newsboat/link.sh
+macro c set browser "echo %u | wl-copy" ; open-in-browser-noninteractively ; set browser ~/.config/newsboat/link.sh
 # download - uppercase chars will download all unread article and set as read
 macro d set browser "setsid -f url.lua --dlAudio" ; open-in-browser-noninteractively ; set browser ~/.config/newsboat/link.sh
 macro D set browser "setsid -f url.lua --dlAudio" ; open-all-unread-in-browser-and-mark-read ; set browser ~/.config/newsboat/link.sh

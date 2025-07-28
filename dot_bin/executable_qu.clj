@@ -96,7 +96,8 @@
 (defn- copy
   "Copy the URL of the selected tasks into the clipboard."
   [selected] {:pre [(seq? selected)]}
-  (sh {:in (cmds->urls selected)} "clipster -c"))
+  (sh {:in (cmds->urls selected)} "wl-paste"))
+  ; (sh {:in (cmds->urls selected)} "clipster -c"))
 ;(sh {:in (cmds->urls selected) } "xclip -selection clipboard" ); freeze with xclip
 
 (defn- open

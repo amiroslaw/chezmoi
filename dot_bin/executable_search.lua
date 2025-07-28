@@ -28,9 +28,11 @@ local args = cliparse(arg, 'phrase')
 local phraseArg = 'empty'
 
 if args.clipboard or args.c then
-	phraseArg = io.popen('xclip -out -selection clipboard'):read('*a')
+	-- phraseArg = io.popen('xclip -out -selection clipboard'):read('*a')
+	phraseArg = io.popen('wl-paste'):read('*a')
 elseif args.primary or args.p then
-	phraseArg = io.popen('xclip -out -selection primary'):read('*a')
+	-- phraseArg = io.popen('xclip -out -selection primary'):read('*a')
+	phraseArg = io.popen('wl-paste -p'):read('*a')
 elseif args.input or args.i then
 	phraseArg =	rofiInput({prompt = 'Search'})	
 elseif args.phrase then
