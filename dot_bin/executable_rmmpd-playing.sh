@@ -5,7 +5,8 @@
 song_to_remove=$(mpc current)
 playlist_pos=$(mpc -f %position% current)
 	#Delete the song
-	trash-put "$(mpc -f %file% current | sed 's/^/\/media\/multi\/Musics\//')"
+	gomi "$(mpc -f %file% current | sed 's/^/\/media\/multi\/Musics\//')"
+	# trash-put "$(mpc -f %file% current | sed 's/^/\/media\/multi\/Musics\//')"
 	#Remove the song from playlist
 	mpc del $playlist_pos
 	#Write to log file

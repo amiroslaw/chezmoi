@@ -8,7 +8,7 @@
     via keyboard shortcut, the file is moved to the recycle bin and
     removed from the playlist.
 
-    On Linux the app trash-cli must be installed first.
+    On Linux the gomi or trash-cli program must be installed first.
 
     Usage:
     Add bindings to input.conf:
@@ -60,6 +60,8 @@ function delete_file(path)
 
 	if os.execute('command -v trash-put') then
 		os.execute('trash-put "' .. path .. '"')
+	elseif os.execute('command -v gomi') then
+		os.execute('gomi "' .. path .. '"')
 	else
 		mp.command_native({
 			name = "subprocess",

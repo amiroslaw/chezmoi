@@ -13,6 +13,6 @@ fi
 #FILE="$(playing)"
 echo "file: $FILE"
 if [ "$FILE" ]; then
-  # trash-put "$FILE" && echo "Removed '$FILE'"
-  trash-put "$FILE" && notify-send "Removed '$FILE'"
+  gomi "$FILE" && notify-send "Removed '$FILE'"
+  # trash-put "$FILE" && notify-send "Removed '$FILE'"
 fi

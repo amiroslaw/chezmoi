@@ -1,6 +1,6 @@
 " vim: filetype=vim :
 " DEPENDENCY
-" fd, rg, fzf, patool or atool, xclip, dua, trash-cli, eza, pdfunite, udevil
+" fd, rg, fzf, patool or atool, xclip, dua, trash-cli or gomi, eza, pdfunite, udevil
 "sxiv,tree, meld dragon-drop tesseract
 "
 " TODO
@@ -253,8 +253,9 @@ nmap <F1> :command <cr>
 "change name without extension
 nmap <F2> cW
 nmap <S-F2> cW<c-a>
-" trash-cli or rm-improved
-nmap <delete> :!trash-put %f<cr>
+" trash-cli or gomi
+nmap <delete> :!gomi %f<cr>
+"nmap <delete> :!trash-put %f<cr>
 nmap DD :!rm -rf %f<cr>
 "open in file manager
 nmap <F3> :! wezterm start --cwd %d %i & <cr> 

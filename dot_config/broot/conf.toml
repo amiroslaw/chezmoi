@@ -127,7 +127,8 @@ internal = ":sort_by_type"
 invocation = "remove"
 key = "ctrl-r"
 leave_broot = false
-execution = "trash-put {file}"
+execution = "gomi {file}"
+# execution = "trash-put {file}"
 # or {directory} it not match dir or file it will delete parrent!
 # execution = "rm -rf {file}"
 [[verbs]]

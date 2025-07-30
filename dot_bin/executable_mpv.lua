@@ -215,6 +215,8 @@ end
 local function delete(selected)
 	if os.execute('command -v trash-put') then
 		return 'trash-put ' .. concatPath(selected)
+	elseif os.execute('command -v gomi') then
+		return 'gomi ' .. concatPath(selected)
 	else
 		return 'rm ' .. concatPath(selected)
 	end
