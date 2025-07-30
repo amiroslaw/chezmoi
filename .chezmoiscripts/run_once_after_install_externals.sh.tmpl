@@ -1,21 +1,27 @@
 #!/bin/bash
 set -e
 
-BIN_DIR="{{ .chezmoi.sourceDir }}/dot_bin"
+LOCAL_BIN_DIR="$HOME/.local/bin"
 TMP="$HOME/tmp-chezmoi"
-mkdir -p "$BIN_DIR"
+mkdir -p "$LOCAL_BIN_DIR"
+sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+
+curl -fsSL https://gomi.dev/install | bash
+mv "$HOME/bin/gomi" "$LOCAL_BIN_DIR"
 
 # fasder
 FASDER_DIR="$TMP/fasder"
 FASDER_FILE="fasder"
+# mkdir -p "$FASDER_DIR"
 
-echo "🔨 Building Go project in $FASDER_DIR..."
+echo "🔨 Building fasder project in $FASDER_DIR..."
 cd "$FASDER_DIR"
 go build
-cp -v --update=none "$FASDER_FILE" "$BIN_DIR/executable_fasder"
+cp -v --update=none "$FASDER_FILE" "$LOCAL_BIN_DIR/fasder"
 echo "✅ Build complete and copied - fasder."
 
 # # kanata
+# BIN_DIR="{{ .chezmoi.sourceDir }}/dot_bin"
 # KANATA_DIR="$TMP/kanata/"
 # KANATA_FILE="$TMP/kanata/target/release/kanata"
 # echo "🔨 Building Go project in $KANATA_DIR..."
@@ -24,8 +30,6 @@ echo "✅ Build complete and copied - fasder."
 # # cargo install --features cmd --path .
 # cp -v --update=none "$KANATA_FILE" "$BIN_DIR/executable_kanata"
 # echo "✅ Build complete and copied - kanata."
-
-sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
 
 # vi: ft=bash
 

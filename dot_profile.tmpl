@@ -38,7 +38,7 @@ export GRAALVM_HOME="$HOME/.local/share/sdkman/candidates/java/23.1.1.r21-nik"
 export GOPATH="$XDG_DATA_HOME"/go
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export SCRIPTS="$HOME/.bin"
-PATH="/usr/local/sbin:/usr/local/bin:/usr/bin/core_perl:/usr/bin:$SCRIPTS:$HOME/.local/share/gem/ruby/2.7.0/bin:$GRAALVM_HOME/bin:$SELENIUM:$(go env GOPATH)/bin:$CARGO_HOME/bin"
+PATH="/usr/local/sbin:/usr/local/bin:/usr/bin/core_perl:/usr/bin:$HOME/.local/share/gem/ruby/2.7.0/bin:$GRAALVM_HOME/bin:$SELENIUM:$(go env GOPATH)/bin:$CARGO_HOME/bin:$HOME/.local/bin:$SCRIPTS"
 export PATH
 
 export NIK=~/.local/share/sdkman/candidates/java/23.r20-nik/bin/native-image
@@ -68,7 +68,7 @@ export TERM_FONT=" --config font_size=%d "
 export TERM_RUN=' start --class "%s" -- %s '
 export TERM_LT="foot"
 export TERM_LT_FONT=" -f 'UbuntuMono Nerd Font:size=%d' "
-export TERM_LT_RUN=' -T "%s" -e %s'
+export TERM_LT_RUN=' --app-id "%s" -e %s'
 export BROWSER="qutebrowser"
 # export BROWSER="org.qutebrowser.qutebrowser.desktop"
 export READER="zathura"

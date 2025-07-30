@@ -112,11 +112,11 @@ export MVND_HOME="/opt/mvnd"
 [[ -s '$MVND_HOME/bin/mvnd-bash-completion.bash' ]] && 'source $MVND_HOME/bin/mvnd-bash-completion.bash'
 
 source ~/.config/fzf/fzf.zsh
-source ~/.config/broot/launcher/bash/br
 source ~/.config/zgenom/sources/lincheney/fzf-tab-completion/___/zsh/fzf-zsh-completion.sh
 bindkey '^I' fzf_completion
 
-eval $(thefuck --alias)
+# source ~/.config/broot/launcher/bash/br
+# eval $(thefuck --alias)
 
 # fasder
 # rest functins are in aliase or fzf config 
