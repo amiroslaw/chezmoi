@@ -7,7 +7,9 @@ Description=Pueue Daemon - CLI process scheduler and manager
 
 [Service]
 Restart=no
-ExecStart=/usr/bin/pueued -vv
+ExecStart=/usr/bin/sh -c '${HOME}/.local/share/cargo/bin/pueued -vv'
+# maybe crate path from chezmoi env with CARGO_HOME, service doens't read env from .profile
+# ExecStart='${CARGO_HOME}/bin/pueued -vv'
 
 [Install]
 WantedBy=default.target

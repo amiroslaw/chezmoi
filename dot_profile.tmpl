@@ -1,0 +1,107 @@
+# device specific
+# runs each terminal instance
+# paths
+export USER_HOME="/home/miro"
+export VISUAL="nvim"
+export TOR_WATCH="$HOME/Downloads/.torrenty"
+export NOTE="$HOME/Documents/notebook"
+export SETUP="$NOTE/Finance/Inwestycje/setup.adoc"
+export CONFIG="$HOME/Documents/Ustawienia"
+export PRIVATE="$HOME/Documents/Ustawienia/private"
+export GUI_EDITOR=/usr/bin/nvim-qt
+export BACKUP_LOG="$HOME/Documents/Ustawienia/logs/borg-pc"
+
+## changing default config folder
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CONFIG_DIRS=/usr/etc/xdg:/etc/xdg
+export XDG_DOWNLOAD_DIR="$HOME/Downloads"
+export GTK2_RC_FILES="$HOME/.config/gtkrc-2.0"
+# export GTK3_RC_FILES=/home/miro/.config/gtkrc-3.0
+export UNCRUSTIFY_CONFIG="$XDG_CONFIG_HOME"/uncrustify/uncrustify.cfg
+export SCREENRC="$XDG_CONFIG_HOME"/screen/screenrc
+export SDKMAN_DIR="$XDG_DATA_HOME"/sdkman
+export GNUPGHOME="$XDG_DATA_HOME"/gnupg
+export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
+export HISTFILE="${XDG_STATE_HOME}"/bash/history
+export ROFI="$HOME/.config/rofi/scripts"
+
+
+# PATHS
+export LUA_INIT="@$HOME/.bin/lua/init.lua"
+export BABASHKA_PRELOADS='(load-file (str (System/getenv "HOME") "/.bin/clj/init.clj"))'
+export SELENIUM="$HOME/Ext/selenium/chromedriver"
+# PATH="/usr/local/sbin:/usr/local/bin:/usr/bin/core_perl:/usr/bin:$HOME/.config/bspwm/panel:$HOME/.bin:$HOME/.local/share/gem/ruby/2.7.0/bin:$SELENIUM"
+export GRAALVM_HOME="$HOME/.local/share/sdkman/candidates/java/23.1.1.r21-nik"
+export GOPATH="$XDG_DATA_HOME"/go
+export CARGO_HOME="$XDG_DATA_HOME"/cargo
+export SCRIPTS="$HOME/.bin"
+PATH="/usr/local/sbin:/usr/local/bin:/usr/bin/core_perl:/usr/bin:$SCRIPTS:$HOME/.local/share/gem/ruby/2.7.0/bin:$GRAALVM_HOME/bin:$SELENIUM:$(go env GOPATH)/bin:$CARGO_HOME/bin"
+export PATH
+
+export NIK=~/.local/share/sdkman/candidates/java/23.r20-nik/bin/native-image
+export NIK_HOME=~/.local/share/sdkman/candidates/java/23.r20-nik
+
+{{ if eq .chezmoi.hostname "laptop" }}
+export OLLAMA_API_HOST="http://$(cat "$PRIVATE/ip4pc"):11434"
+
+{{ else if eq .chezmoi.hostname "pc" }}
+export TOR_DIR="/media/multi/Downloads"
+export BACKUP="/media/winD/backup-borg/daily"
+export COURSES="/media/multimedia/kursy"
+{{ else }}
+{{ end }}
+
+# Default Apps
+export EDITOR="nvim"
+export VISUAL="nvim"
+export GUI_EDITOR=/usr/bin/nvim-qt
+export OPENER="xdg-open"
+export PAGER="less"
+export MANPAGER="nvim +Man!"
+export DISPLAY=:0
+# TERM is not available 
+export TERMINAL="wezterm"
+export TERM_FONT=" --config font_size=%d "
+export TERM_RUN=' start --class "%s" -- %s '
+export TERM_LT="foot"
+export TERM_LT_FONT=" -f 'UbuntuMono Nerd Font:size=%d' "
+export TERM_LT_RUN=' -T "%s" -e %s'
+export BROWSER="qutebrowser"
+# export BROWSER="org.qutebrowser.qutebrowser.desktop"
+export READER="zathura"
+
+# for my scripts
+export GAMIFICATION="/home/miro/Documents/Ustawienia/configs/grywalizacja"
+export OLLAMA_MODELS="$HOME/Ext/ollama"
+export OLLAMA_HOST=":11434"
+
+# configs
+export QT_QPA_PLATFORMTHEME="qt5ct"
+export MPD_PORT=6666
+# Default Apps
+# export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+# source $HOME/.profile
+# export LC_ALL=en_US.UTF-8
+# export LANGUAGE=en_US.UTF-8
+# export LANG=en_US.UTF-8
+# export LC_CTYPE=en_US.UTF-8
+# export LC_ALL=C
+
+# TODO REMOVE
+# Load profiles from /etc/profile.d
+# if test -d /etc/profile.d/; then
+# 	for profile in /etc/profile.d/*.sh; do
+# 		test -r "$profile" && . "$profile"
+# 	done
+# 	unset profile
+# fi
+#
+# # Source global bash config
+# if test "$PS1" && test "$BASH" && test -r /etc/bash.bashrc; then
+# 	. /etc/bash.bashrc
+# fi
+
+# vi: ft=zsh

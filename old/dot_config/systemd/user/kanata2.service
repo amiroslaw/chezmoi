@@ -1,0 +1,28 @@
+# I had problem with execute rofi via service it doesn't recognise envs from .profile in ExecStart
+# in kanata.kbd config also the program doesn't know envs and PATH
+[Unit]
+Description=Kanata keyboard remapper
+Documentation=https://github.com/jtroo/kanata
+
+[Service]
+Environment=PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/bin
+#   Uncomment the 4 lines beneath this to increase process priority
+#   of Kanata in case you encounter lagginess when resource constrained.
+#   WARNING: doing so will require the service to run as an elevated user such as root.
+#   Implementing least privilege access is an exercise left to the reader.
+#
+# CPUSchedulingPolicy=rr
+# CPUSchedulingPriority=99
+# IOSchedulingClass=realtime
+# Nice=-20
+Type=simple
+ExecStart=/usr/bin/sh -c '${HOME}/.local/share/cargo/bin/kanata --cfg ${HOME}/.config/kanata/kanata.kbd'
+Restart=no
+# ExecStart=/usr/bin/sh -c '${HOME}/.local/share/cargo/bin/kanata --cfg ${HOME}/.config/kanata/kanata.kbd'
+# ExecStart=/usr/bin/sh -c '${XDG_DATA_HOME}/cargo/bin/kanata --cfg ${HOME}/.config/kanata/kanata.kbd'
+# ExecStart=/usr/bin/sh -c '${CARGO_HOME}/bin/kanata --cfg ${HOME}/.config/kanata/kanata.kbd'
+# XDG_DATA_HOME=/home/miro/.local/share
+# /.local/share/cargo/bin
+
+[Install]
+WantedBy=default.target

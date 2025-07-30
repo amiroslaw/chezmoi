@@ -81,7 +81,7 @@ alias cfw3m='chezmoi edit --apply ~/.w3m/keymap'
 # {{{ RÓŹNE
 # copy last command
 # alias CC='$(fc -l -n -1) | xclip -sel clip'
-alias CC='$(fc -l -n -1) | wl-copy'
+alias CC='fc -l -n -1 | wl-copy'
 alias setup='$EDITOR "$NOTE"/finance/inwestycje/setup.adoc'
 alias weather='curl wttr.in/warszawa | grep -v "New feature" | grep -v Follow'
 alias cl='clear'

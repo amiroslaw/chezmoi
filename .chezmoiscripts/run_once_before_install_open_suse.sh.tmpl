@@ -2,10 +2,15 @@
 set -e
 
 sudo zypper install -y go rust luajit
-sudo zypper install -y curl gawk git ImageMagick wget btop xdg-user-dirs xdg-utils mpv mpv-mpris vifm 7zip pueue qutebrowser vifm zsh fzf fd ripgrep timewarrior taskwarrior btop lazygit git-delta eza tealdeer bat libnotify-tools
+sudo zypper install -y curl gawk git ImageMagick wget btop xdg-user-dirs xdg-utils mpv mpv-mpris vifm 7zip qutebrowser vifm zsh fzf fd ripgrep timewarrior taskwarrior btop lazygit git-delta eza tealdeer bat libnotify-tools
 sudo zypper install -y meld
-# sudo zypper install -y dua rofi-buku   delta mpd?--no-recommends
 sudo zypper install -y --no-recommends NetworkManager-applet playerctl newsboat clojure
+
+#too old versions or no package in repos
+# sudo zypper install -y pueue 
+# sudo zypper install -y dua rofi-buku   mpd?--no-recommends
+cargo install --locked pueue --git https://github.com/Nukesor/pueue
+cargo install --locked --features cmd kanata --git  https://github.com/jtroo/kanata
 # clojure installs with java; I could use sdkman and download jar clojure package
 
 {{ if eq .chezmoi.hostname "pc" }}

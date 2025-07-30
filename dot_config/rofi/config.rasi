@@ -104,4 +104,6 @@ kb-remove-to-eol: "";
 /*	me-accept-custom: "Control+MouseDPrimary";*/
 
 //@theme "/usr/share/rofi/themes/Arc.rasi"
-@theme "/home/miro/.config/rofi/themes/squared-everforest.rasi"
+//@theme "/home/miro/.config/rofi/themes/squared-everforest.rasi"
+
+@theme "/usr/share/rofi/themes/gruvbox-light.rasi"

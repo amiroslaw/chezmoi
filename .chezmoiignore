@@ -5,6 +5,8 @@ system/
 .config/ncmpcpp
 .config/broot
 .config/stylua
+# hyprland doesn't read from zprofile but greetd loads envs from .profile
+.zprofile
 
 {{ if eq .chezmoi.hostname "pc" }}
 {{ else if eq .chezmoi.hostname "laptop" }}
