@@ -58,17 +58,19 @@ function delete_file(path)
         return
     end
 
-	if os.execute('command -v trash-put') then
-		os.execute('trash-put "' .. path .. '"')
-	elseif os.execute('command -v gomi') then
-		os.execute('gomi "' .. path .. '"')
-	else
-		mp.command_native({
-			name = "subprocess",
-			playback_only = false,
-			args = { 'trash', path },
-		})
-	end
+	os.execute('gomi "' .. path .. '"')
+	-- if os.execute('command -v gomi') then
+	-- 	os.execute('gomi "' .. path .. '"')
+	-- 	-- os.execute('notify-send "xxgomi"')
+	-- elseif os.execute('command -v trash-put') then
+	-- 	os.execute('trash-put "' .. path .. '"')
+	-- else
+	-- 	mp.command_native({
+	-- 		name = "subprocess",
+	-- 		playback_only = false,
+	-- 		args = { 'trash', path },
+	-- 	})
+	-- end
 	os.execute('notify-send "Deleted: ' .. path .. '"')
 end
 
