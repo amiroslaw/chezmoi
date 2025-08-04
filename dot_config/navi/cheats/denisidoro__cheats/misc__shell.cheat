@@ -117,7 +117,7 @@ chgrp <group-name-from> <group-name-to>
 
 % shell Symlinks
 @ util
-# Create symlink
+# Create symlink ::nl
 ln -s <paths> <link-name>
 # Update symlink
 ln -sfn <paths> <paths>

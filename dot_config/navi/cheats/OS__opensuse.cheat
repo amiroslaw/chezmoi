@@ -1,0 +1,15 @@
+% OS
+
+# Create snapshot
+sudo snapper create --userdata important=<options> --description "<description>"
+$ options: echo 'yes no' | tr ' ' '\n' 
+# snapshot list 
+sudo snapper list
+# snapshot rollback
+sudo snapper rollback <number>
+# Show changes in files  
+sudo snapper diff <nr_from>..<nr_to>
+# What files were changed 
+sudo snapper status <nr_from>..<nr_to>
+# Delete range
+sudo snapper delete <nr_from>..<nr_to>

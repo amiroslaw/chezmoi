@@ -25,9 +25,6 @@ cheats:
 # search:
 #   tags: git,!checkout # equivalent to the --tag-rules option
 
-# client:
-#   tealdeer: true # enables tealdeer support for navi --tldr
-
 client:
 # enables tealdeer support for navi --tldr
   tealdeer: true
