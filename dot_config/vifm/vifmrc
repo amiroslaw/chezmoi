@@ -1,7 +1,9 @@
 " vim: filetype=vim :
 " DEPENDENCY
-" fd, rg, fzf, patool or atool, xclip, dua, trash-cli or gomi, eza, pdfunite, udevil
-"sxiv,tree, meld dragon-drop tesseract
+" fd, rg, fzf, tree, patool or atool, dua,  eza, pdfunite, udevil meld dragon-drop tesseract
+"sxiv, xclip,trash-cli ,
+" wayland alternatives 
+" gomi wl-clipboard swayimg
 "
 " TODO
 " change separete command from keybinding `command!`, it will be posiible to see it in command list `:com`, or just execute it form command mode
@@ -528,20 +530,21 @@ fileviewer *.cb7
 	\ #ueberzug#cb7 %px %py %pw %ph %c
 	\ %pc
 	\ #ueberzug#clear
+
+fileviewer *.jpg
+	\ #ueberzug#image %px %py %pw %ph
+	" or \ #ueberzug#image_no_cache %px %py %pw %ph
+	\ %pc
+	\ #ueberzug#clear
+
 " imgcat
 " problems with webp and avif, that should work in wezterm
-" fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*webp,*avif wezterm imgcat --width %pw --height %ph %c:p %pd
-" sixel needs sixel lib 
-" fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*webp,*avif
-"          \ img2sixel -S -w $((%pw*9)) %c %pd,
-"          \ convert -identify %f -verbose /dev/null
-
-" kitty 
-" fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*avif},<image/*>
-" 	\ kitty +icat --place %pwx%ph@%pxx%py  --silent %c
-" 	\ %pc
-" 	\ kitty icat --clear --silent %pd
-	 " \ identify %f
+ "fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*webp,*avif wezterm imgcat --width %pw --height %ph %c:p %pd
+ "sixel needs sixel lib slow
+ "fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*webp,*avif
+ "         \ img2sixel -S -w $((%pw*9)) %c %pd,
+ "         \ convert -identify %f -verbose /dev/null
+ "
 
 " enable tree colors in folder preview
 fileviewer */,.*/ eza --color=always --tree --level=5 %c/

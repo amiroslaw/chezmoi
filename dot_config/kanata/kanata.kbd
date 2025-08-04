@@ -127,7 +127,7 @@ linux-dev (/dev/input/by-id/usb-Microsoft_Microsoft®_2.4GHz_Transceiver_v9.0-ev
   clip (cmd "/home/miro/.config/rofi/scripts/clipster/roficlip" )
   off (cmd rofi -show power-menu -modi power-menu:~/.config/rofi/scripts/power.sh)
   news (cmd setsid scratchpad.sh newsboat "wezterm start --class newsboat -- newsboat")
-  tw (cmd setsid scratchpad.sh task "xst -c task -n task -e taskwarrior-tui")
+  tw (cmd setsid scratchpad.sh task "foot -T task --app-id task -e taskwarrior-tui")
   kee (cmd setsid keecli.sh)
   video (cmd setsid mpv.lua -o /home/miro/Videos)
   todo (cmd todo.lua add)

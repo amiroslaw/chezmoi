@@ -27,6 +27,15 @@ vim.api.nvim_create_autocmd( -- go to last loc when opening a buffe
 		command = [[if @% !~# '\.git[\/\\]COMMIT_EDITMSG$' && line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif]],
 	}
 )
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+  pattern = os.getenv("HOME") .. "/.local/share/chezmoi/*",
+  callback = function(args)
+    vim.fn.system({ "chezmoi", "apply", "--source-path", args.file })
+  end,
+  desc = "Apply chezmoi changes after writing a chezmoi file",
+})
+
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 	pattern = { '*.json' },
 	command = [[set filetype=json]],

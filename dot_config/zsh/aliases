@@ -369,6 +369,7 @@ alias Rm='rm -iv'
 #}}}
 
 # {{{ FZF
+alias fenv='env | fzf'
 alias fn='nvim -o "$(fd --type f | fzf)"'
 alias fnh='nvim -o "$(fd --hidden --type f | fzf)"'
 alias ffh='"$(fd --hidden --type f | fzf)"'
@@ -447,8 +448,9 @@ alias -g C='| wl-copy'
 alias -g CL='| yank -l'
 # alias -g P= '$(xclip -o -selection clipboard)'
 # alias -g PP='$(xclip -o -selection primary)'
-alias -g P="$(wl-paste)"
-alias -g PP="$(wl-paste --primary)"
+# TODO doesn't work
+# alias -g P="$(wl-paste)"
+# alias -g PP="$(wl-paste --primary)"
 # czasami dać enter;  przy F można dodawać * np ls * F; D to wybór pliku/katalogu z użyciem fzf np. cat D
 # http://www.zzapper.co.uk/zshtips.html
 alias -g ND='*(/om[1])' 	      # newest directory
@@ -469,8 +471,6 @@ alias -g H='$(fd --hidden | fzf) '
 # alias -g E=" ${(P)$(env | awk -F '=' '{print $1}' | fzf)}"
 # alias -g grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 
-
-
 #}}}
 
 #{{{ Navi
@@ -480,9 +480,9 @@ alias nc="navi --cheatsh"
 alias nt="navi --tldr"
 # aliases using query 
 navialias() {
-    navi --query "$1" --best-match
+    navi --query "::$1" --best-match
 }
-alias nln="navialias 'create symlink'"
+alias nln="navialias 'ln'"
 #}}}
 
 #{{{ FUNCTIONS
