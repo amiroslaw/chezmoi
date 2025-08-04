@@ -3,11 +3,13 @@ set -e
 
 sudo zypper install -y hyprland  hyprland-devel hyprland-qtutils hyprpolkitagent  xwayland qt6-wayland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
 sudo zypper install -y mako
-# hyprlock
-#hyprsunset
-# qt5-wayland 
 
 sudo zypper install -y --no-recommends grim slurp swayimg wl-clipboard cliphist waybar
+# sudo zypper install -y --no-recommends hyprpaper
+
+# hyprlock
+# hyprsunset no package
+# qt5-wayland 
 
 {{ if eq .chezmoi.hostname "pc" }}
 {{ else if eq .chezmoi.hostname "laptop" }}

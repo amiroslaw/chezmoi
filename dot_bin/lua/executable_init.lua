@@ -284,7 +284,9 @@ function run(cmd, errorMsg)
    end
 
       Command_s = "( " .. Command_s .. " )" .. " 1> " .. OutFile_s .. " 2> " .. ErrFile_s
-   local Status_code = os.execute(Command_s)
+   local _,_, Status_code = os.execute(Command_s)
+   -- in LuaJIT 2.1. Status_code is a 3rd return type 
+   -- local Status_code = os.execute(Command_s)
   Out_t = readf(OutFile_s) -- sometimes is nil - I think I fix that
 	local err_f  = io.open(ErrFile_s, "r")
 	local status = Status_code == 0
@@ -545,12 +547,15 @@ function rofiMenu(entriesTab, options)
 		notifyError(err)
 		return {''}, false
 	end
-	-- only luajit returns different status code
+	-- only luajit returns different status code; I had that in one of the luajit version
+	-- TODO cancellation
 	if code == 256 then
 		return {''}, false
 	end
-	if next(keys) and code > 256 then
-		code = code/256 - 9
+	-- if next(keys) and code > 256 then
+	if next(keys) then
+		-- code = code/256 - 9
+		code = code - 9
 		code = keys[code] 
 	end
 	if options and options.multi then

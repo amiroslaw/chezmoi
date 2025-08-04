@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+pueue group add mpv-audio|| true; pueue group add dl-video|| true; pueue group add dl-audio|| true; pueue group add mpv-fullscreen|| true; pueue group add mpv-popup|| true; pueue group add wget|| true; pueue group add kindle || true
+pueue parallel -g default 9|| true; pueue parallel -g dl-video 9|| true; pueue parallel -g dl-audio 9|| true; pueue parallel -g kindle 9 || true
+
+mkdir -p  $HOME/Videos/YouTube/ $HOME/Downloads/wget $HOME/Musics/PODCASTS/ $HOME/Pictures/gallery-dl/ && echo "created dirs "
+
+{{ if eq .chezmoi.hostname "pc" }}
+LOCAL_MPV="$PRIVATE/mpv/local-pc"
+{{ else if eq .chezmoi.hostname "laptop" }}
+LOCAL_MPV="$PRIVATE/mpv/local-lap"
+{{ end }}
+LINK="$PRIVATE/mpv/playlist/local"
+# todo it makes a loop
+[ ! -e "$LINK" ] && ln -s "$LOCAL_MPV" $LINK  && echo "Link created. $LINK" 
+
+
+# vi: ft=bash
+

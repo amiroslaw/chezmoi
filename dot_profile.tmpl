@@ -1,5 +1,4 @@
-# device specific
-# runs each terminal instance
+# TODO device specific
 # paths
 export USER_HOME="/home/miro"
 export VISUAL="nvim"
@@ -81,6 +80,21 @@ export OLLAMA_HOST=":11434"
 # configs
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export MPD_PORT=6666
+
+# distrobox
+command_not_found_handle() {
+# don't run if not in a container
+  if [ ! -e /run/.containerenv ] && [ ! -e /.dockerenv ]; then
+    exit 127
+  fi
+  distrobox-host-exec "${@}"
+}
+if [ -n "${ZSH_VERSION-}" ]; then
+  command_not_found_handler() {
+    command_not_found_handle "$@"
+ }
+fi
+
 # Default Apps
 # export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 # source $HOME/.profile

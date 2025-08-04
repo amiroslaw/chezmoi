@@ -2,16 +2,25 @@
 set -e
 
 sudo zypper install -y go rust luajit
-sudo zypper install -y curl gawk git ImageMagick wget btop xdg-user-dirs xdg-utils mpv mpv-mpris vifm 7zip qutebrowser vifm zsh fzf fd ripgrep timewarrior taskwarrior btop lazygit git-delta eza tealdeer bat libnotify-tools
-sudo zypper install -y meld
-sudo zypper install -y --no-recommends NetworkManager-applet playerctl newsboat clojure
-
+sudo zypper install -y curl gawk git ImageMagick wget btop xdg-user-dirs xdg-utils mpv mpv-mpris vifm 7zip qutebrowser vifm zsh fzf fd ripgrep timewarrior taskwarrior btop lazygit git-delta eza tealdeer bat libnotify-tools 
+sudo zypper install -y meld qalculate-gtk 
+sudo zypper install -y --no-recommends NetworkManager-applet playerctl newsboat clojure keepassxc
+sudo zypper install -y --no-recommends universal-ctags tesseract tesseract-ocr-traineddata-eng  atool pandoc
+# maybe
+# sudo zypper install -y --no-recommends pdfunite broot jq fastfetch 
+# ueberzugpp doesn't work
+# opi
+# dua-cli
 
 #too old versions or no package in repos
 # sudo zypper install -y pueue 
 # sudo zypper install -y dua rofi-buku   mpd?--no-recommends
 cargo install --locked pueue --git https://github.com/Nukesor/pueue
 cargo install --locked --features cmd kanata --git  https://github.com/jtroo/kanata
+cargo install --locked taskwarrior-tui --git https://github.com/kdheepak/taskwarrior-tui
+cargo install --locked navi --git https://github.com/denisidoro/navi
+# no nchat
+# cargo install --locked tgt --git https://github.com/FedericoBruzzone/tgt
 # clojure installs with java; I could use sdkman and download jar clojure package
 
 {{ if eq .chezmoi.hostname "pc" }}

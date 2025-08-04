@@ -129,7 +129,7 @@ optionsMenu () {
           if [[ $newtag == "" ]]; then
             mode=tags main
           else
-            buku --nostdin --replace "${menu}" "${newtag}"
+            buku --replace "${menu}" "${newtag}"
             mode=tags main
           fi
         fi
@@ -141,7 +141,7 @@ optionsMenu () {
           exit
         elif [[ $val -eq 0 ]]; then
           if [[ $delask == "1. Yes" ]]; then
-	    echo y | script -qfc "buku --nostdin --replace ${menu}" /dev/null
+	    echo y | script -qfc "buku --replace ${menu}" /dev/null
             mode=tags main
           elif [[ $delask == "2. No" ]]; then
             mode=tags main
@@ -162,7 +162,7 @@ deleteMenu () {
     exit
   elif [[ $val -eq 0 ]]; then
     if [[ $delask == "1. Yes" ]]; then
-      buku --nostdin -d "${id}" --tacit
+      buku -d "${id}" --tacit
       mode=bookmarks main
     elif [[ $delask == "2. No" ]]; then
       optionsMenu
@@ -206,7 +206,7 @@ editTitle () {
   if [[ $val -eq 1 ]]; then
     exit
   elif [[ $val -eq 0 ]]; then
-    buku --nostdin -u "${id}" --title "${titlemenu}"
+    buku -u "${id}" --title "${titlemenu}"
   fi
 
   mode=bookmarks main
@@ -223,7 +223,7 @@ editUrl () {
       echo "" | rofi -e "Not a valid URI, Make sure URLs start with http"
       editUrl
     else
-      buku --nostdin -u "${id}" --url "${urlmenu}"
+      buku -u "${id}" --url "${urlmenu}"
     fi
   fi
 
@@ -237,27 +237,28 @@ editComment () {
   if [[ $val -eq 1 ]]; then
     exit
   elif [[ $val -eq 0 ]]; then
-    buku --nostdin -u "${id}" --comment "${commentmenu}"
+    buku -u "${id}" --comment "${commentmenu}"
   fi
 
   mode=bookmarks main
 }
 
 editTags () {
-  edittagsmenu=$(echo | _rofi -filter "${tags}" -p '> ' -mesg "Edit Tags and hit Enter")
+  edittagsmenu=$(buku --np --st | grep -v -e "waiting" | awk '{$NF=""; print $0}' | cut -d ' ' -f2  | _rofi -filter "${tags}" -p '> ' -mesg "Edit Tags and hit Enter")
   val=$?
 
   if [[ $val -eq 1 ]]; then
     exit
   elif [[ $val -eq 0 ]]; then
-    buku --nostdin -u "${id}" --tag "${edittagsmenu}"
+    buku -u "${id}" --tag "${edittagsmenu}"
   fi
 
   mode=bookmarks main
 }
 
 addMark () {
-  inserturl=$(echo -e "$(xclip -o)" | _rofi -p '> ' -mesg "Use URL below or type manually")
+  # inserturl=$(echo -e "$(xclip -o)" | _rofi -p '> ' -mesg "Use URL below or type manually")
+  inserturl=$(echo -e "$(wl-paste)" | _rofi -p '> ' -mesg "Use URL below or type manually")
   val=$?
 
   if [[ $val -eq 1 ]]; then
@@ -268,7 +269,7 @@ addMark () {
 }
 
 addTags () {
-  inserttags=$(buku --nostdin --np --st | grep -v '^waiting for input$' | awk '{$NF=""; print $0}' | cut -d ' ' -f2- | _rofi -p '> ' -mesg "Add some tags. Separate tags with ', '")
+  inserttags=$(buku --np  --st | grep -v "$buku_output" | awk '{$NF=""; print $0}' | cut -d ' ' -f2- | _rofi -p '> ' -mesg "Add some tags. Separate tags with ', '")
   val=$?
 
   if [[ $val -eq 1 ]]; then
@@ -284,12 +285,12 @@ addTags () {
       tags=${inserttags}
     fi
 
-    buku --nostdin -a "${inserturl}" "${tags}"
+    buku -a "${inserturl}" "${tags}"
   fi
 }
 
 parseBuku () {
-  buku --nostdin --nc -p | grep -v '^waiting for input$' | gawk -v max="$max_str_width" -v type="$display_type" '
+  buku --nc -p | grep -v "$buku_output" | gawk -v max="$max_str_width" -v type="$display_type" '
     BEGIN { RS=""; FS="\n" }
     {
       id = gensub(/([0-9]+)\.(.*)/, "\\1", "g", $1)
@@ -340,11 +341,11 @@ getId () {
       fi
     done
   fi
-  echo $id
+  echo "$id"
 }
 
 getTitleFromId () {
-  buku --nostdin --nc -p "${1}" | grep -v '^waiting for input$' | gawk '
+  buku --nc -p "${1}" | grep -v "$buku_output" | gawk '
     BEGIN { RS=""; FS="\n" }
 
     { print gensub(/[0-9]+\.\s*(.*)/, "\\1", "g", $1) }
@@ -352,7 +353,7 @@ getTitleFromId () {
 }
 
 getUrlFromId () {
-  buku --nostdin --nc -p "${1}" | grep -v '^waiting for input$' | gawk '
+  buku --nc -p "${1}" | grep -v "$buku_output" | gawk '
     BEGIN { RS=""; FS="\n" }
 
     { print gensub(/\s+> (.*)/, "\\1", "g", $2) }
@@ -360,7 +361,7 @@ getUrlFromId () {
 }
 
 getCommentFromId () {
-  buku --nostdin --nc -p "${1}" | grep -v '^waiting for input$' | gawk '
+  buku --nc -p "${1}" | grep -v "$buku_output" | gawk '
     BEGIN { RS=""; FS="\n" }
 
     {
@@ -371,7 +372,7 @@ getCommentFromId () {
 }
 
 getTagsFromId () {
-  buku --nostdin --nc -p "${1}" | grep -v '^waiting for input$' | gawk '
+  buku --nc -p "${1}" | grep -v "$buku_output" | gawk '
     BEGIN { RS=""; FS="\n" }
 
     {
@@ -385,3 +386,8 @@ getTagsFromId () {
 }
 
 mode=bookmarks main
+
+# why not 
+# awk '{print $2}'
+# instead of 
+# awk '{$NF=""; print $0}' | cut -d ' ' -f2

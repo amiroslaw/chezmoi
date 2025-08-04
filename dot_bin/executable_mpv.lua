@@ -46,7 +46,7 @@ doesn't clear playlist after abort prompt
 end
 
 local CMD_VIDEO = 'mpv --profile=stream %s'
-local CMD_POPUP = 'mpv --x11-name=videopopup --profile=stream-popup %s'
+local CMD_POPUP = 'mpv --profile=stream-popup %s'
 local CMD_AUDIO = (os.getenv 'TERM_LT' .. os.getenv 'TERM_LT_RUN'):format('audio', 'mpv --profile=stream-audio %s')
 local CMD_QUEUE = {
 	fullscreen = 'pueue add  --label "%s" -g mpv-fullscreen -- ' .. CMD_VIDEO,
@@ -54,8 +54,9 @@ local CMD_QUEUE = {
 	audio = 'pueue add -e --label "%s" -g mpv-audio -- ' .. CMD_AUDIO
 }
 local GUI_EDITOR = os.getenv('GUI_EDITOR') .. ' %s'
-local DIR_PLAYLISTS = os.getenv 'HOME' .. '/Templates/mpvlists'
-local DIR_ARCHIVE = os.getenv 'HOME' .. '/Templates/mpvlists-archive'
+local DIR_LISTS =os.getenv 'PRIVATE' .. '/mpv'
+local DIR_PLAYLISTS = DIR_LISTS .. '/playlist'
+local DIR_ARCHIVE = DIR_LISTS .. '/archive'
 
 local LINK_REGEX = "(https?://([%w_.~!*:@&+$/?%%#-]-)(%w[-.%w]*%.)(%w%w%w?%w?)(:?)(%d*)(/?)([%w_.~!*:@&+$/?%%#=-]*))"
 
@@ -265,12 +266,14 @@ local function openPlaylist()
 	}
 
 	local selected, keybind = rofiMenu(playlists, {prompt = prompt, keys = keysFun, multi=true, width = '95%'})
-	if not keybind then return end -- cancel
+	-- todo
+	-- if not keybind then return end -- cancel
 	if not keysFun[keybind] then -- default
 		notify(CMD_VIDEO:format(concatPath(selected)))
 		local _, ok, _ = run(CMD_VIDEO:format(concatPath(selected)))
 		assert(ok, 'Error: Can not play video ')
 	else
+		print('default')
 		local _, ok, _ = run(keysFun[keybind][2](selected))
 		assert(ok, 'Error: Can not execute ')
 	end
