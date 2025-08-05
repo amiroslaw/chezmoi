@@ -111,11 +111,6 @@ alias log='journalctl -b'
 alias logerr="journalctl -p 3 -xb"
 alias logwatch='journalctl -b -n 200 -f'
 
-# navi
-alias sysstat='systemctl status '
-alias sysrestart='sudo systemctl restart '
-alias sysstop='sudo systemctl stop '
-
 alias diskls='lsblk'
 # pacman
 alias pacr='~/.bin/pac -r'
@@ -478,11 +473,18 @@ alias nn='navi'
 # Search using tldr/cheatsh
 alias nc="navi --cheatsh"
 alias nt="navi --tldr"
+
 # aliases using query 
 navialias() {
     navi --query "::$1" --best-match
 }
-alias nln="navialias 'ln'"
+
+# navi
+alias sysstat='navialias sst'
+alias sysrestart='navialias sre'
+alias sysstop='navialias sxx'
+alias sysreload='navialias sdr'
+
 #}}}
 
 #{{{ FUNCTIONS
@@ -655,6 +657,10 @@ bindkey -M isearch " " magic-space    # normal space during searches
 #}}}
 
 #{{{ old
+
+# alias sysstat='systemctl status '
+# alias sysrestart='sudo systemctl restart '
+# alias sysstop='sudo systemctl stop '
 ## job
 # alias vpn='cd /home/miro/eversis/amiroslaw/eversis-pfs-node1-UDP4-1195-amiroslaw && sudo openvpn --config eversis-pfs-node1-UDP4-1195-amiroslaw.ovpn --auth-user-pass pass.txt'
 

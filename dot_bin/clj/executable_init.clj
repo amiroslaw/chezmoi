@@ -307,7 +307,7 @@
                      table)))
 
 (def UTF-8 (java.nio.charset.StandardCharsets/UTF_8))
-(def url-pattern "https?://[^/]+")
+(def url-pattern "https?://[^/]+") ; should't it be [^\\s]
 (defn url? [url-str]
   (try (io/as-url url-str)
        true

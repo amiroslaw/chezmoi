@@ -76,10 +76,8 @@ Use <span color='${help_color}'>${copy}</span> - copty to clipboard, <span color
         if [[ $mode == "bookmarks" ]]; then
             id=$(getId "$content" "$menu")
             for bm in ${id}; do
-				# TODO get url and open in browser 
-                buku --nostdin -o "${bm}"
-                # buku --nostdin -p "${bm}"
-                # notify-send "${bm}"
+				$BROWSER $(buku --nostdin -p "${bm}" | bb -io '(re-seq #"https?://[^\s]+" (slurp *in*))') 
+                # buku --nostdin -o "${bm}" did not work
             done
         elif [[ $mode == "tags" ]]; then
             filter="${menu}" mode="bookmarks" main

@@ -67,7 +67,7 @@ c.tabs.last_close = 'startpage'
 c.tabs.background = True
 c.url.open_base_url = True # Open the searchengine if a shortcut is invoked without parameters.
 
-c.editor.command = [ os.environ["TERM_LT"], "-c", "qb", "-e", os.environ["EDITOR"], "-f", "{file}", "-c", "normal {line}G{column0}1", ]
+c.editor.command = [ os.environ["TERM_LT"], "--app-id", "qb", "-e", os.environ["EDITOR"], "-f", "{file}", "-c", "normal {line}G{column0}1", ]
 c.editor.remove_file = False # Files are in the /tmp
 c.spellcheck.languages =  ["en-US", 'pl-PL']
 c.content.default_encoding = 'utf-8'
