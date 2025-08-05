@@ -42,7 +42,7 @@ function createGcalCmd(inputs)
 		gcalCmd = 'gcalcli --config-folder="' .. CONFIG .. '" --calendar "arek" add --title "' .. title .. '" --when "' .. duration .. ' ' .. hour .. ':' .. minutes .. '" --duration 60 --description "' .. description ..'" --where " " --reminder "10m popup"'
 	end
 
-	assert(os.execute(gcalCmd) == 0, "Can not add event")
+	assert(os.execute(gcalCmd), "Can not add event")
 	return "Added event - "  .. title
 end
 

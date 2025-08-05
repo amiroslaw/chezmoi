@@ -49,7 +49,7 @@ function join()
 	if number == 1 then number = rofiNumberInput('Number of clips') end
 	local clipsterOutput = io.popen("clipster --output --" .. clipType .. " -n " .. number):read('*a')
 	assert(#clipsterOutput ~= 0, "Can not get clipboard history")
-	assert(os.execute('echo "' .. clipsterOutput .. '" | clipster --clipboard') == 0, "Can not get clipboard history")
+	assert(os.execute('echo "' .. clipsterOutput .. '" | clipster --clipboard'), "Can not get clipboard history")
 	return 'Joined ' .. clipType
 end
 

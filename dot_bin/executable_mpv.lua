@@ -108,7 +108,7 @@ end
 local function renamePlaylist(playlistName)
 	local customName = buildName(playlistName)
 	if customName then
-		assert( os.execute('mv "' .. DIR_PLAYLISTS .. '/' .. playlistName .. '" "' .. DIR_PLAYLISTS .. '/' .. customName .. '"') == 0, 'Error: Could not rename ' .. playlistName)
+		assert( os.execute('mv "' .. DIR_PLAYLISTS .. '/' .. playlistName .. '" "' .. DIR_PLAYLISTS .. '/' .. customName .. '"'), 'Error: Could not rename ' .. playlistName)
 	end
 end
 
@@ -200,7 +200,7 @@ local function makeQueue(group)
 	local playlistNameTemplate = '#EXTM3U\n#PLAYLIST: ' .. listName .. '\n'
 	local playlistTemplate = playlistNameTemplate .. M(links):map(getMetadata):concat('\n'):value()
 
-	assert(os.execute('mkdir -p ' .. DIR_PLAYLISTS) == 0, 'Did not create playlist dir ' .. DIR_PLAYLISTS)
+	assert(os.execute('mkdir -p ' .. DIR_PLAYLISTS), 'Did not create playlist dir ' .. DIR_PLAYLISTS)
 	io.open(('%s/%s.m3u'):format(DIR_PLAYLISTS, listName), 'w'):write(playlistTemplate)
 	notify('Made playlist for ' .. group)
 end
@@ -232,7 +232,7 @@ local function rename(selected)
 end
 
 local function archive(selected) 
-	assert(os.execute('mkdir -p ' .. DIR_ARCHIVE) == 0, 'Did not create playlist dir ' .. DIR_ARCHIVE)
+	assert(os.execute('mkdir -p ' .. DIR_ARCHIVE), 'Did not create playlist dir ' .. DIR_ARCHIVE)
 	return 'mv ' .. concatPath(selected) .. ' "' .. DIR_ARCHIVE .. '"'
 end
 
@@ -269,11 +269,10 @@ local function openPlaylist()
 	-- todo
 	-- if not keybind then return end -- cancel
 	if not keysFun[keybind] then -- default
-		notify(CMD_VIDEO:format(concatPath(selected)))
+		-- notify(CMD_VIDEO:format(concatPath(selected)))
 		local _, ok, _ = run(CMD_VIDEO:format(concatPath(selected)))
 		assert(ok, 'Error: Can not play video ')
 	else
-		print('default')
 		local _, ok, _ = run(keysFun[keybind][2](selected))
 		assert(ok, 'Error: Can not execute ')
 	end

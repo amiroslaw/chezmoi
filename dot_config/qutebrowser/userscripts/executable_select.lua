@@ -24,7 +24,7 @@ local function copy(txt)
 	local txt = txt and txt or CONST.selectedTxt
 	assert(writef(txt, CONST.clipFile), 'Did not copy to clipboard - IO error')
 	-- todo works but throws error
-	assert(os.execute('wl-copy < ' .. CONST.clipFile) == 0, 'Did not copy to clipboard')
+	assert(os.execute('wl-copy < ' .. CONST.clipFile), 'Did not copy to clipboard')
 	-- assert(os.execute('xclip -sel clip -i ' .. CONST.clipFile) == 0, 'Did not copy to clipboard -xclip')
 end
 
@@ -49,7 +49,7 @@ function adoc()
 	local out,ok,  err = run('pandoc --wrap=none --from html --to asciidoc --output ' .. CONST.clipFile .. ' ' .. CONST.clipFileHtml)
 	
 	if ok then
-		assert(os.execute('wl-copy < ' .. CONST.clipFile) == 0, 'Did not copy to clipboard')
+		assert(os.execute('wl-copy < ' .. CONST.clipFile), 'Did not copy to clipboard')
 	-- assert(os.execute('xclip -sel clip -i ' .. CONST.clipFile) == 0, 'Did not copy to clipboard -xclip')
 	else
 		log(err, 'ERROR')

@@ -101,7 +101,7 @@ end
 
 local function browser(url)
 	local status = os.execute('xdg-open "' .. url .. phraseArg .. '"')
-	assert(status == 0, 'Could not browse: ' .. phraseArg)
+	assert(status, 'Could not browse: ' .. phraseArg)
 end
 
 local function help() print(HELP); os.exit() end

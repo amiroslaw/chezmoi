@@ -392,7 +392,7 @@ function createTmpFile(options)
 	local dir = '/tmp/lua/'
 	local fileName = ('%s-%s%s'):format(prefix, os.date('%s'), format)
 	local cmd = ('mkdir -p %q && touch %s%s'):format(dir, dir, fileName)
-	assert(os.execute(cmd) == 0, 'Did not create temporary file')
+	assert(os.execute(cmd), 'Did not create temporary file')
 
 	return ('%s%s'):format(dir, fileName), fileName
 end -- >>>
@@ -405,7 +405,7 @@ function editor(text, editorName)
 	local editorName = editorName and editorName or  os.getenv('GUI_EDITOR')
 	if os.execute( "test -f " .. text ) == 0 then
 		local ok = os.execute(editorName .. ' ' .. text )
-		assert(ok == 0, 'Could not open ' .. text)
+		assert(ok, 'Could not open ' .. text)
 		return 0
 	end
 
@@ -417,7 +417,7 @@ function editor(text, editorName)
 		local file = createTmpFile({format = 'adoc'})
 		io.open(file, 'w'):write(text)
 		local ok = os.execute(editorName .. ' ' .. file )
-		assert(ok == 0, 'Could not open ' .. file)
+		assert(ok, 'Could not open ' .. file)
 	end
 end 
 --- >>>
@@ -572,7 +572,7 @@ end -- >>>
 -- getConfigProperties <<<
 -- Read configuration file with key=value format. Function returns table(map).
 function getConfigProperties(path)
-	assert(os.execute( "test -f " .. path ) == 0, 'Config file does not exist: ' .. path)
+	assert(os.execute( "test -f " .. path ), 'Config file does not exist: ' .. path)
 	return M(M.tabulate(io.lines(path)))
 		:map(M.fun.gsub('%s', ''))
 		:map(M.bind2(split,'='))

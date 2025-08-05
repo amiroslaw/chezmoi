@@ -171,7 +171,7 @@ local function restart()
 		local workDuration = file:read '*a'
 		file:write 'Restarted'
 		file:close()
-		assert( os.execute('touch -d "' .. workDuration .. ' minutes ago" ' .. STATUS_PATH) == 0, 'Can not change modification date')
+		assert( os.execute('touch -d "' .. workDuration .. ' minutes ago" ' .. STATUS_PATH), 'Can not change modification date')
 		changeTWstate(stateEnum.WORK)
 end
 

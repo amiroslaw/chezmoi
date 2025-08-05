@@ -64,12 +64,12 @@ end
 local function execQueue(cmd, group, url)
 	if type(url) == 'string' then
 		cmd = (cmd .. ' "%s"'):format(url)
-		assert(os.execute(cmd) == 0, 'Can not run: ' .. cmd)
+		assert(os.execute(cmd), 'Can not run: ' .. cmd)
 		return
 	end
 	local url, title = next(url)
 	cmd = (cmd .. '"%s"'):format(title, url)
-	assert(os.execute(cmd) == 0, 'Can not run: ' .. cmd)
+	assert(os.execute(cmd), 'Can not run: ' .. cmd)
 	startQueue(group)
 end
 
@@ -100,7 +100,7 @@ local function createEpub(link)
 	local date = os.date('%Y-%m-%d')
 	os.execute('mkdir -p ' .. KINDLE_TMP_DIR)
 	local ok = os.execute(readerCmd .. ' -H -T url,sitename,byline | pandoc --from html --to epub --output "' .. KINDLE_TMP_DIR .. title .. '.epub" --toc --metadata title="' .. title .. '" --metadata date='..date)
-	assert(ok == 0, "Can't create ebook: " .. title)
+	assert(ok, "Can't create ebook: " .. title)
 	return title
 end
 
@@ -126,7 +126,7 @@ end
 
 local function urlToDoc(url, filePath, docFormat)
 	local cmd = ('rdrview -H -A "Mozilla" "%s" -T title | pandoc --from html --to %s --output "%s"'):format(url, docFormat, filePath)
-	assert(os.execute(cmd) == 0, 'Could not create file')
+	assert(os.execute(cmd), 'Could not create file')
 end
 
 local function readable(linkTab)

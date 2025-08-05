@@ -40,7 +40,7 @@ local function switchView()
 	else
 		stat = os.execute('task context ' .. selected[1])
 	end
-	assert(stat == 0, "Coulden't switch view")
+	assert(stat, "Coulden't switch view")
 end
 
 local function modifyTask(modification)
