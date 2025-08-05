@@ -11,6 +11,5 @@ else
 fi
 sleep 0.100
 # wtype $(wl-paste)
-notify-send 2
 # ydotool key 225:1 96:1 96:0 225:0
 wl-paste | ydotool type --file -

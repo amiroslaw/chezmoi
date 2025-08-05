@@ -3,6 +3,7 @@ set -e
 
 systemctl --user start pueued.service
 systemctl --user enable pueued.service
+systemctl --user enable --now ydotool.service
 sudo systemctl enable --now NetworkManager.service             
 # sudo systemctl enable --now NetworkManager-dispatcher.service  
 # sudo systemctl enable --now NetworkManager-wait-online.service 
