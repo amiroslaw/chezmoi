@@ -16,12 +16,13 @@
         // "custom/khorshididate",
         // "wlr/taskbar",
         "hyprland/workspaces",
+	"hyprland/windowcount",
 		"hyprland/submap",
     ],
 
-    "modules-center": [
-        "hyprland/window",
-    ],
+    // "modules-center": [
+        // "hyprland/window",
+    // ],
 
     "modules-right": [
 		"mpris",
@@ -71,6 +72,17 @@
         "on-click": "sh -c '(sleep 0.5s; swaylock -eFfki ~/Pictures/lockscreen.png)' & disown",
         "tooltip": false
     },
+
+   "hyprland/windowcount" : {
+    	// "format": "{}",
+    	// "format-windowed": "󰊔",
+    	"format": " ",
+    	"format-empty": " ",
+    	"format-windowed": " ",
+    	"format-fullscreen": "{} 󰊓",
+    	"separate-outputs": false,
+     },
+
 "hyprland/window": {
 // "max-length": 50, nie ma
     // "format": "👉 {initialClass}",
@@ -86,6 +98,37 @@
         "activate-only": true,
         // "all-outputs": true,
         "show-special": true,
+		"on-scroll-up": "hyprctl dispatch workspace e-1",
+		"on-scroll-down": "hyprctl dispatch workspace e+1",
+	"format": "{name} {windows}",
+	"format-window-separator": " ",
+	"window-rewrite-default": "󰻀",
+	"window-rewrite": {
+    //websites
+    "title<.*youtube.*>": "",
+    //browsers
+    "class<firefox>": "",
+    "class<org.qutebrowser.qutebrowser>": "",
+    "class<brave>": "",
+    //editors
+    "class<org.kde.kate>": "󱃖",
+    "class<obsidian>": "",
+
+    //Applications
+    "class<org.kde.dolphin>": "",
+    "class<vifm>": "",
+".*jetbrains-idea.*": "\uE7B5",
+      ".*Chromium.*": "", 
+"class<org.wezfurlong.wezterm>": " ",
+   "foot": "",
+      "class<.*teams.*>": "󰊻",
+   "class<nvim-qt>": "",
+      "title<.*nvim.*>": "",
+	"title<.*newsboat.*>": "󰎕 ",
+	"class<audio>": "",
+		"class<VSCode|code-url-handler>": "<span font='12'>󰨞</span>",
+      "class<org.pwmt.zathura>": "",
+	},
     },
 "hyprland/submap": {
     "format": "✌️ {}",

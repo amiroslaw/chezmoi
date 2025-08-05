@@ -236,3 +236,18 @@ tooltip label{
     border-radius: 5px;
     background-color: green;
 }
+
+/* Different background when empty */
+/* window#waybar.empty #windowcount { */
+/*     background: darkred; */
+/* } */
+
+/* Hide the windowcount module when not in windowed mode (i.e. not fullscreen) */
+window#waybar.fullscreen #windowcount {
+    /* background: darkred; */
+    background: @workspace_urgent_background;
+    color: @workspace_urgent;
+	/* height: 5px; */
+    border-radius: 5px;
+    padding:  0px 7px;
+}
