@@ -70,12 +70,13 @@ Shift+y = exec pwd | wl-copy && notify-send "Copied path $(pwd)"
 ; copy image doesn't work
 ; Ctrl+y = exec cat '%' | tee > /tmp/foo && notify-send Copied
 ; Ctrl+y = exec wl-copy --type image/png < '%' && notify-send "Copied image %"
+Ctrl+y = exec sh -c 'convert "%"  -quality 85 png:- | wl-copy --type image/png'
 ;ci { command(|xclip-copyfile); }
 ; set wallpaper
 ; W { command(feh --no-fehbg --bg-fill $); }
 ;ocr image
 e = exec tesseract '%' '%'
-;rename
+# rename
 r = exec hyprctl dispatch exec "$XDG_CONFIG_HOME/swayimg/rename.sh" '%'
 1 = exec mkdir -p 1 && mv '%' 1 && echo "File moved: %" && notify-send "Moved to 1: '%'";
 2 = exec mkdir -p 2 && mv '%' 2 && echo "File moved: %" && notify-send "Moved to 2: '%'";

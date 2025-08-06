@@ -355,8 +355,8 @@ nnoremap yp :yankPath <cr>
 command! yankPath echo -n %c:p | wl-copy %i
 " yank current filename without path into the clipboard
 nnoremap yn :yankName <cr>
-command! yankName echo -n %c | xclip -sel clip %i
-"command! yankName echo -n %c | wl-copy %i
+"command! yankName echo -n %c | xclip -sel clip %i
+command! yankName echo -n %c | wl-copy %i
 " yank root of current file's name (without extension) into the clipboard
 nnoremap yr :yankRootName <cr>
 command! yankPathRoot echo -n %c:r | wl-copy %i
