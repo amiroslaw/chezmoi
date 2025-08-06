@@ -1,40 +1,41 @@
 % zypper
+@ util
 
-# Install packages
-zypper install <package-name>
+# Install packages ::zin
+sudo zypper install <recommends> <package-name>
 
 # Install local rpm package
-zypper install <filepath-rpm>
+sudo zypper install <files>
 
 # Download package without installing
-zypper install --download-only <package-name>
+sudo zypper install --download-only <package-name>
 
 # Downgrade or install a package with a specific version
-zypper install --force <package-name>-<package-version>
+sudo zypper install --force <package-name>-<package-version>
 
 # Install a package and remove a package in one go
-zypper install <package-name-1> -<package-name-2>
+sudo zypper install <package-name-1> -<package-name-2>
 
 # Remove package
-zypper remove <package-name>
+sudo zypper remove <package-name>
 
 # Automatically remove unneeded dependencies
-zypper remove --clean-deps <package-name>
+sudo zypper remove --clean-deps <package-name>
 
 # Update packages
-zypper update
+sudo zypper update
 
 # Only download the packages, do not install
-zypper update --download-only 
+sudo zypper update --download-only 
 
 # List available updates
 zypper list-updates
 
 # Update specific package
-zypper update <package-name>
+sudo zypper update <package-name>
 
 # Perform a distribution upgrade
-zypper dist-upgrade
+sudo zypper dist-upgrade
 
 # Search packages
 zypper search <query>
@@ -70,11 +71,9 @@ zypper clean
 zypper clean --all
 
 # Start a shell to enter multiple commands in one session
-zypper shell
+sudo zypper shell
 
-
-
-
+$ recommends: echo ' \n--no-recommends'
 
 
 

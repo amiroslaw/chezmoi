@@ -78,10 +78,34 @@ alias cfw3m='chezmoi edit --apply ~/.w3m/keymap'
 
 #}}}
 
+#{{{ Navi
+alias nn='navi'
+# Search using tldr/cheatsh
+alias nc="navi --cheatsh"
+alias nt="navi --tldr"
+
+# aliases using query 
+navialias() {
+    navi --query "::$1" --best-match
+}
+
+# navi
+alias sysstat='navialias sst'
+alias sysrestart='navialias sre'
+alias sysstop='navialias sxx'
+alias sysreload='navialias srd'
+alias zin='navialias zin'
+alias zse='zypper search'
+
+#}}}
+
+
 # {{{ RÓŹNE
 # copy last command
 # alias CC='$(fc -l -n -1) | xclip -sel clip'
 alias CC='fc -l -n -1 | wl-copy'
+
+alias wezt='wezterm cli set-tab-title'
 alias setup='$EDITOR "$NOTE"/finance/inwestycje/setup.adoc'
 alias weather='curl wttr.in/warszawa | grep -v "New feature" | grep -v Follow'
 alias cl='clear'
@@ -465,25 +489,6 @@ alias -g H='$(fd --hidden | fzf) '
 # env, przy uruchomieniu terminalu od razu wywołuje 
 # alias -g E=" ${(P)$(env | awk -F '=' '{print $1}' | fzf)}"
 # alias -g grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
-
-#}}}
-
-#{{{ Navi
-alias nn='navi'
-# Search using tldr/cheatsh
-alias nc="navi --cheatsh"
-alias nt="navi --tldr"
-
-# aliases using query 
-navialias() {
-    navi --query "::$1" --best-match
-}
-
-# navi
-alias sysstat='navialias sst'
-alias sysrestart='navialias sre'
-alias sysstop='navialias sxx'
-alias sysreload='navialias srd'
 
 #}}}
 
