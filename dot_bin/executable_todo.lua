@@ -8,24 +8,24 @@ List of the options:
 		show - show todo tasks for current day.
 		-h help - show help
 
--- dependency: zenity
+-- dependency: yad
 ]]
 todoPath = os.getenv('NOTE') ..  '/Zadania/inbox.adoc'
 function show() 
-	local _, ok, err = run('task rc.verbose=nothing minimal | zenity --text-info')
+	local _, ok, err = run('task rc.verbose=nothing minimal | yad --text-info')
 	if not ok then
 		notifyError(err)
 	end
-	-- local ok, err = run('todo.sh -p ls @t' .. ' | zenity --text-info')
+	-- local ok, err = run('todo.sh -p ls @t' .. ' | yad --text-info')
 	-- local todoTxt = io.input(todoPath):read("*a")
 	-- local start, last = todoTxt:find("# Week")
 	-- local todayTxt = string.sub(todoTxt, 1, start -1)
-	-- os.execute('echo "' .. todayTxt .. '" | zenity --text-info')
+	-- os.execute('echo "' .. todayTxt .. '" | yad --text-info')
 end
 
 function add() 
 	-- local _, ok, err = run('todo.sh add "' .. task .. '" +x')
-	local task = io.popen('zenity --entry --text="Add task"'):read('*a')
+	local task = io.popen('yad --entry --text="Add task"'):read('*a')
 	local file = io.open(todoPath, "a+")
 	file:write("* [ ] " .. task)
 	file:close()

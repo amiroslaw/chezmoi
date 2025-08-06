@@ -36,7 +36,7 @@ mpv.lua --mpvList queueGroupName --noInput
 
 In order to change stream format and options it's needed to add the profiles `stream` and `stream-popup` into the mpv.conf file.
 For editing - set system env: GUI_EDITOR
-Dependencies: st, clipster, fd, zenity, rofi, notify-send, yt-dlp, trash-put in optional, jq
+Dependencies: st, clipster, fd, yad, rofi, notify-send, yt-dlp, trash-put in optional, jq
 	for yt: mpv, pueue
 
 TODO: 
@@ -88,7 +88,7 @@ end
 
 local function buildName(defaultName)
 	if args.input or args.i then
-		local out = run('zenity --entry --text="Playlist name" --entry-text="' .. defaultName .. '"', "Can't run zenity")
+		local out = run('yad --entry --text="Playlist name" --entry-text="' .. defaultName .. '"', "Can't run yad")
 		return out[1]
 	end
 	local save = args.save or args.s

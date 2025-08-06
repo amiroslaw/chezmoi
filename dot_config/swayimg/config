@@ -68,15 +68,15 @@ y = exec wl-copy '%' && notify-send "Copied file name %"
 ; copy path
 Shift+y = exec pwd | wl-copy && notify-send "Copied path $(pwd)"
 ; copy image doesn't work
+; Ctrl+y = exec cat '%' | tee > /tmp/foo && notify-send Copied
 ; Ctrl+y = exec wl-copy --type image/png < '%' && notify-send "Copied image %"
 ;ci { command(|xclip-copyfile); }
 ; set wallpaper
 ; W { command(feh --no-fehbg --bg-fill $); }
 ;ocr image
-; e { command(echo -n $1 | xargs -I {} tesseract {} {}); }
-; E { command(-cat | xargs -I {} tesseract {} {}); }
-;rename but with default png extension
-; r { command(zenity --entry | xargs -I {} mv $1 {}.png); }
+e = exec tesseract '%' '%'
+;rename
+r = exec hyprctl dispatch exec "$XDG_CONFIG_HOME/swayimg/rename.sh" '%'
 1 = exec mkdir -p 1 && mv '%' 1 && echo "File moved: %" && notify-send "Moved to 1: '%'";
 2 = exec mkdir -p 2 && mv '%' 2 && echo "File moved: %" && notify-send "Moved to 2: '%'";
 3 = exec mkdir -p 3 && mv '%' 3 && echo "File moved: %" && notify-send "Moved to 3: '%'";
@@ -182,7 +182,7 @@ Delete = exec rm -f '%' && echo "File removed: %"; skip_file
 # Mode at startup (viewer/slideshow/gallery)
 mode = viewer
 # Window size (fullscreen/image, or absolute size)
-size = 1280,720
+size = fullscreen
 # Sway/Hyprland only: Window position (auto or absolute coordinates, e.g. 10,20)
 position = auto
 # Sway/Hyprland only: create floating window above the currently focused one

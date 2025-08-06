@@ -244,7 +244,7 @@ Examples:
   qu.clj restart queueGroupName
   qu.clj list
 
-Dependencies: pueue, rofi, notify-send, mpv.lua, zenity, clipster "
+Dependencies: pueue, rofi, notify-send, mpv.lua, clipster "
           (format-cmds! subcommands)
           (cli/format-opts {:spec spec})))
 

@@ -52,7 +52,6 @@
   (flatten (vec (url-params ks)))
   (run-dialog (vec (url-params ks)))
   (println (change-params ks))
-  (sh "zenity --forms --title='Add reminder' --add-entry=\"When\" --add-entry=\"Message\"  --add-password=\"Confirm Password\" --add-calendar=\"Expires\" ")
   )
 ;(defn- build-dialog [params]
 ;  (let [param-entries (for [param params]

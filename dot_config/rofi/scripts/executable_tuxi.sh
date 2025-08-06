@@ -1,9 +1,9 @@
 #!/bin/sh
-# dependency: tuxi, zenity
+# dependency: tuxi, yad
 
-input=$(zenity --entry --text="Ask" --width 530)
-tuxi -ra $input | zenity --text-info --width 530 --height 530
-# tuxi -ra $input | zenity --text-info
+input=$(yad --entry --text="Ask" --width 530)
+tuxi -ra $input | yad --text-info --width 530 --height 530
+# tuxi -ra $input | yad --text-info
 
 # rofi"
 # input=$(rofi -lines 1 -width 50 -dmenu -p "Ask") 

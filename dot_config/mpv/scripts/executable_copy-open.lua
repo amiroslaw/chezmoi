@@ -64,10 +64,6 @@ local function showMetadata()
 	file:write(text)
 	file:close()
 	local ok = os.execute(editor .. ' ' .. fileName )
-
-	-- local zenity = io.popen('zenity --text-info --width 730 --height 530', 'w')
-	-- zenity:write(text)
-	-- zenity:close()
 end
 
 function openUrl()
