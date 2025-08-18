@@ -864,6 +864,7 @@ nmap('<LocalLeader>cf', '<Plug>(grammarous-fixit)', { noremap = false }) --	Fix 
  -- }}} 
 
 -- nap-nvim {{{
+-- Quickly jump between next and previous NeoVim buffer, tab, file, spell, change list, jump list quickfix, diagnostic, etc. 
 require("nap").setup({
     next_prefix = "<a-o>",
     prev_prefix = "<a-i>",
@@ -1044,6 +1045,19 @@ vim.diagnostic.config({
 -- 		end,
 -- 	},
 })
+
+-- nvim-treesitter
+require'nvim-treesitter.configs'.setup {
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "<C-CR>",       -- Start selection
+      node_incremental = "<C-CR>",     -- Expand to next node
+      scope_incremental = "<A-CR>",    -- Expand to next scope
+      node_decremental = "<C-BS>",     -- Shrink selection (c - backspace)
+    },
+  },
+}
 
 -- można nadpisać z folderu lsp
 -- vim.lsp.config('luals', {

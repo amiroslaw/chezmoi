@@ -40,26 +40,6 @@
        (map :id)
        (str/join " ")))
 
-(defn- selected-items->tasks [tasks selected-menu-items]
-  (->> selected-menu-items
-       (map parse-long)
-       (map #(nth tasks %))))
-
-(defn- trim-col
-  "Trim a column to a specified length, padding with spaces if necessary
- Parameters:
- - column: The string to trim
- - length: The desired length of the output string (default is 20)
- Returns:
- - A string of the specified length"
-  ([column] {:post [(string? %)]}
-   (trim-col column 15))
-  ([column length] {:post [(string? %)]}
-   (let [current-length (count column)]
-     (if (>= current-length length)
-       (str (subs column 0 length))
-       (str column (apply str (repeat (- length current-length) " ")))))))
-
 (defn- extract-url
   "Extracts the fires URL from the txt string. If no URL is found, returns an empty string."
   [txt] {:pre [(string? txt)]}
@@ -190,7 +170,7 @@
         {:keys [out key exit]}
         (rofi-menu! task-items {:prompt (str "All tasks: " (count tasks)), :multi true, :width "80%", :format \i, :keys menu-keys-tasks})]
     (if exit
-      {:key key, :selected (selected-items->tasks tasks out)}
+      {:key key, :selected (rofi-indexes->inputs out tasks)}
       (menu nil))))
 
 (defn- create-group-menu [groups]

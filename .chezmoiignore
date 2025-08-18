@@ -7,6 +7,9 @@ system/
 .config/stylua
 # hyprland doesn't read from zprofile but greetd loads envs from .profile
 .zprofile
+.gitignore
+.lsp
+.clj-kondo
 
 {{ if eq .chezmoi.hostname "pc" }}
 {{ else if eq .chezmoi.hostname "laptop" }}

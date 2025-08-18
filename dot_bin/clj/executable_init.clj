@@ -60,6 +60,7 @@
    (log! msg :error)
    (when exit? (System/exit 1))))
 
+  ;; TODO  rename to run but run! is taken, maybe change to signature: cmd as string and exit? as optional 
 (defn ps-error-handler! [exit? cmd & args]
   "Executes a shell command and handles errors.
   Parameters:
@@ -158,6 +159,14 @@
 (defn- lines->vec [string]
   (vec (str/split-lines string)))
 
+(defn rofi-indexes->inputs 
+  "Helper for rofi-menu that returns indexes → format -i. Converts selected menu items"
+  [selected-menu-items inputs]
+    {:pre [(sequential? selected-menu-items) (sequential? inputs)] :post [(seq? %)]}
+  (->> selected-menu-items
+       (map parse-long)
+       (map #(nth inputs %))))
+
 (defn- rofi-menu-return [selected exit]
   (cond
     (= 0 exit) {:out (lines->vec selected), :exit true}
@@ -194,6 +203,11 @@
   (rofi-menu! [\"a\" \"b\" \"c\"] user-options)
   ```"
   ([entries] (rofi-menu! entries {}))
+  ;; TODO 
+  ;; maybe returning :out-str → converted list to string, it would be good for non multiple menu selection 
+  ; add prompt param
+  ; ([entries prompt] (rofi-menu! entries {:prompt (format "%s: (%d)" prompt (count entries))}))
+  ; ([entries prompt options] {:pre [(map? options)
   ([entries options] {:pre [(map? options)
                             (if (contains? options :keys) (vector? (:keys options)) true)]}
    (let [opt (combine-options options)
@@ -341,6 +355,21 @@
        body
        (notify-error! (format "HTTP error: %s\n%s" status (get-in body json-error-path body)) false) ;; TODO change to true
        ))))
+
+(defn- trim-col
+  "Trim a column to a specified length, padding with spaces if necessary
+ Parameters:
+ - column: The string to trim
+ - length: The desired length of the output string (default is 20)
+ Returns:
+ - A string of the specified length"
+  ([column] {:post [(string? %)]}
+   (trim-col column 20))
+  ([column length] {:post [(string? %)]}
+   (let [current-length (count column)]
+     (if (>= current-length length)
+       (str (subs column 0 length))
+       (str column (apply str (repeat (- length current-length) " ")))))))
 
 (comment
   (require '[portal.api :as p])

@@ -34,7 +34,7 @@
   {:post [(string? %)]}
   (if (nil? column)
     ""
-    (str " | " (media/trim-col column 20))))
+    (str " | " (trim-col column 20))))
 
 (defn- history->menu
   "Converts database item to a rofi menu format."
@@ -42,12 +42,12 @@
   {:post [(every? string? %)]}
   (map (fn [row] (str (:data row) (trim-col (:author row)) " | " (:title row))) history))
 
+
 (defn- items->videos
   "Converts selected menu items to video entries."
   [items history]
-  (->> items
-       (map parse-long)
-       (map (fn [i] (select-keys (get history i) [:url :title])))))
+  (->> (rofi-indexes->inputs items history)
+       (map (juxt :url :title))))
 
 (defn- rofi-history [history keys]
   (let [{:keys [out key exit]}

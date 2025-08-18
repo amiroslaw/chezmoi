@@ -14,7 +14,9 @@ snippet defmm
 snippet defma
 	(defmacro ${1:name} "${2:doc-string}" ${0:dispatch-fn})
 snippet defn
-	(defn ${1:name} "${2:doc-string}" [${3:arg-list}]
+	(defn ${1:name} 
+		"${2:doc-string}"
+		[${3:arg-list}]
 		${0:code})
 snippet defp
 	(defprotocol ${1:name}
@@ -78,6 +80,8 @@ snippet use
 	(:use [${1:namespace} :only [${0}]])
 snippet print
 	(println ${0})
+snippet pprint
+	(clojure.pprint/pprint ${0})
 snippet reduce
 	(reduce ${1:(fn [p n] ${3})} ${2})
 snippet when

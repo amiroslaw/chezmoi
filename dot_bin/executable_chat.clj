@@ -46,6 +46,7 @@
       (System/exit 0)
       input)))
 
+;; todo export and get from GEMINI_API_KEY
 (def gemini-api-key (let [path (str (System/getenv "PRIVATE") "/keys.properties")
                           key (get-properties! path "gemini_api_key")]
                       (if key key

@@ -35,7 +35,7 @@
    :post [(string? %)]}
   (let [snippet (:snippet item)
         date (first (str/split (:publishedAt snippet) #"T"))]
-    (format "%s | %s | %s" date (media/trim-col (:channelTitle snippet)) (:title snippet))))
+    (format "%s | %s | %s" date (trim-col (:channelTitle snippet)) (:title snippet))))
 
 (defn- response->video [res]
   {:pre  [(map? res)]
@@ -52,9 +52,7 @@
 (defn- rofi-selections->videos
   "Converts selected menu items to maps with URL and title."
   [items response]
-  (->> items
-       (map parse-long)
-       (map (fn [i] (get response i)))
+  (->> (rofi-indexes->inputs items response)
        (map response->video)))
 
 (defn- rofi-video-menu [response]
@@ -228,7 +226,7 @@
   (let [list-id (url-params (:url opts) "list")
         playlist (fetch-playlist list-id)]
     (if (:m3u opts)
-      (tap> (create-playlist playlist))
+      (create-playlist playlist)
       (rofi-videos playlist)
       )))
 

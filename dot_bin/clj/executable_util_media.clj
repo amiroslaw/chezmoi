@@ -33,20 +33,6 @@
   [action label]
   (format (get actions action) (clojure.string/escape label {\' "`"})))
 
-(defn- trim-col
-  "Trim a column to a specified length, padding with spaces if necessary
- Parameters:
- - column: The string to trim
- - length: The desired length of the output string (default is 20)
- Returns:
- - A string of the specified length"
-  ([column] {:post [(string? %)]}
-   (trim-col column 20))
-  ([column length] {:post [(string? %)]}
-   (let [current-length (count column)]
-     (if (>= current-length length)
-       (str (subs column 0 length))
-       (str column (apply str (repeat (- length current-length) " ")))))))
 
 ;(defn- trim-col [column]
 ;  {:post [(string? %)]}
