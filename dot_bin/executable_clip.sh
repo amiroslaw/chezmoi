@@ -2,13 +2,15 @@
 set -o pipefail
 
 # items=$(cliphist list) $(cat $PRIVATE/rofi/snippet)
-selection=$({ cliphist list; cat "$PRIVATE/rofi/snippet"; } | rofi -dmenu)
+# selection=$({ cliphist list; cat "$PRIVATE/rofi/snippet"; } | rofi -dmenu)
 
-if decoded=$(echo "$selection" | cliphist decode); then
-    echo "$decoded" | wl-copy
-else
-    echo "$selection" | awk '{print $2}' | wl-copy
-fi
+# if decoded=$(echo "$selection" | cliphist decode); then
+#     echo "$decoded" | wl-copy
+# else
+#     echo "$selection" | awk '{print $2}' | wl-copy
+# fi
+
+clipcat-menu insert
 sleep 0.100
 
 ydotool key 29:1 47:1 47:0 29:0

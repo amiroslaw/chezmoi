@@ -3,8 +3,12 @@ set -e
 
 LOCAL_BIN_DIR="$HOME/.local/bin"
 TMP="$HOME/tmp-chezmoi"
+mkdir -p "$TMP"
 mkdir -p "$LOCAL_BIN_DIR"
 sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+
+echo "🔨 install clipcat..."
+sudo zypper --no-gpg-checks install -y $TMP/clipcat.rpm
 
 curl -fsSL https://gomi.dev/install | bash
 mv "$HOME/bin/gomi" "$LOCAL_BIN_DIR"
