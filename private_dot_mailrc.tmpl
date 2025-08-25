@@ -1,7 +1,6 @@
 set smtp-use-starttls
 set ssl-verify=ignore
 set smtp=smtp://smtp.gmail.com:587
-set smtp-auth=loginil.mailrcPassm:58
-set smtp-auth-user={{- .mail.gmail -}}
-set smtp-auth-password={{- .mail.mailrcPass -}}
+set smtp-auth-user={{- .mail.gmail }}
+set smtp-auth-password={{- .mail.mailrcPass }}
 set from="{{- .mail.gmail -}}(Arkadiusz Mirosław)"

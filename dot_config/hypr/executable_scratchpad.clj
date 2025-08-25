@@ -24,7 +24,7 @@
   [win]
   {:pre [(map? win)], :post [(string? %)]}
   (let [workspace (last (str/split (get-in win [:workspace :name]) #":"))
-        class (trim-col (last (str/split (:class win) #"\\.")) 10)
+        class (trim-col (last (str/split (:class win) #"\.")) 10)
         title (:title win)]
     (format "%s\t :%s #%s" workspace class title)))
 
