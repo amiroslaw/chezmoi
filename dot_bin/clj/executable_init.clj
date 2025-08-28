@@ -216,7 +216,7 @@
          msg (when (not-empty (:msg opt)) (format " -markup -mesg \"%s\"" (:msg opt)))]
      (let [{:keys [exit out]}
            (sh {:in entries}
-               (format "rofi -format %s %s -monitor -4 -i -l %s -dmenu -p '%s' -theme-str 'window {width:  %s;}' %s %s"
+               (format "rofi -format %s %s -case-smart -monitor -4 -i -l %s -dmenu -p '%s' -theme-str 'window {width:  %s;}' %s %s"
                        (:format opt) (:multi opt) height (:prompt opt) (:width opt) (:keys opt) msg))]
        (rofi-menu-return out exit)))))
 
