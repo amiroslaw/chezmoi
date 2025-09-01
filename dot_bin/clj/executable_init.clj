@@ -61,6 +61,7 @@
    (when exit? (System/exit 1))))
 
   ;; TODO  rename to run but run! is taken, maybe change to signature: cmd as string and exit? as optional 
+;; maybe add option to return vector if the output returns multiple lines
 (defn ps-error-handler! [exit? cmd & args]
   "Executes a shell command and handles errors.
   Parameters:
