@@ -156,7 +156,7 @@
   {:pre  [(map? item)] :post [(string? %)]}
   (let [snippet (:snippet item)
         date (first (str/split (:publishedAt snippet) #"T"))]
-    (format "%s | %s | %s" date (media/trim-col (:channelTitle snippet)) (:title snippet))))
+    (format "%s | %s | %s" date (trim-col (:channelTitle snippet)) (:title snippet))))
 
 (defn- response->video [res]
   {:pre  [(map? res)] :post [(map? %)]}
