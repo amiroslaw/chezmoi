@@ -293,7 +293,7 @@
 
 (defn get-properties!
   "Loads properties from a file at the given path if it is a regular file. It needs to be a java properties file.
-  Returns a map with the property names and values."
+  Returns a map with the property names and values. List has to be split by ','"
   ([path]
    (if (fs/regular-file? path)
      (doto (new java.util.Properties)
@@ -370,6 +370,78 @@
      (if (>= current-length length)
        (str (subs column 0 length))
        (str column (apply str (repeat (- length current-length) " ")))))))
+
+(defn- transform-subcmd
+  "Transforms a subcommand map from cli lib into a standardized format."
+  [subcmd]
+  {:pre [(map? subcmd)] :post [(map? %)]}
+  (let [{:keys [cmds spec desc]} subcmd
+        opts (if spec
+               (mapv (fn [[k v]]
+                       {:name (name k)
+                        :opt-desc (:desc v)
+                        :coerce (:coerce v)})
+                     spec)
+               [])]
+    {:cmd (first cmds), :desc (or desc ""), :opts opts}))
+
+(defn- format-opt
+  "Formats a single option for Zsh completion."
+  [{:keys [name opt-desc coerce]}]
+  {:pre [(string? name) (string? opt-desc)] :post [(string? %)]}
+  (let [action (match [coerce]
+                      [:int] ":Int:"
+                      [:long] ":Long:"
+                      [:double] ":Double:"
+                      [(_ :guard #(number? %))] ":Number:" ;; maybe not needed previous
+                      [:boolean] ""
+                      [:paths] ":Filename:_files"
+                      [(_ :guard #(vector? %))] ":Filename:_files"
+                      :else ":String:")]
+    (format "'--%s[%s]%s'" name opt-desc action)))
+
+(defn- format-subcmd
+  "Builds list of commands and arguments for Zsh completion."
+  [{:keys [cmd desc opts]}]
+  (let [command (format "'%s:%s'" (or cmd " ") desc)
+        opt (str/join " " (map format-opt opts))
+        arg (format "%s) _arguments %s ;;" (or cmd "*") opt)]
+    {:cmd command :arg arg}))
+
+(defn- format-completion
+  "Formats a Zsh completion script for a list of subcommands."
+  [subcmds]
+  {:pre [(sequential? subcmds)] :post [(string? %)]}
+  (let [file-name-with-ext (fs/file-name *file*)
+        file-name (first (fs/split-ext file-name-with-ext))
+        completion (map format-subcmd subcmds)
+        cmds (str/join " " (mapv :cmd completion))
+        args (str/join "\n" (mapv :arg completion))]
+    (format
+      "_%1$s() {
+        local -a commands=(%2$s)
+        local state line
+        _arguments -C '1:command:->cmds' '*::arg:->args'
+        case $state in
+          cmds) _describe 'command' commands ;;
+          args)
+            case $line[1] in
+              %3$s
+            esac
+          ;;
+        esac
+        }
+      compdef _%1$s %4$s" file-name cmds args file-name-with-ext)))
+
+;; TODO add support for other shells
+(defn completion!
+  "Generates and prints Zsh completion scripts for a list of subcommands."
+  [subcmds _]
+  {:pre [(sequential? subcmds) (every? map? subcmds)]}
+  (->> subcmds
+       (map transform-subcmd)
+       format-completion
+       print))
 
 (comment
   (require '[portal.api :as p])
