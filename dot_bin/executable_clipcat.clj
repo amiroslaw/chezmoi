@@ -1,30 +1,29 @@
 #!/usr/bin/env bb
-(require '[babashka.process :as ps :refer [$ shell process sh]]
-         '[clojure.string :as str]
-         '[babashka.cli :as cli]
-         '[clojure.core.match :refer [match]]
-         '[clojure.java.io :as io])
+(require '[clojure.string :as str] '[babashka.cli :as cli] '[clojure.core.match :refer [match]])
+
+;; I could not find a clipboard manager for wayland which could separate primary from clipboard
+;; buffer, this is why I have selection subcommand instead of passing parameter in options and
+;; providing the same functionality.
 ;; TODO
+; fix selection
+; paste-clip - add x11 support with xdotool
+; build my own rofi selector with keybinding for removing entries and adding them to the snippets,
+; multiselect
 
 (declare subcommands)
 
-(defn- paste
-  [opts clip]
-  {:pre [(string? clip)]}
-  (if (:paste opts)
-    (do (ps-error-handler! true "clipcatctl insert" clip)
-        (ps-error-handler! true "sleep 0.100")
-        ; ctrl+v
-        (ps-error-handler! true "ydotool key 29:1 47:1 47:0 29:0")
-        ; # shift+insert -  primary clipboard
-        ; (ps-error-handler! true "clipcatctl insert -k primary" clip)
-        ; (ps-error-handler! true "ydotool key 42:1 110:1 110:0 42:0")
-        ;       'xdotool sleep 0.100 key --clearmodifiers ctrl+v'
-        (println clip))
-    (println clip)))
+(defn- selection
+  [{opts :opts}]
+  (let [primary (ps-error-handler! true "wl-paste --primary")]
+    (if (:paste opts)
+      (do
+       (ps-error-handler! true "sleep 0.100")
+        ; shift+insert -  primary clipboard
+        (ps-error-handler! true "ydotool key 42:1 110:1 110:0 42:0")
+        (println primary))
+      (println primary))))
 
-(defn- list-clip-id
-  []
+(defn- list-clip-id []
   {:post [(sequential? %)]}
   (->> (ps-error-handler! true "clipcatctl list")
        str/split-lines
@@ -36,9 +35,31 @@
   {:pre [(string? id)], :post [(string? %)]}
   (ps-error-handler! true "clipcatctl get" id))
 
-(defn- previous [{opts :opts}] (paste opts (get-clip (second (list-clip-id)))))
+(defn- last-clip [] (get-clip (first (list-clip-id))))
 
-(defn- last-item [{opts :opts}] (paste opts (get-clip (first (list-clip-id)))))
+(defn- paste-clip
+  ([opts] (paste-clip opts (last-clip)))
+  ([opts clip]
+   (if (:paste opts)
+     (do 
+       ; (ps-error-handler! true "sleep 0.100")
+         ; ctrl+v
+         (ps-error-handler! true "ydotool key 29:1 47:1 47:0 29:0")
+         ; (ps-error-handler! true "clipcatctl insert -k primary" clip)
+         ;       'xdotool sleep 0.100 key --clearmodifiers ctrl+v'
+         (println clip))
+     (println clip))))
+
+(defn- previous
+  [{opts :opts}]
+  (->> (list-clip-id)
+       second
+       get-clip
+       str/trim
+       (ps-error-handler! true "clipcatctl insert"))
+  (paste-clip opts))
+
+(defn- menu [{opts :opts}] (ps-error-handler! true "clipcat-menu insert") (paste-clip opts))
 
 (defn- join
   [{opts :opts}]
@@ -47,7 +68,7 @@
          (take number)
          (map get-clip)
          (str/join "\n")
-         (paste opts))))
+         (paste-clip opts))))
 
 (def spec-join
   {:number
@@ -60,6 +81,7 @@
   [_]
   (printf
     " Utils for working with clipcat program. %n%s
+Global options:%n%s
 Options for `join` command:%n%s
 Examples:
    clipcat.clj join --number 3
@@ -67,13 +89,17 @@ Examples:
 %nDependencies:
 -- dependency: clipcat, rofi"
     (format-cmds! subcommands)
+    (cli/format-opts {:spec spec-global})
     (cli/format-opts {:spec spec-join})))
 
 (def subcommands
   [{:cmds ["join"], :desc "Join clipboard items", :fn join, :spec (merge spec-global spec-join)}
    {:cmds ["previous"], :desc "Get the previous clipboard item", :fn previous, :spec spec-global}
-   {:cmds ["last"], :desc "Get the last clipboard item", :fn last-item, :spec spec-global}
-   {:cmds ["help"], :desc "Print help.", :fn print-help}
+   {:cmds ["menu"], :desc "Clipboard rofi menu", :fn menu, :spec spec-global}
+   {:cmds ["selection"],
+    :desc "Get the last item from the primary (selection) clipboard",
+    :fn selection,
+    :spec spec-global} {:cmds ["help"], :desc "Print help.", :fn print-help}
    {:cmds [], :desc "Print help.", :fn print-help}])
 
 (when (= *file* (System/getProperty "babashka.file"))
