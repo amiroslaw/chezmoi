@@ -9,6 +9,17 @@
 ["tmp-chezmoi/clipcat.rpm"]
 	type = "file" 
 	url = "https://github.com/xrelkd/clipcat/releases/download/v0.21.0/clipcat-0.21.0-1.el7.x86_64.rpm"
+
+# CURSORS
+[".local/share/icons/Bibata-cursor"] 
+	type = "archive" 
+	stripComponents	= 1
+	url = "https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.7/Bibata-Modern-Ice.tar.xz"
+[".local/share/icons/GoogleDot-cursor"] 
+	type = "archive" 
+	stripComponents	= 1
+	url = "https://github.com/ful1e5/Google_Cursor/releases/download/v2.0.0/GoogleDot-Blue.tar.gz"
+	# url = "https://github.com/ful1e5/Google_Cursor/releases/download/v2.0.0/GoogleDot-Black.tar.gz"
 # from cargo
 # ["tmp-chezmoi/taskwarrior-tui.rpm"] 
 # 	type = "file" 
@@ -20,5 +31,10 @@
 # ["tmp-chezmoi/kanata"]
 # 	type = "git-repo" 
 # 	url = "https://github.com/jtroo/kanata.git"
+
+# I'm don't know how to download subdir from github 
+# [".local/share/icons/qogir"] 
+	# type = "file" 
+	# url = "https://github.com/vinceliuice/Qogir-icon-theme/tree/master/src/cursors/dist-Manjaro-Dark"
 
 # files
