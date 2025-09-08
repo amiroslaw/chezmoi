@@ -1,5 +1,10 @@
 % systemctl, service
 
+# shutdown 
+sleep <timer> && systemctl poweroff
+$ timer: echo '900\n1800\n2700\n3600'
+
+# start service
 systemctl <user> start <service_inactive>
 
 # Stop service ::sxx

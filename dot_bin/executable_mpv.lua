@@ -184,6 +184,7 @@ local function makeQueue(group)
 	-- I could read a title from label
 	-- local cmd = [[pueue status --json | jq -r '.tasks.[] | select(.group == "%s") | "\(.label)@@@\(.command)"']]
 	-- local _, out = run(cmd:format(group))
+	-- TODO change parsking json to clojure
 	local out = run(('pueue status --json | jq -r \'.tasks.[] | select(.group == "%s") | .command\''):format(group))
 
 	if #out == 0 then
