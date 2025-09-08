@@ -348,6 +348,7 @@ return {
 	--}}}
 	--{{{ COLORSCHEMES and Syntax
 	'baskerville/vim-sxhkdrc',
+	'kmonad/kmonad-vim',
 	'rafi/awesome-vim-colorschemes', -- https://vimcolorschemes.com/rafi/awesome-vim-colorschemes
 	-- not used
 	{ 'dracula/vim', lazy = false, priority = 1000, name = 'dracula', enabled = false },
