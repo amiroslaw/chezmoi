@@ -431,16 +431,20 @@ fo() {
 #ZSH
 # {{{ ZSH extensions 
 # open files based on their extensions in default app
-# devour swallows 
 alias -s {tex,txt,md,adoc,java,html}=nvim
 alias -s html=w3m
-alias -s {avi,mp4,webm,m3u,mkv}='devour mpv --profile stream '
-alias -s pdf='devour zathura'
+alias -s {avi,mp4,webm,m3u,mkv}='mpv --profile=stream '
+alias -s pdf='zathura'
 alias -s {mp3,flac,og}='mpv --no-video'
-alias -s {jpg,JPG,jpeg,png,PNG,gif}='devour pqiv'  
-alias -s {ods,ODS,odt,ODT,odp,ODP,doc,DOC,docx,DOCX,xls,XLS,xlsx,XLSX,xlsm,XLSM,ppt,PPT,pptx,PPTX,csv,CSV}='devour libreoffice'
+alias -s {jpg,JPG,jpeg,png,PNG,gif}='swayimg'  
+alias -s {ods,ODS,odt,ODT,odp,ODP,doc,DOC,docx,DOCX,xls,XLS,xlsx,XLSX,xlsm,XLSM,ppt,PPT,pptx,PPTX,csv,CSV}='libreoffice'
 alias -s {zip,ZIP,war,WAR,gz,tgz}="atool -l"
 alias -s {jar,JAR}="java -jar"
+# devour swallows in hyprland I can set it as a global function
+# alias -s {avi,mp4,webm,m3u,mkv}='devour mpv --profile=stream '
+# alias -s pdf='devour zathura'
+# alias -s {jpg,JPG,jpeg,png,PNG,gif}='devour pqiv'  
+# alias -s {ods,ODS,odt,ODT,odp,ODP,doc,DOC,docx,DOCX,xls,XLS,xlsx,XLSX,xlsm,XLSM,ppt,PPT,pptx,PPTX,csv,CSV}='devour libreoffice'
 #}}}
 
 # {{{ ZSH global

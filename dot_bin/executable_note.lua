@@ -10,11 +10,10 @@ List of the options:
 	number - number of clipboard history, if it will be empty, input form will appear
 	-h help - write help
 
--- dependency: rofi, clipster
+-- dependency: rofi, clipcat
 ]]
 FILE_PATH = os.getenv('NOTE') ..  '/clip.adoc'
 action = arg[1]
-clipboard = 'primary'
 
 if not action then 
 	notifyError('Provide argument')
@@ -23,27 +22,16 @@ end
 function clipster(clipboard) 
 	local clipType = clipboard
 	return function()
-		local delimiter = '~#~'
 		local clipboardAmount = 1
 		if not arg[2] then clipboardAmount = rofiNumberInput('Number of clips') 
 		else
 			clipboardAmount = arg[2]
 		end
 
-		-- local clipElements = io.popen("clipster --output --" .. clipType .. " -n " .. clipboardAmount):read('*a') -- for LIFO order
 		local clipElements = {}
-		local clipsterOutput = io.popen("clipster --output --delim " .. delimiter .. " --" .. clipType .. " -n " .. clipboardAmount + 1):read('*a')
+		local clipsterOutput = io.popen("clipcat.clj " .. clipType .. " -n " .. clipboardAmount + 1):read('*a')
 		assert(#clipsterOutput ~= 0, "Can not get clipboard history")
-
-		for token in clipsterOutput:gmatch("(.-)" .. delimiter) do
-			table.insert(clipElements, token)
-		end
-		
-		local revertedClip = ''
-		for i=1, #clipElements do
-			revertedClip = revertedClip .. clipElements[#clipElements + 1 - i] .. '\n'
-		end
-		return revertedClip
+		return clipsterOutput
 	end
 end
 
@@ -60,13 +48,13 @@ end
 
 local switch = (function(name)
 	local sw = {
-		["clip"]= clipster('clipboard'),
-		["clipboard"]= clipster('clipboard'),
-		["sel"]= clipster('primary'),
-		["selection"]= clipster('primary'),
+		["clip"]= clipster('join'),
+		["clipboard"]= clipster('join'),
+		["sel"]= clipster('selection'),
+		["selection"]= clipster('selection'),
 		["write"] = writeNote,
 		["-h"]= function() print(HELP); os.exit() end,
-		["#default"]= clipster('primary'),
+		["#default"]= clipster('join'),
 	}
 	return (sw[name]and{sw[name]}or{sw["#default"]})[1]
 end)

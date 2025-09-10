@@ -29,8 +29,8 @@
     (sql/query (get-in db [db-name :path]) (get-in db [db-name :query]))
     (catch Exception e
       (notify-error! (str "Query database\n" (.getMessage e)) true))))
-
-(defn- trim-col [column]
+;; TODO
+(defn- trim [column]
   {:post [(string? %)]}
   (if (nil? column)
     ""
@@ -40,7 +40,7 @@
   "Converts database item to a rofi menu format."
   [history]
   {:post [(every? string? %)]}
-  (map (fn [row] (str (:data row) (trim-col (:author row)) " | " (:title row))) history))
+  (map (fn [row] (str (:data row) (trim (:author row)) " | " (:title row))) history))
 
 
 (defn- items->videos
@@ -64,7 +64,7 @@
   - videos: A list of the videos
   - action: The action to execute, which should be a key in the actions map"
   [videos action]
-  (doseq [video videos] (ps-error-handler! false (media/cmd-from-action action (:title video)) (:url video))))
+  (doseq [video videos] (ps-error-handler! false (media/cmd-from-action action (second video)) (first video))))
 
 (defn- run [db keys default]
   (let [history (query-history! db)
@@ -109,8 +109,6 @@
   (count (query-history!))
   (run :qutebrowser media/rofi-keys :fullscreen)
   (run :newsboat media/rofi-keys :fullscreen)
-
-  (trim-col "apropos clojure")
 
   (deps/add-deps '{:deps {io.github.paintparty/fireworks {:mvn/version "0.10.4"}}})
   (require '[fireworks.core :refer [? !? ?> !?>]])
