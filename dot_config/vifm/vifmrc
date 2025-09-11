@@ -344,6 +344,7 @@ nnoremap > 4<c-w><
 nnoremap < 4<c-w>>
 
 " CLIPBOARD COPY
+" TODO change to clipcat
 " yank current directory path into the clipboard
 " nnoremap yd :!echo -n %d | xclip -sel clip %i<cr>
 nnoremap yd :yankPathRoot <cr>

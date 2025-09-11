@@ -33,23 +33,16 @@
 
 (let [qute-url (System/getenv "QUTE_URL")
       page (slurp (System/getenv "QUTE_TEXT"))
-      selected-text (System/getenv "QUTE_SELECTED_TEXT")    ;; or (ps-error-handler! true "clipster -p -o")
+      selected-text (System/getenv "QUTE_SELECTED_TEXT")
       url (build-url qute-url selected-text page)]
   (notify! url)
-  (sh {:in url} "clipster -c "))
+  (ps-error-handler! true "clipcatctl insert " url))
+  ; (sh {:in url} "clipster -c "))
 
 (comment
   (def short "The three main uses of the en dash are:")
   (def long "The en dash is commonly used to indicate a closed range of values – a range with clearly defined and finite upper and lower boundaries – roughly signifying what might otherwise be communicated by the word")
   (build-url "https://en.wikipedia.org/wiki/Dash" long)
-
-  (sh {:in
-       (build-url "https://en.wikipedia.org/wiki/Dash"
-                  ;"he three main uses of the en dash are:"
-                  short
-                  ;(ps-error-handler! true "clipster -p -o")
-                  )
-       } "clipster -c ")
 
   (def text "Lisp is a functional programming language. Clojure is a functional programming language.")
   (def selection "sp is a functional prog")

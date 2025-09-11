@@ -35,7 +35,8 @@
 ;; todo, change to clipcat
 (defn- clipboard [type]
   {:pre [(string? type)]}
-  (ps-error-handler! true (str "clipster --output -m '' --" type)))
+  (ps-error-handler! true (str "clipcat.clj " type)))
+  ; (ps-error-handler! true (str "clipster --output -m '' --" type)))
 
 ;; Data Fetching
 (defn- fetch-playlist [id]

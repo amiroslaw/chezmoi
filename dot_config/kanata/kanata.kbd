@@ -126,7 +126,7 @@ look if some programs need to be execute with shell
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defalias ;; common apps scripts
-  tab (tap-dance 300 (tab M-tab  A-tab C-tab)) ;; too many available actions
+  tab (tap-dance 200 (tab M-tab  A-tab C-tab)) ;; too many available actions
   q (cmd notify-send t)
   trash (cmd sh -c r#"eval $(printf "$TERM_LT $TERM_LT_RUN" "trash" "gomi --restore")"#r) ;; TODO add
   ;; without setsid or sh -c, apps will be terminated when kanata is killed
@@ -154,7 +154,7 @@ look if some programs need to be execute with shell
 
 
 (deflayermap (url) ;; or media
-	f1 (cmd notify-send options: "u-url menu\nm(M)-magnet\nf(F)-video\na(A)-audio dl\ny(Y)-yt dl\ng(G)-gallery-dl\nw(w)-wget\ns-speed reader\nr-read\nk(K)-kindle")
+	F1 (cmd notify-send options: "u-url menu\nm(M)-magnet\nf(F)-video\na(A)-audio dl\ny(Y)-yt dl\ng(G)-gallery-dl\nw(w)-wget\ns-speed reader\nr-read\nk(K)-kindle")
 	u (cmd url.lua --menu --input)
 	s (cmd url.lua --speed -n 1)
 	r (cmd url.lua --read -n 1)
@@ -170,23 +170,21 @@ look if some programs need to be execute with shell
 (deflayermap (yt)
   n (cmd db-search.clj --newsboat)
   q (cmd db-search.clj --qutebrowser)
-  F1 (cmd notify-send yt)
   ___ XX)
 
 (deflayermap (clip)
-	f1 (cmd notify-send clip options: "g-gui\np-(prim)selection\nr[R]-remove clip/sel\nj[J]-join clip/sel\nn(N)-next clip/sel\nk(K)-note from clip\nl(L)-note from sel\nw -write note")
-	p (cmd clipcat.clj selection --paste)
+	F1 (cmd notify-send clip options: "g-gui\np-(prim)selection\nr[R]-remove clip/sel\nj[J]-join clip/sel\nn(N)-next clip/sel\nk(K)-note from clip\nl(L)-note from sel\nw -write note")
+	p (cmd clipcat.clj primary --paste)
 	j (cmd clipcat.clj join --input)
 	4 (cmd clipcat.clj join --number 4)
 	m (cmd clipcat.clj menu --paste)
 	r (cmd clipcat-menu remove)
 	;;e (cmd bash -c "clipcat-menu edit") ;; not useful, also it doesn't work
-	n (cmd clipcat.clj previous --paste)
+	n (cmd clipcat.clj clip --previous --paste)
 	;; maybe better for sequence 
-	s (t! (cmd note.lua clip 1) (cmd note.lua sel 1)) ;; selection on hold
+	s (t! hold (cmd note.lua clip 1) (cmd note.lua sel 1)) ;; selection on hold
 	i (cmd note.lua clip) ;; input for the number of copied elements
 	w (cmd note.lua write)
-	F1 (cmd notify-send deflayermap)
   ___ XX)
 
 

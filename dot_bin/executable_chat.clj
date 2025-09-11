@@ -139,9 +139,11 @@
 (defn- get-text [opts]
   (cond
     (:url opts) (html->txt (:url opts))
-    (:primary opts) (:out (sh "clipster --output -m '' --primary"))
+    (:primary opts) (:out (sh "clipcat.clj primary"))
+    ; (:primary opts) (:out (sh "clipster --output -m '' --primary"))
     (:input opts) (:input opts)
-    :else (:out (sh "clipster --output -m '' --clipboard"))))
+    :else (:out (sh "clipcat.clj clip"))))
+    ; :else (:out (sh "clipster --output -m '' --clipboard"))))
 
 (defn- display-ai-response [response opts]
   (create-dir! response-dir)
@@ -230,7 +232,7 @@
   OLLAMA_API_HOST = %s
   TERM_LT and TERM_LT_RUN = %s
   %nDependencies:
-   - ollama, clipster, rofi
+   - ollama, clipcat, rofi
    - optional for `url` flag: rdrview, pandoc
    - optional for `scratchpad`: nvim "
           (format-cmds! subcommands)

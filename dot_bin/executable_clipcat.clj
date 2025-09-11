@@ -12,7 +12,7 @@
 
 (declare subcommands)
 
-(defn- selection
+(defn- primary
   [{opts :opts}]
   (let [primary (ps-error-handler! true "wl-paste --primary")]
     (if (:paste opts)
@@ -50,13 +50,14 @@
          (println clip))
      (println clip))))
 
-(defn- previous
+(defn- clip
   [{opts :opts}]
-  (->> (list-clip-id)
-       second
-       get-clip
-       str/trim
-       (ps-error-handler! true "clipcatctl insert"))
+  (let [previous (if (:previous opts) second first)]
+    (->> (list-clip-id)
+         previous
+         get-clip
+         str/trim
+         (ps-error-handler! true "clipcatctl insert")))
   (paste-clip opts))
 
 (defn- menu [{opts :opts}] (ps-error-handler! true "clipcat-menu insert") (paste-clip opts))
@@ -75,6 +76,7 @@
      {:desc "Number of previous items to join. Default 10", :coerce :int, :default 10, :alias :n},
    :input {:desc "Input for numbers of items to join.", :coerce :boolean, :alias :i}})
 
+(def spec-clip {:previous {:desc "Get previous clipboard item.", :coerce :boolean, :alias :r}})
 (def spec-global {:paste {:desc "Imitate paste.", :coerce :boolean, :alias :p}})
 
 (defn- print-help
@@ -83,6 +85,7 @@
     " Utils for working with clipcat program. %n%s
 Global options:%n%s
 Options for `join` command:%n%s
+Options for `clip` command:%n%s
 Examples:
    clipcat.clj join --number 3
   source <(clipcat.clj completions)  → source zsh completions
@@ -90,15 +93,16 @@ Examples:
 -- dependency: clipcat, rofi"
     (format-cmds! subcommands)
     (cli/format-opts {:spec spec-global})
-    (cli/format-opts {:spec spec-join})))
+    (cli/format-opts {:spec spec-join})
+    (cli/format-opts {:spec spec-clip})))
 
 (def subcommands
   [{:cmds ["join"], :desc "Join clipboard items", :fn join, :spec (merge spec-global spec-join)}
-   {:cmds ["previous"], :desc "Get the previous clipboard item", :fn previous, :spec spec-global}
+   {:cmds ["clip"], :desc "Get a clipboard item", :fn clip, :spec (merge spec-global spec-clip)}
    {:cmds ["menu"], :desc "Clipboard rofi menu", :fn menu, :spec spec-global}
-   {:cmds ["selection"],
+   {:cmds ["primary"],
     :desc "Get the last item from the primary (selection) clipboard",
-    :fn selection,
+    :fn primary,
     :spec spec-global} {:cmds ["help"], :desc "Print help.", :fn print-help}
    {:cmds [], :desc "Print help.", :fn print-help}])
 

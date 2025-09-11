@@ -21,10 +21,11 @@ List of the actions:
 		--help -h - show help
 
 List of the options:
-		--number -n number of line from clipboard. In default it will grab one item from CLIPBOARD clipboard
-		--primary -p → takes url from the PRIMARY clipboard, instead of the CLIPBOARD clipboard
-		--input -i show form input for the number
 		--email -e → option for kinde, ebook will be send to a kindle device via email. You need to setup mailx and create $PRIVATE/kindle_email file with an email address
+		--primary -p → takes url from the PRIMARY clipboard, instead of the CLIPBOARD clipboard
+		only with clipboard type
+		--number -n number of line from clipboard. In default it will grab one item from CLIPBOARD clipboard
+		--input -i show form input for the number
 		url - link for a website/video
 
 Examples:
@@ -41,7 +42,7 @@ url.lua --kindle --email url
 Choose action from menu, and pass url from PRIMARY clipboard
 url.lua --menu --primary
 
-dependencies:  clipster, yt-dlp, gallery-dl, rdrview, mailx, speedread, pandoc, pueue
+dependencies:  clipcat, yt-dlp, gallery-dl, rdrview, mailx, speedread, pandoc, pueue
 ]]
 
 local YT_DIR = '~/Videos/YouTube/'
@@ -293,11 +294,14 @@ if argNumber then
 	if args.url then -- get from the option
 		number = args.url[1]
 	end
+	local clipboard = ''
 	local clip = ' --clipboard '
 	if args.primary or args.p then
-		clip = ' --primary '
+		clipboard = io.popen("clipcat.clj primary")
+	else
+		clipboard = io.popen("clipcat.clj join -n " .. number)
 	end
-	local clipboard = io.popen("clipster --output ".. clip .." -n " .. number)
+	-- local clipboard = io.popen("clipster --output ".. clip .." -n " .. number)
 	linkTab = filterLinks(clipboard)
 end
 

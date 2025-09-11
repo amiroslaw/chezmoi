@@ -5,7 +5,7 @@ print [[
 Utility script for managing stream with the mpv program. 
 Using: mpv.lua action [url]
 
-The url argument can be replace by `--clip` (it will be pulled from the clipboard using the clipster application) or `--resume` (temporary file) options.
+The url argument can be replace by `--clip` (it will be pulled from the clipboard using the clipcat application) or `--resume` (temporary file) options.
 Actions that run list, create a playlist (*.m3u) - after the player is closed script will make a file. 
 Actions that manage playlists can take `--save[=playlistName]` or `--input` options for overrate default name.
 
@@ -36,7 +36,7 @@ mpv.lua --mpvList queueGroupName --noInput
 
 In order to change stream format and options it's needed to add the profiles `stream` and `stream-popup` into the mpv.conf file.
 For editing - set system env: GUI_EDITOR
-Dependencies: st, clipster, fd, yad, rofi, notify-send, yt-dlp, trash-put in optional, jq
+Dependencies: st, clipcat, fd, yad, rofi, notify-send, yt-dlp, trash-put in optional, jq
 	for yt: mpv, pueue
 
 TODO: 
@@ -76,7 +76,8 @@ if args.params then
 end
 
 if args.clip or args.c then
-	local clipboard, status, err = run('clipster -o --clipboard -n 1', "Can't read from cliparser")
+	-- local clipboard, status, err = run('clipster -o --clipboard -n 1', "Can't read from clipster")
+	local clipboard, status, err = run('clipcat.clj join -n 1', "Can't read from clipcat")
 	assert(status, err)
 	local match = clipboard[1]:match(LINK_REGEX)
 	if match then
