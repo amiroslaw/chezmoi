@@ -1,5 +1,6 @@
 #|
-comment
+look if some programs need to be execute with shell
+	;;w (cmd sh -c "note.lua write")
 |#
 
 (defcfg
@@ -8,6 +9,10 @@ comment
 	danger-enable-cmd yes
 	concurrent-tap-hold yes ;; enables defchordsv2 
 	sequence-timeout 2000
+)
+
+(deftemplate hold (tap hold)
+  (tap-hold 200 200 $tap $hold)
 )
 
 (defsrc
@@ -20,11 +25,19 @@ comment
 
 (deflayer base
   @grv  @1    @2    @3    @4    @5    @6    @7    @8    @9    @0    @-    @=    bspc
-  @tab  q    w     e    r    t    y    u    i    o    p    [    ]    \
+  @tab  q    w     e    r    t    @y    @u    i    o    p    [    ]    \
   @cap  @alt_a   @met_s	@ctl_d @sft_f g	h @sft_j  @ctl_k @met_l @alt_; '    ret
   @lsft z    x    @c    v    b    n    m    ,    .    /    @rsft
   lctl lmet @lalt           @spc            @ralt cmp lmet
 ) ;; doubled lmet
+
+(deflayer apps
+  XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX
+  XX    @q    XX    @news    XX    @tw    @yt    XX    @qb    XX    @fm    XX    XX    XX
+  XX    @audio @off @rofi @vifm    XX    @clip    @chat @kee     @qu   XX    XX    XX
+  XX    @todo  @pom  @idea    @video    XX    @note    XX    XX    XX    XX    XX
+  XX    XX    ret              XX              XX    XX    XX
+)
 
 (deflayer numbers
   _    _    _    _    _    _    _    _    _    _    _    _    _    _
@@ -36,9 +49,46 @@ comment
 ;; _    $    +    \(    \)    @    |    -    =    \_    *    '    ret
 ;; _    !    #    {    }    ~    &    [    ]    %    ^    @mdf
 
-(deftemplate hold (tap hold)
-  (tap-hold 200 200 $tap $hold)
+(deflayer navigation ;; plus media
+  XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX
+  XX    XX    XX    XX    XX    XX    C-c   C-z	C-x   C-v  S-ins  XX    XX   XX
+  XX    mute    vold  volu	XX    XX    left down   up   rght   ret   XX    XX    
+  XX    XX    XX    XX    XX    XX    home	pgdn pgup	end	  ins   XX
+  XX    XX    XX              XX              XX    XX    XX 
 )
+;; S-ins; C-z: pase select, undo
+
+(deflayer pl
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    (macro RA-e)    lrld    _    _    _    _    (macro RA-o)    _    _    _    _
+  _    (macro RA-a)    (macro RA-s)    _    _    _	_    _    _    (macro RA-l)    _    _    _
+  _    (macro RA-z)    (macro RA-x)    (macro RA-c)  _    _    (macro RA-n)    _    _    _ _    _
+  _    _    _              _              _    _    _ 
+)
+
+(defalias ;; layers
+  ;; lcrt (tap-hold-release 200 200 sldr lcrt)
+  lsft (tap-hold-press 200 200 bspc lsft) ;;  left backspace
+  rsft (tap-hold-press 200 200 S-0 rsft) ;; right bracket
+;; tap shortcuts
+  pl (one-shot 500 (layer-while-held pl))
+  ralt (tap-hold-release 200 200 @pl ralt) ;; TODO maybe double pl layer and make actions on hold
+  apps (one-shot 500 (layer-while-held apps))
+  lalt (tap-hold-release 200 200 @apps lalt)
+;; hold shortcuts
+  cap (tap-hold-press 200 200 esc (layer-while-held navigation)) ;; esc
+  spc (tap-hold 200 200 spc (layer-while-held numbers))
+   
+  c (tap-hold 200 200 c (one-shot 800 (layer-while-held clip)))
+  y (tap-hold 200 200 y (one-shot 800 (layer-while-held yt)))
+  u (tap-hold 200 200 u (one-shot 800 (layer-while-held url)))
+ ;; enter (switch  ((and u i)) ret break)
+  ;; spc (one-shot 500 (layer-while-held numbers))
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                  shortcuts                   ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defalias ;; symbols on hold
   grv (t! hold grv S-`)
   0 (t! hold 0 S-0)
@@ -53,31 +103,6 @@ comment
   9 (t! hold 9 S-9)
   = (t! hold = S-=)
   - (t! hold - S--))
-
-(deflayer navigation ;; plus media
-  XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX
-  XX    XX    XX    XX    XX    XX    C-c   C-z	C-x   C-v  S-ins  XX    XX   XX
-  XX    mute    vold  volu	XX    XX    left down   up   rght   ret   XX    XX    
-  XX    XX    XX    XX    XX    XX    home	pgdn pgup	end	  ins   XX
-  XX    XX    XX              XX              XX    XX    XX 
-)
-;; S-ins; C-z: pase select, undo
-
-(defalias ;; layers
-  ;; lcrt (tap-hold-release 200 200 sldr lcrt)
-  lsft (tap-hold-press 200 200 bspc lsft) ;;  left backspace
-  rsft (tap-hold-press 200 200 S-0 rsft) ;; right bracket
-  ;;grv (tap-hold 200 200 grv lrld) ;; reload on hold
-  cap (tap-hold-press 200 200 esc (layer-while-held navigation)) ;; esc
-  spc (tap-hold 200 200 spc (layer-while-held numbers))
-  pl (one-shot 500 (layer-while-held pl))
-  ralt (tap-hold-release 200 200 @pl ralt) ;; TODO maybe double pl layer and make actions on hold
-  apps (one-shot 500 (layer-while-held apps))
-  lalt (tap-hold-release 200 200 @apps lalt)
- ;; enter (switch  ((and u i)) ret break)
-  ;; spc (one-shot 500 (layer-while-held numbers))
-)
-
 ;; HOMEROW
 (defalias
 	alt_a (tap-hold 200 200 a lalt)
@@ -93,33 +118,12 @@ comment
 
 (defchordsv2 ;; can be only one
   (h j) ret 100 first-release () ;; enter on j+k
-  ;; with homerow it has to be repeated 
-  ;;(lmet v) (cmd clipcat.clj menu --paste) 800 first-release ()
-  ;;(lmet lctl v) (cmd clipcat.clj previous --paste) 800 first-release ()
-  ;;(lmet lsft v) (cmd clipcat.clj selection --paste) 800 first-release ()
-  ;;(l v) (cmd clipcat.clj menu --paste) 800 first-release ()
-  ;;(l k v) (cmd clipcat.clj previous --paste) 800 first-release ()
-  ;;(l j v) (cmd clipcat.clj selection --paste) 800 first-release ()
 )
 
-(deflayer pl
-  _    _    _    _    _    _    _    _    _    _    _    _    _    _
-  _    _    _    (macro RA-e)    lrld    _    _    _    _    (macro RA-o)    _    _    _    _
-  _    (macro RA-a)    (macro RA-s)    _    _    _	_    _    _    (macro RA-l)    _    _    _
-  _    (macro RA-z)    (macro RA-x)    (macro RA-c)  _    _    (macro RA-n)    _    _    _ _    _
-  _    _    _              _              _    _    _ 
-)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                  APPLICATIONS                  ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(deflayer apps
-  XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX
-  XX    @q    XX    @news    XX    @tw    @yt    XX    @qb    XX    @fm    XX    XX    XX
-  XX    @audio @off @rofi @vifm    XX    @clip    @chat @kee     @qu   XX    XX    XX
-  XX    @todo  @pom  @idea    @video    XX    @note    XX    XX    XX    XX    XX
-  XX    XX    ret              XX              XX    XX    XX
-)
 
 (defalias ;; common apps scripts
   tab (tap-dance 300 (tab M-tab  A-tab C-tab)) ;; too many available actions
@@ -148,24 +152,43 @@ comment
   ;; scripts (cmd sh -c "$(ls ~/.bin | rofi -dmenu)")
 )
 
-(deflayermap (clip)
-  p (cmd clipcat.clj selection --paste)
-  j (cmd clipcat.clj join --input)
-  4 (cmd clipcat.clj join --number 4)
-  m (cmd clipcat.clj menu --paste)
-  r (cmd clipcat-menu remove)
-  ;;e (cmd bash -c "clipcat-menu edit") ;; idk why but it doesn't work
-  n (cmd clipcat.clj previous --paste)
-  F1 (cmd notify-send deflayermap)
-  ___ XX
-)
 
-(defalias ;; clipboard
-  clipboard (one-shot 800 (layer-while-held clip))
-  ;;ralt (layer-switch script)
-  c (tap-hold 200 200 c @clipboard)
-  ;;c (tap-hold 200 200 c (cmd notify-send 1))
-  )
+(deflayermap (url) ;; or media
+	f1 (cmd notify-send options: "u-url menu\nm(M)-magnet\nf(F)-video\na(A)-audio dl\ny(Y)-yt dl\ng(G)-gallery-dl\nw(w)-wget\ns-speed reader\nr-read\nk(K)-kindle")
+	u (cmd url.lua --menu --input)
+	s (cmd url.lua --speed -n 1)
+	r (cmd url.lua --read -n 1)
+	;; maybe it should be tap-hold-press
+	k (t! hold (cmd url.lua --kindle --email -n 1) (cmd url.lua --kindle --email -n 10))
+	m (t! hold  (cmd url.lua --tor -n 1) (cmd url.lua --tor -n 10))
+	f (t! hold  (cmd url.lua --mpvFullscreen -n 1) (cmd url.lua --mpvFullscreen -n 10))
+	a (t! hold  (cmd url.lua --dlAudio -n 1) (cmd url.lua --dlAudio -n 10))
+	g (t! hold  (cmd url.lua --gallery -n 1) (cmd url.lua --gallery -n 10))
+	y (t! hold  (cmd url.lua --dlVideo -n 1) (cmd url.lua --dlVideo -n 10))
+	w (t! hold  (cmd url.lua --wget -n 1) (cmd url.lua --wget -n 10)))
+
+(deflayermap (yt)
+  n (cmd db-search.clj --newsboat)
+  q (cmd db-search.clj --qutebrowser)
+  F1 (cmd notify-send yt)
+  ___ XX)
+
+(deflayermap (clip)
+	f1 (cmd notify-send clip options: "g-gui\np-(prim)selection\nr[R]-remove clip/sel\nj[J]-join clip/sel\nn(N)-next clip/sel\nk(K)-note from clip\nl(L)-note from sel\nw -write note")
+	p (cmd clipcat.clj selection --paste)
+	j (cmd clipcat.clj join --input)
+	4 (cmd clipcat.clj join --number 4)
+	m (cmd clipcat.clj menu --paste)
+	r (cmd clipcat-menu remove)
+	;;e (cmd bash -c "clipcat-menu edit") ;; not useful, also it doesn't work
+	n (cmd clipcat.clj previous --paste)
+	;; maybe better for sequence 
+	s (t! (cmd note.lua clip 1) (cmd note.lua sel 1)) ;; selection on hold
+	i (cmd note.lua clip) ;; input for the number of copied elements
+	w (cmd note.lua write)
+	F1 (cmd notify-send deflayermap)
+  ___ XX)
+
 
 
 ;; sequence
@@ -175,3 +198,13 @@ comment
 ;;    name (cmd notify-send c))
 ;;(defalias lctl (tap-hold-release 200 200 sldr lctl))
 
+
+;;(defchordsv2 ;; can be only one
+  ;; with homerow it has to be repeated 
+  ;;(lmet v) (cmd clipcat.clj menu --paste) 800 first-release ()
+  ;;(lmet lctl v) (cmd clipcat.clj previous --paste) 800 first-release ()
+  ;;(lmet lsft v) (cmd clipcat.clj selection --paste) 800 first-release ()
+  ;;(l v) (cmd clipcat.clj menu --paste) 800 first-release ()
+  ;;(l k v) (cmd clipcat.clj previous --paste) 800 first-release ()
+  ;;(l j v) (cmd clipcat.clj selection --paste) 800 first-release ()
+;;)
