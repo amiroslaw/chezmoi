@@ -64,7 +64,6 @@ if ! zgenom saved; then
 	zgenom ohmyzsh plugins/history 
 	zgenom ohmyzsh plugins/web-search 
 	zgenom ohmyzsh plugins/colored-man-pages
-	zgenom ohmyzsh plugins/taskwarrior
 	zgenom ohmyzsh plugins/dirhistory
 	zgenom load lincheney/fzf-tab-completion # breaks some completions
 	zgenom load zsh-users/zsh-completions
@@ -74,6 +73,7 @@ if ! zgenom saved; then
 	zgenom load arzzen/calc.plugin.zsh
 	zgenom load urbainvaes/fzf-marks # mark alias_name; fzm to cd
 	zgenom load MichaelAquilina/zsh-you-should-use
+	# zgenom ohmyzsh plugins/taskwarrior #older
 	# zgenom load jeffreytse/zsh-vi-mode # can override some keybindings
 	# zgenom ohmyzsh plugins/git 
 	# zgenom load ChrisPenner/copy-pasta #alternative xclip-copyfile; xclip-pastefile
@@ -126,6 +126,8 @@ _fasder_preexec() {
 autoload -Uz add-zsh-hook
 add-zsh-hook preexec _fasder_preexec
 
+# completions
+fpath=($XDG_CONFIG_HOME/zsh/completions $fpath)
 source <(yt.clj completions)
 source <(clipcat.clj completions)
 
