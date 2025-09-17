@@ -4,6 +4,7 @@
          '[clojure.core.match :refer [match]]
          '[cheshire.core :as json])
 
+; scratchpad implementation for Hyprland.
 ; IMPORTANT, hypr rule can't move ???
 ; TODO
 ; videopopup did not send to special - it is pinned window
