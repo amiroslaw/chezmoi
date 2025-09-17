@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import json
 import requests
@@ -57,9 +57,7 @@ WEATHER_CODES = {
 
 data = {}
 
-
-weather = requests.get("https://wttr.in/London?format=j1").json()
-
+weather = requests.get("https://wttr.in/Warsaw?format=j1").json()
 
 def format_time(time):
     return time.replace("00", "").zfill(2)

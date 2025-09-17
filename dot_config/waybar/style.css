@@ -65,12 +65,14 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: "monospace";
+	/* font-family: "Monaspace Argon"; */
+	font-family: "Ubuntu Nerd Font";
+    /* font-family: "monospace"; */
     font-weight: bold;
-    font-size: 16px;
+    font-size: 14px;
     min-height: 0;
 }
-
+  
 window#waybar {
     background: transparent;
 	  color: @foreground;

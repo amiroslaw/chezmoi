@@ -6,7 +6,7 @@
     "exclusive": true,
     "passthrough": false,
     "gtk-layer-shell": true,
-    "height": 36,
+    "height": 28,
     "margin-right": 5,
     "margin-left": 5, 
 
@@ -16,7 +16,7 @@
         // "custom/khorshididate",
         // "wlr/taskbar",
         "hyprland/workspaces",
-	"hyprland/windowcount",
+		"hyprland/windowcount",
 		"hyprland/submap",
     ],
 
@@ -27,15 +27,17 @@
     "modules-right": [
 		"mpris",
         "tray",
-        "pulseaudio/slider",
+		"custom/pomodoro",
+        // "pulseaudio/slider",
+        "pulseaudio",
 		"bluetooth",
         "clock",
         // "battery",
-        // "pulseaudio",
         // "pulseaudio#microphone",
         "backlight",
-        "cpu",
         "memory",
+		"custom/weather",
+        "cpu",
         "disk",
         "temperature",
         "network",
@@ -62,7 +64,7 @@
 
     "custom/power": {
         "format": "",
-        "on-click": "sysact",
+        "on-click": "rofi -show power-menu -modi power-menu:$ROFI/power.sh",
         "tooltip": false
     },
 
@@ -225,18 +227,18 @@
         },
         "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },
-"pulseaudio/slider": {
-    "min": 0,
-    "max": 100,
-    "orientation": "horizontal"
-},
+	"pulseaudio/slider": {
+		"min": 0,
+		"max": 100,
+		"orientation": "horizontal"
+	},
     "pulseaudio": {
-        "format": "{icon}",
+        "format": "{icon} {volume}%",
         "format-muted": "",
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-        "on-scroll-up": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+",
-        "on-scroll-down": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%-",
-        "scroll-step": 5,
+        "on-scroll-up": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 2%+",
+        "on-scroll-down": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 2%-",
+        "scroll-step": 1,
         "format-icons": {
             "headphone": "",
             "hands-free": "",
@@ -247,7 +249,7 @@
             "default": ["", "", ""]
         },
         "tooltip": true,
-        "tooltip-format": "{icon} at {volume}%"
+        "tooltip-format": "{icon} {volume}%"
     },
 
     "pulseaudio#microphone": {
@@ -264,16 +266,15 @@
 
     "backlight": {
         "device": "intel_backlight",
-        "format": "{icon}",
+		"format": "{percent}% {icon}",
         "format-alt-click": "click-right",
         "format-alt": "{icon} {percent}%",
         "format-icons": ["󰃞", "󰃟", "󰃠"],
-        "on-scroll-up": "incbrightness",
-        "on-scroll-down": "decbrightness"
+        "on-scroll-up": "brightnessctl -e4 -n2 set 2%+",
+        "on-scroll-down": "brightnessctl -e4 -n2 set 2%-"
     },
 
     "custom/weather": {
-        //shows the current weather and forecast
         "tooltip" : true,
         "format" : "{}",
         "interval" : 3600,
@@ -337,5 +338,16 @@
         "exec": "~/.config/waybar/scripts/khorshidi-date",
         "return-type" : "json"
     },
+
+	"custom/pomodoro": {
+	  "exec": "pomodoro.lua status -anc",
+	  "interval": 60,
+	  // "return-type": "json",
+	  "on-click": "pomodoro.lua pause -n",
+	  "on-click-right": "pomodoro.lua stop -n && task sync",
+	  "on-click-middle": "pomodoro.lua notify",
+	  "tooltip": true,
+	  "tooltip-format": "pomodoro"
+	},
 
 }
