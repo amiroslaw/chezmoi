@@ -338,7 +338,7 @@
         "exec": "~/.config/waybar/scripts/khorshidi-date",
         "return-type" : "json"
     },
-
+// TODO if I return json with task title I can get tooltip with that 
 	"custom/pomodoro": {
 	  "exec": "pomodoro.lua status -anc",
 	  "interval": 60,

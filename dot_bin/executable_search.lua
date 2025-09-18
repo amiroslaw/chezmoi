@@ -21,7 +21,7 @@ search.lua --google -p
 Multi search
 search.lua --google --dd "search phrase"
 
--- dependency: rofi, xclip, translate shell, tuxi
+-- dependency: rofi,  translate shell, tuxi, xclip/wl-paste -maybe change to clipcat.clj
 ]]
 
 local args = cliparse(arg, 'phrase')
@@ -39,11 +39,13 @@ elseif args.phrase then
 	phraseArg = args.phrase[1]	
 end
 
+-- TODO pass lang as param
 function cheat()
 	return function(phraseArg)
 	local topics = {
 		lua = "lang",
 		java = 'lang',
+		clojure = 'lang',
 		js = 'lang',
 		typescript = 'lang',
 		kotlin = 'lang',

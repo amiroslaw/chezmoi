@@ -61,7 +61,7 @@ alias cfqute='chezmoi edit --apply ~/.config/qutebrowser/config.py'
 alias cfnchat='chezmoi edit --apply ~/.nchat/key.conf'
 alias cfkanata='chezmoi edit --apply ~/.config/kanata/kanata.kbd'
 alias cfnews='chezmoi edit --apply ~/.config/newsboat/config'
-alias cfurl='chezmoi edit --apply ~/.config/newsboat/urls'
+alias cfurl='nvim ~/.config/newsboat/urls'
 alias cfw3m='chezmoi edit --apply ~/.w3m/keymap'
 # OLD
 # alias cfportfolio='chezmoi edit --apply ~/.config/investing/portfolio.yaml'
