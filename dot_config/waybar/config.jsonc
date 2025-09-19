@@ -1,4 +1,5 @@
 // killall -SIGUSR2 waybar
+// or pkill -SIGUSR2 waybar
 {
     "layer": "top",
     "position": "top",
@@ -76,9 +77,9 @@
     },
 
    "hyprland/windowcount" : {
-    	// "format": "{}",
+    	"format": "{}",
     	// "format-windowed": "󰊔",
-    	"format": " ",
+    	// "format": " ",
     	"format-empty": " ",
     	"format-windowed": " ",
     	"format-fullscreen": "{} 󰊓",
@@ -98,7 +99,7 @@
     "hyprland/workspaces": {
         "on-click": "activate",
         "activate-only": true,
-        // "all-outputs": true,
+        // "all-outputs": true, // for multimonitors
         "show-special": true,
 		"on-scroll-up": "hyprctl dispatch workspace e-1",
 		"on-scroll-down": "hyprctl dispatch workspace e+1",
@@ -119,17 +120,17 @@
     //Applications
     "class<org.kde.dolphin>": "",
     "class<vifm>": "",
-".*jetbrains-idea.*": "\uE7B5",
+	".*jetbrains-idea.*": "\uE7B5",
       ".*Chromium.*": "", 
-"class<org.wezfurlong.wezterm>": " ",
+	"class<org.wezfurlong.wezterm>": " ",
    "foot": "",
-      "class<.*teams.*>": "󰊻",
+     "class<.*teams.*>": "󰊻",
    "class<nvim-qt>": "",
-      "title<.*nvim.*>": "",
+     "title<.*nvim.*>": "",
 	"title<.*newsboat.*>": "󰎕 ",
 	"class<audio>": "",
-		"class<VSCode|code-url-handler>": "<span font='12'>󰨞</span>",
-      "class<org.pwmt.zathura>": "",
+	"class<VSCode|code-url-handler>": "<span font='12'>󰨞</span>",
+    "class<org.pwmt.zathura>": "",
 	},
     },
 "hyprland/submap": {
