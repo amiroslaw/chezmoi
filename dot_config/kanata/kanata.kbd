@@ -1,4 +1,6 @@
 #|
+remove pl layer if not many bindings
+maybe all cmd move to aliases and only refer to them in deflayermap/layer - better readebility and more space for custom helper script - parser 
 look if some programs need to be execute with shell
 	;;w (cmd sh -c "note.lua write")
 |#
@@ -12,7 +14,7 @@ look if some programs need to be execute with shell
 )
 
 (deftemplate hold (tap hold)
-  (tap-hold 200 200 $tap $hold)
+  (tap-hold 200 300 $tap $hold)
 )
 
 (defsrc
@@ -33,10 +35,18 @@ look if some programs need to be execute with shell
 
 (deflayer apps
   XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    @trash
-  XX    XX    XX    @news    XX    @tw    @yt    XX    @qb    XX    @fm    XX    XX    XX
+  XX    @quake    XX    @news    XX    @tw    @yt    XX    @qb    XX    @fm    XX    XX    XX
   XX    @audio @off @rofi @vifm    XX    @clip    @chat @kee     @qu   XX    XX    XX
   XX    @todo  @pom  @idea    @video    XX    @note    XX    XX    XX    XX    XX
   XX    XX    ret              XX              XX    XX    XX
+)
+
+(deflayer pl
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    RA-e    lrld    _    _    _    _    RA-o    _    _    _    _
+  _    RA-a    RA-s    _    _    _	_    _    _    RA-l    _    _    _
+  _    RA-z    RA-x    RA-c  _    _    RA-n    _    _    _ _    _
+  _    _    _              _              _    _    _ 
 )
 
 (deflayer numbers
@@ -58,14 +68,6 @@ look if some programs need to be execute with shell
 )
 ;; S-ins; C-z: pase select, undo
 
-(deflayer pl
-  _    _    _    _    _    _    _    _    _    _    _    _    _    _
-  _    _    _    (macro RA-e)    lrld    _    _    _    _    (macro RA-o)    _    _    _    _
-  _    (macro RA-a)    (macro RA-s)    _    _    _	_    _    _    (macro RA-l)    _    _    _
-  _    (macro RA-z)    (macro RA-x)    (macro RA-c)  _    _    (macro RA-n)    _    _    _ _    _
-  _    _    _              _              _    _    _ 
-)
-
 (defalias ;; layers
   ;; lcrt (tap-hold-release 200 200 sldr lcrt)
   lsft (tap-hold-press 200 200 bspc lsft) ;;  left backspace
@@ -78,13 +80,14 @@ look if some programs need to be execute with shell
 ;; hold shortcuts
   cap (tap-hold-press 200 200 esc (layer-while-held navigation)) ;; esc
   spc (tap-hold 200 200 spc (layer-while-held numbers))
-   
   c (tap-hold 200 200 c (one-shot 800 (layer-while-held clip)))
   m (tap-hold 200 200 m (one-shot 800 (layer-while-held media)))
   u (tap-hold 200 200 u (one-shot 800 (layer-while-held url)))
   o (tap-hold 200 200 o (one-shot 800 (layer-while-held open)))
   i (tap-hold 200 200 i (one-shot 800 (layer-while-held AI)))
   z (tap-hold 200 200 z (one-shot 800 (layer-while-held task)))
+;; multi doesn't work in as expected
+  ;;i (tap-hold 200 200 i (multi (cmd notify-send "AI")(one-shot 800 (layer-while-held AI))))
  ;; enter (switch  ((and u i)) ret break)
   ;; spc (one-shot 500 (layer-while-held numbers))
 )
@@ -120,9 +123,11 @@ look if some programs need to be execute with shell
 )
 
 (defchordsv2 ;; can be only one
-  (h j) ret 100 first-release () ;; enter on j+k
+;; mod keys are not good for it, also it won't support home row
+  (m ,) ret 100 first-release () ;; enter on m+,
+  (met sft v) @clip-primary 9000 first-release ()
+  (l j v) @clip-primary 9000 first-release ()
 )
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                  APPLICATIONS                  ;
@@ -135,7 +140,7 @@ look if some programs need to be execute with shell
   rofi (cmd rofi -modi drun,keys,run -show drun -show-icons -sidebar-mode -monitor -4 -matching fuzzy)
 
   qu (cmd qu.clj menu)
-  yt (cmd setsid mpv.lua -o)
+  yt (cmd setsid mpv.lua -o) ;; playlists
   video (cmd setsid mpv.lua -o /home/miro/Videos)
   qb (cmd sh -c "$XDG_CONFIG_HOME/qutebrowser/userscripts/session.sh")
   pom (cmd sh -c "task sync && pomodoro.lua add -n")
@@ -143,32 +148,36 @@ look if some programs need to be execute with shell
   idea (cmd setsid /home/miro/Ext/idea-IU-233.14015.106/bin/idea.sh)
   vifm (cmd sh -c r#"eval $(printf "$TERM_LT $TERM_LT_RUN" "vifm" "vifm")"#)
   news (cmd sh -c r#"scratchpad.clj -n news $(printf "$TERMINAL $TERM_RUN" "news" "newsboat")"#)
+  quake (cmd sh -c r#"scratchpad.clj -n drop $(printf "$TERMINAL $TERM_RUN" "drop" "")"#)
   tw (cmd sh -c r#"scratchpad.clj -n task $(printf "$TERM_LT $TERM_LT_RUN" "task" "taskwarrior-tui")"#)
-
-  chat (cmd setsid scratchpad.sh chat "wezterm start --class chat -- nchat")
-  audio (cmd audio.sh toggle) ;; x11
-  clip (cmd "/home/miro/.config/rofi/scripts/clipster/roficlip" )
   off (cmd sh -c "rofi -show power-menu -modi power-menu:$ROFI/power.sh")
   kee (cmd setsid keecli.sh)
   todo (cmd todo.lua add)
+clip-primary (cmd clipcat.clj primary --paste)
+
+  ;; old or change to wayland
+  chat (cmd setsid scratchpad.sh chat "wezterm start --class chat -- nchat")
+  audio (cmd audio.sh toggle) ;; x11
+  clip (cmd "/home/miro/.config/rofi/scripts/clipster/roficlip" )
   fm (cmd setsid pcmanfm )
   ;; scripts (cmd sh -c "$(ls ~/.bin | rofi -dmenu)")
 )
 
 (deflayermap (task)
-	F1 (cmd notify-send task: "T-todo\nt-TW-tui\ni-add to inbox\nr-pom repeat\np-pom pause\nm-pom modify task\nl-pom menu\nd-pom add task\nn-gcal notify\na-gcal agenda\nc-gcal-add\ng-gamification\nf-timefx")
-	i (cmd sh -c "todo.lua add") ;; inbox
+	F1 (cmd notify-send task: "T-todo\nt-TW-tui\ni-add to inbox\nr-pom repeat\np-pom pause\nm-pom modify task\nl-pom menu\nd-pom add task\nn-pom notify\nk-gcal notify\na-gcal agenda\nc-gcal-add\ng-gamification\nf-timefx")
+	i @todo
 	t (t! hold @tw (cmd sh -c "todo.lua show")) ;; taskwarrior list in yad
 	r (cmd sh -c "pomodoro.lua repeat -n")
 	p (cmd sh -c "pomodoro.lua pause -n")
 	m (cmd sh -c "pomodoro.lua modify")
 	s (cmd sh -c "pomodoro.lua stop -n && task sync")
 	l (cmd sh -c "pomodoro.lua menu -n")
+	n (cmd sh -c "pomodoro.lua notify")
 	d @pom
 	g (cmd sh -c "java -jar ~/.local/bin/grywalizacja.jar")
 	f (cmd sh -c "timefx")
 	c (cmd sh -c "gcal-add.lua")
-	n (cmd sh -c "gcal-show.sh")
+	k (cmd sh -c "gcal-show.sh")
 	a (cmd sh -c "gcalcli --nocolor agenda --config-folder="/home/miro/.config/gcalcli"  | zenity --text-info")
   ___ _)
 
@@ -209,8 +218,8 @@ look if some programs need to be execute with shell
 F1 (cmd notify-send media: "v-videos\ny-yt\ny-playlists\ns-ytsearch\nc-ytsearch clip\na-yt-account\nn-newsboat\nq-qb")
   n (cmd sh -c "db-search.clj --newsboat")
   q (cmd sh -c "db-search.clj --qutebrowser")
-  y (cmd sh -c "mpv.lua -o") ;; repeated playlists
-  v (cmd sh -c "mpv.lua -o /home/miro/Videos")
+  y @yt
+  v @video
   ;;s (cmd sh -c "mpv.lua -y") ;; slower
   s (cmd sh -c "yt.clj search --input") ;; youtube search
   c (cmd sh -c "yt.clj --clip")
@@ -234,7 +243,7 @@ F1 (cmd notify-send media: "v-videos\ny-yt\ny-playlists\ns-ytsearch\nc-ytsearch 
 
 (deflayermap (clip)
 	F1 (cmd notify-send clip: "p-(prim)selection\nr-remove clip\nj-join clip\nn-next clip\ns(S)-note from clip/sel\ni-note from clip join\nw -write note")
-	p (cmd clipcat.clj primary --paste)
+	p @clip-primary
 	j (cmd clipcat.clj join --input)
 	4 (cmd clipcat.clj join --number 4)
 	m (cmd clipcat.clj menu --paste)
