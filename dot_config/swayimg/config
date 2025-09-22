@@ -1,6 +1,7 @@
 # Any of these options can be overridden using the --config argument
 # $ swayimg --config="general.mode=gallery"
 # TODO move commands from pqivrc
+# escape "
 
 ################################################################################
 # Viewer mode key binding configuration: key = action [parameters]
@@ -60,11 +61,11 @@ Escape = exit
 q = exit
 
 # COMMANDS
-Delete = exec rm -f '%' && notify-send "File removed: %"; skip_file
-x = exec gomi '%' && notify-send "File removed: %";
+Delete = exec rm -f "%" && notify-send "File removed: %"; skip_file
+x = exec gomi "%" && notify-send "File removed: %";
 ; X { command(xclip-cutfile $1); }
 ; copy name
-y = exec wl-copy '%' && notify-send "Copied file name %"
+y = exec wl-copy "%" && notify-send "Copied file name %"
 ; copy path
 Shift+y = exec pwd | wl-copy && notify-send "Copied path $(pwd)"
 ; copy image doesn't work
@@ -75,14 +76,14 @@ Ctrl+y = exec sh -c 'convert "%"  -quality 85 png:- | wl-copy --type image/png'
 ; set wallpaper
 ; W { command(feh --no-fehbg --bg-fill $); }
 ;ocr image
-e = exec tesseract '%' '%'
+e = exec tesseract "%" "%"
 # rename
 r = exec hyprctl dispatch exec "$XDG_CONFIG_HOME/swayimg/rename.sh" '%'
-1 = exec mkdir -p 1 && mv '%' 1 && echo "File moved: %" && notify-send "Moved to 1: '%'";
-2 = exec mkdir -p 2 && mv '%' 2 && echo "File moved: %" && notify-send "Moved to 2: '%'";
-3 = exec mkdir -p 3 && mv '%' 3 && echo "File moved: %" && notify-send "Moved to 3: '%'";
-4 = exec mkdir -p 4 && mv '%' 4 && echo "File moved: %" && notify-send "Moved to 4: '%'";
-5 = exec mkdir -p 5 && mv '%' 5 && echo "File moved: %" && notify-send "Moved to 5: '%'";
+1 = exec mkdir -p 1 && mv "%" 1 && echo "File moved: %" && notify-send "Moved to 1: '%'";
+2 = exec mkdir -p 2 && mv "%" 2 && echo "File moved: %" && notify-send "Moved to 2: '%'";
+3 = exec mkdir -p 3 && mv "%" 3 && echo "File moved: %" && notify-send "Moved to 3: '%'";
+4 = exec mkdir -p 4 && mv "%" 4 && echo "File moved: %" && notify-send "Moved to 4: '%'";
+5 = exec mkdir -p 5 && mv "%" 5 && echo "File moved: %" && notify-send "Moved to 5: '%'";
 # Mouse related
 ScrollLeft = step_right 5
 ScrollRight = step_left 5
@@ -119,12 +120,12 @@ Return = mode
 Escape = exit
 q = exit
 # COMMANDS
-Delete = exec rm -f '%' && echo "File removed: %"; skip_file
-1 = exec mkdir -p 1 && mv '%' 1 && echo "File moved: %" && notify-send "Moved to 1: '%'";
-2 = exec mkdir -p 2 && mv '%' 2 && echo "File moved: %" && notify-send "Moved to 2: '%'";
-3 = exec mkdir -p 3 && mv '%' 3 && echo "File moved: %" && notify-send "Moved to 3: '%'";
-4 = exec mkdir -p 4 && mv '%' 4 && echo "File moved: %" && notify-send "Moved to 4: '%'";
-5 = exec mkdir -p 5 && mv '%' 5 && echo "File moved: %" && notify-send "Moved to 5: '%'";
+Delete = exec rm -f "%" && echo "File removed: %"; skip_file
+1 = exec mkdir -p 1 && mv "%" 1 && echo "File moved: %" && notify-send "Moved to 1: '%'";
+2 = exec mkdir -p 2 && mv "%" 2 && echo "File moved: %" && notify-send "Moved to 2: '%'";
+3 = exec mkdir -p 3 && mv "%" 3 && echo "File moved: %" && notify-send "Moved to 3: '%'";
+4 = exec mkdir -p 4 && mv "%" 4 && echo "File moved: %" && notify-send "Moved to 4: '%'";
+5 = exec mkdir -p 5 && mv "%" 5 && echo "File moved: %" && notify-send "Moved to 5: '%'";
 
 ################################################################################
 # Gallery mode key binding configuration: key = action [parameters]
@@ -156,7 +157,7 @@ Shift+r = reload
 Equal = thumb +20
 Plus = thumb +20
 Minus = thumb -20
-Delete = exec rm -f '%' && echo "File removed: %"; skip_file
+Delete = exec rm -f "%" && echo "File removed: %"; skip_file
 Escape = exit
 q = exit
 # Mouse related
@@ -169,12 +170,12 @@ Ctrl+ScrollDown = thumb -20
 MouseLeft = mode viewer
 
 # COMMANDS
-Delete = exec rm -f '%' && echo "File removed: %"; skip_file
-1 = exec mkdir -p 1 && mv '%' 1 && echo "File moved: %" && notify-send "Moved to 1: '%'";
-2 = exec mkdir -p 2 && mv '%' 2 && echo "File moved: %" && notify-send "Moved to 2: '%'";
-3 = exec mkdir -p 3 && mv '%' 3 && echo "File moved: %" && notify-send "Moved to 3: '%'";
-4 = exec mkdir -p 4 && mv '%' 4 && echo "File moved: %" && notify-send "Moved to 4: '%'";
-5 = exec mkdir -p 5 && mv '%' 5 && echo "File moved: %" && notify-send "Moved to 5: '%'";
+Delete = exec rm -f "%" && echo "File removed: %"; skip_file
+1 = exec mkdir -p 1 && mv "%" 1 && echo "File moved: %" && notify-send "Moved to 1: '%'";
+2 = exec mkdir -p 2 && mv "%" 2 && echo "File moved: %" && notify-send "Moved to 2: '%'";
+3 = exec mkdir -p 3 && mv "%" 3 && echo "File moved: %" && notify-send "Moved to 3: '%'";
+4 = exec mkdir -p 4 && mv "%" 4 && echo "File moved: %" && notify-send "Moved to 4: '%'";
+5 = exec mkdir -p 5 && mv "%" 5 && echo "File moved: %" && notify-send "Moved to 5: '%'";
 
 ################################################################################
 # General configuration
