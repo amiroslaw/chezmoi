@@ -125,8 +125,8 @@ look if some programs need to be execute with shell
 (defchordsv2 ;; can be only one
 ;; mod keys are not good for it, also it won't support home row
   (m ,) ret 100 first-release () ;; enter on m+,
-  (met sft v) @clip-primary 9000 first-release ()
-  (l j v) @clip-primary 9000 first-release ()
+  (met x) @clip-primary 9000 first-release ()
+  (l x) @clip-primary 9000 first-release ()
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -153,6 +153,7 @@ look if some programs need to be execute with shell
   off (cmd sh -c "rofi -show power-menu -modi power-menu:$ROFI/power.sh")
   kee (cmd setsid keecli.sh)
   todo (cmd todo.lua add)
+  ;; aliases
 clip-primary (cmd clipcat.clj primary --paste)
 
   ;; old or change to wayland
@@ -263,16 +264,6 @@ F1 (cmd notify-send media: "v-videos\ny-yt\ny-playlists\ns-ytsearch\nc-ytsearch 
 ;;    name (cmd notify-send c))
 ;;(defalias lctl (tap-hold-release 200 200 sldr lctl))
 
-
-;;(defchordsv2 ;; can be only one
-  ;; with homerow it has to be repeated 
-  ;;(lmet v) (cmd clipcat.clj menu --paste) 800 first-release ()
-  ;;(lmet lctl v) (cmd clipcat.clj previous --paste) 800 first-release ()
-  ;;(lmet lsft v) (cmd clipcat.clj selection --paste) 800 first-release ()
-  ;;(l v) (cmd clipcat.clj menu --paste) 800 first-release ()
-  ;;(l k v) (cmd clipcat.clj previous --paste) 800 first-release ()
-  ;;(l j v) (cmd clipcat.clj selection --paste) 800 first-release ()
-;;)
 
 ;;(defvar
 ;;)
