@@ -58,7 +58,7 @@ look if some programs need to be execute with shell
 )
 ;; _    $    +    \(    \)    @    |    -    =    \_    *    '    ret
 ;; _    !    #    {    }    ~    &    [    ]    %    ^    @mdf
-
+;; TODO right doesn't work??
 (deflayer navigation ;; plus media
   XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX
   XX    XX    XX    XX    XX    XX    C-c   C-z	C-x   C-v  S-ins  XX    XX   XX
@@ -123,7 +123,7 @@ look if some programs need to be execute with shell
 )
 
 (defchordsv2 ;; can be only one
-;; mod keys are not good for it, also it won't support home row
+;; mod keys are not good for it - they overlaps with home row
   (m ,) ret 100 first-release () ;; enter on m+,
   (met x) @clip-primary 9000 first-release ()
   (l x) @clip-primary 9000 first-release ()
