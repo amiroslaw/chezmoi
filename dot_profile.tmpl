@@ -19,8 +19,6 @@ export XDG_CONFIG_DIRS=/usr/etc/xdg:/etc/xdg
 export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 export GTK2_RC_FILES="$HOME/.config/gtkrc-2.0"
 # export GTK3_RC_FILES=/home/miro/.config/gtkrc-3.0
-export UNCRUSTIFY_CONFIG="$XDG_CONFIG_HOME"/uncrustify/uncrustify.cfg
-export SCREENRC="$XDG_CONFIG_HOME"/screen/screenrc
 export SDKMAN_DIR="$XDG_DATA_HOME"/sdkman
 export GNUPGHOME="$XDG_DATA_HOME"/gnupg
 export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
@@ -68,9 +66,14 @@ export TERM_RUN=' start --class "%s" -- %s '
 export TERM_LT="foot"
 export TERM_LT_FONT=" -f 'UbuntuMono Nerd Font:size=%d' "
 export TERM_LT_RUN=' --app-id "%s" -e %s'
+
+# APP specific
 export BROWSER="qutebrowser"
 # export BROWSER="org.qutebrowser.qutebrowser.desktop"
 export READER="zathura"
+export UNCRUSTIFY_CONFIG="$XDG_CONFIG_HOME"/uncrustify/uncrustify.cfg
+export SCREENRC="$XDG_CONFIG_HOME"/screen/screenrc
+export HYPRSHOT_DIR="$HOME"/Documents/share/Screens
 
 # for my scripts
 export GAMIFICATION="/home/miro/Documents/Ustawienia/configs/grywalizacja"

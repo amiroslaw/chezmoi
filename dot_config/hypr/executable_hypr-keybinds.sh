@@ -28,27 +28,38 @@ map_modmask() {
   esac
 }
 
-# Get JSON output from hyprctl
-json_output=$(hyprctl binds -j)
+update_requested=false
+for arg in "$@"; do
+  if [ "$arg" == "--update" ]; then
+    update_requested=true
+    break
+  fi
+done
 
-# Process JSON: Convert modmask values using a loop
-updated_json=$(echo "$json_output" | jq -c '.[]' | while read -r bind; do
-  modmask_value=$(echo "$bind" | jq -r '.modmask')
-  modmask_str=$(map_modmask "$modmask_value")
-  echo "$bind" | jq --arg modmask_str "$modmask_str" '.modmask = $modmask_str'
-done | jq -s '.')
+if [ ! -f "$binds_file" ] || [ "$update_requested" = true ]; then
+	# Get JSON output from hyprctl
+	json_output=$(hyprctl binds -j)
 
-# Save to file
-echo "$updated_json" >"$binds_file"
+	# Process JSON: Convert modmask values using a loop
+	updated_json=$(echo "$json_output" | jq -c '.[]' | while read -r bind; do
+	  modmask_value=$(echo "$bind" | jq -r '.modmask')
+	  modmask_str=$(map_modmask "$modmask_value")
+	  echo "$bind" | jq --arg modmask_str "$modmask_str" '.modmask = $modmask_str'
+	done | jq -s '.')
 
-echo "File '$binds_file' has been created successfully."
+	# Save to file
+	echo "$updated_json" >"$binds_file"
+
+	echo "File '$binds_file' has been created successfully."
+fi
 
 # Filter JSON entries based on criteria
 filtered_entries=$(jq -r '.[] | select(.submap == "" and .dispatcher != "submap") | 
     "\(.modmask)-\(.key) \"\(.description)\": \(.dispatcher) \(.arg)"' "$binds_file")
 
+counter=$(echo "$filtered_entries" | wc -l)
 # Show options in rofi and get user selection
-selected=$(echo "$filtered_entries" | rofi -dmenu -config "$HOME/.config/rofi/config-wide.rasi")
+selected=$(echo "$filtered_entries" | rofi -dmenu -p "Hypr keybinds: $counter")
 
 # Extract dispatcher and arg from the selected entry
 dispatcher=$(echo "$selected" | sed -E 's/.*: ([^ ]+) .*/\1/')
