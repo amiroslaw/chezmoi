@@ -1,6 +1,6 @@
 " vim: filetype=vim :
 " DEPENDENCY
-" fd, rg, fzf, tree, patool or atool, dua,  eza, pdfunite, udevil meld dragon-drop tesseract
+" fd, rg, fzf, tree, patool or atool, dua,  eza, pdfunite, udevil meld dragon-drop tesseract, fasder
 "sxiv, xclip,trash-cli ,
 " wayland alternatives 
 " gomi wl-clipboard swayimg
@@ -272,11 +272,21 @@ nmap <F5> :!cp -r %f %D<cr>
 " move files to the opposite pane
 nmap <F6> :!mv %f %D &<cr>
 "make dir and cd - form plugin, nested directory allowed 
-nmap <F7> :MkCd <space> 
+nmap <F7> :MkCd<space> 
 " make dir from selected file name
-nmap cd :mkdir %c:r <cr> 
-nmap <F8> :touch <space> 
-nmap cf :touch %c.txt <space> 
+nmap cd :mkdir %c:r<cr> 
+"nmap <F8> :touch <space> 
+nmap cf :touch %c.txt<space> 
+nmap <F8> :create<space> 
+"Use this command to create directories when the last character entered is "/", and create files otherwise:
+command create :
+\|  let $last_char = expand(system("str=\"%a\"; echo \"${str: -1}\""))
+\|  if $last_char == "/"
+\|    mkdir "%a"
+\|  else
+\|    touch "%a"
+\|  endif
+
 nmap <A-1> :! mkdir -p 1 && mv %f 1 <cr>
 nmap <A-2> :! mkdir -p 2 && mv %f 2 <cr>
 nmap <A-3> :! mkdir -p 3 && mv %f 3 <cr>
@@ -454,7 +464,16 @@ filextype */
 filextype {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.webp,*.webm,*.svg,*avif},<image/*>
         \ swayimg -f %f %i,
         "\ pqiv -f %f %i,
-        "\ sxiv -fa %f %i,
+" in terminal with timg
+"filextype *.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
+"         \*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
+"         \*.as[fx]
+"        \ {View in timg}
+"        \ timg --title --center --clear %f,
+"filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.webp
+"        \ {View in timg}
+"        \ timg --title --center --clear %f; read -n1 -s -r -p "Press any key to return",
+
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " viewers                                        "
 """"""""""""""""""""""""""""""""""""""""""""""""""
@@ -474,25 +493,8 @@ fileviewer {*.docx},<application/vnd.openxmlformats-officedocument.wordprocessin
 " fileviewer {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,*.fl[icv],*.m2v,*.mov,*.webm,*.mts,*.m4v,*.r[am],*.qt,*.divx,*.as[fx]},<video/*>
 "          \ ffprobe -pretty %c 2>&1
 
-" ueberzug
-" https://github.com/vifm/vifm/tree/master/data/plugins/ueberzug - DEPENDENCIES
-fileviewer <image/gif>
-	\ #ueberzug#image_no_cache %px %py %pw %ph
-	\ %pc
-	\ #ueberzug#clear
-
-" Otherwise, use the video fileviewer for gifs
-" fileviewer <video/*>,<image/gif>
-fileviewer <video/*>
-	\ #ueberzug#video %px %py %pw %ph
-	\ %pc
-	\ #ueberzug#clear
-
-fileviewer <image/*>
-	\ #ueberzug#image %px %py %pw %ph
-	" or \ #ueberzug#image_no_cache %px %py %pw %ph
-	\ %pc
-	\ #ueberzug#clear
+" ueberzug plugin - IT HANTLES preview other than IMG
+" https://github.com/vifm/vifm/tree/master/data/plugins/ueberzug - DEPENDENCIES 
 fileviewer <audio/*>
 	\ #ueberzug#audio %px %py %pw %ph
 	\ %pc
@@ -502,10 +504,6 @@ fileviewer <font/*>
 	\ %pc
 	\ #ueberzug#clear
 
-fileviewer *.pdf
-	\ #ueberzug#pdf %px %py %pw %ph
-	\ %pc
-	\ #ueberzug#clear
 fileviewer *.epub
 	\ #ueberzug#epub %px %py %pw %ph
 	\ %pc
@@ -532,11 +530,47 @@ fileviewer *.cb7
 	\ %pc
 	\ #ueberzug#clear
 
-fileviewer *.jpg
-	\ #ueberzug#image %px %py %pw %ph
-	" or \ #ueberzug#image_no_cache %px %py %pw %ph
-	\ %pc
-	\ #ueberzug#clear
+set previewoptions=hardgraphicsclear
+
+" timg
+" https://github.com/hzeller/timg
+" -p kitty → icat protocol doesn't work
+fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
+		 \ timg -U -p sixel --frames=1 -g%pwx%ph %c %pd 2>/dev/null
+		 \ %pc
+"fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
+		 "\ timg -U -p kitty -g%pwx%ph %c %pd 2>/dev/null
+"fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
+	"\ timg -U --grid=2 -p k -g%pwx%ph %c %pd 2>/dev/null
+	
+fileviewer <video/*>
+	\ timg -U -p sixel --frames=1 -g%pwx%ph %c %pd 2>/dev/null
+
+fileviewer {*.pdf},<application/pdf> timg -p sixel -W --auto-crop --frames=1 -g%pwx%ph %c %pd
+
+" img ueberzug
+
+"fileviewer *.jpg
+"	\ #ueberzug#image %px %py %pw %ph
+"	" or \ #ueberzug#image_no_cache %px %py %pw %ph
+"	\ %pc
+"	\ #ueberzug#clear
+
+"fileviewer <image/gif>
+"	\ #ueberzug#image_no_cache %px %py %pw %ph
+"	\ %pc
+"	\ #ueberzug#clear
+"" Otherwise, use the video fileviewer for gifs
+"" fileviewer <video/*>,<image/gif>
+"fileviewer <video/*>
+"	\ #ueberzug#video %px %py %pw %ph
+"	\ %pc
+"	\ #ueberzug#clear
+"fileviewer <image/*>
+"	\ #ueberzug#image %px %py %pw %ph
+"	" or \ #ueberzug#image_no_cache %px %py %pw %ph
+"	\ %pc
+"	\ #ueberzug#clear
 
 " imgcat
 " problems with webp and avif, that should work in wezterm

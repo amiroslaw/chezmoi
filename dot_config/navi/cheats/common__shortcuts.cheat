@@ -1,6 +1,10 @@
 % shortcuts
 @ util
 
+# image preview 
+timg -U --grid=<int> --title --center --clear -p <pixelation> <files>
+$ pixelation: echo -e "kitty\nsixel\nhalf"
+
 # start gemini
 npx https://github.com/google-gemini/gemini-cli
 
