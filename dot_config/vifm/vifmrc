@@ -535,6 +535,7 @@ set previewoptions=hardgraphicsclear
 " timg
 " https://github.com/hzeller/timg
 " -p kitty → icat protocol doesn't work
+" timg If no option is given, default is taken from environment variable TIMG_PIXELATION.
 fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
 		 \ timg -U -p sixel --frames=1 -g%pwx%ph %c %pd 2>/dev/null
 		 \ %pc

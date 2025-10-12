@@ -59,7 +59,7 @@ filtered_entries=$(jq -r '.[] | select(.submap == "" and .dispatcher != "submap"
 
 counter=$(echo "$filtered_entries" | wc -l)
 # Show options in rofi and get user selection
-selected=$(echo "$filtered_entries" | rofi -dmenu -p "Hypr keybinds: $counter")
+selected=$(echo "$filtered_entries" | rofi -dmenu -i -case-smart -p "Hypr keybinds: $counter")
 
 # Extract dispatcher and arg from the selected entry
 dispatcher=$(echo "$selected" | sed -E 's/.*: ([^ ]+) .*/\1/')

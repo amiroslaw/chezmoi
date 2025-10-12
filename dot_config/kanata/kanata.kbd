@@ -229,7 +229,7 @@ F1 (cmd notify-send media: "v-videos\ny-yt\ny-playlists\ns-ytsearch\nc-ytsearch 
 
 ;; TODO add ollama on hold
 (deflayermap (AI)
-	F1 (cmd notify-send AI: "a-ask\nt-ask abou text\np-ask about text-prim\nl-action list\ns-summary\nd-summary in adoc\ng-grammar\nx-explain grammar\nr-trans to pl\ne-trans to en")
+	F1 (cmd notify-send AI: "i-ask\nt-ask abou text\np-ask about text-prim\nl-action list\ns-summary\na-summary in adoc\ng-grammar\nx-explain grammar\nr-trans to pl\ne-trans to en")
 	i (cmd chat.clj ask -o scratchpad) ;; ask question
 	t (cmd chat.clj text -o scratchpad) ;; ask about text
 	p (cmd chat.clj text -o scratchpad --primary) ;; ask about text from primary selection

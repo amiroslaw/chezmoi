@@ -15,6 +15,7 @@ List of the options:
 	add - add new pomodoro. If session is active it will update it, the  description and tag will remain the same if you won't provide them.
 	status - print status message 
 	info - shows daily spent time 
+	modify - modify task 
 	history - display pomodoro history
 	menu - list of the options
 	-h help - show help
