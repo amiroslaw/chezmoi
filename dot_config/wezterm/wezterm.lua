@@ -65,9 +65,10 @@ return { -- Must be in the end
 	mouse_bindings = bindings.mouse_bindings,
 	automatically_reload_config = false,
 	key_tables = bindings.key_tables,
-	window_decorations = "INTEGRATED_BUTTONS|RESIZE",
-	integrated_title_button_style = "Gnome",
-	integrated_title_buttons = { 'Close' },
+	-- window_decorations has an issue with rendering
+	-- window_decorations = "INTEGRATED_BUTTONS|RESIZE",
+	-- integrated_title_button_style = "Gnome",
+	-- integrated_title_buttons = { 'Close' },
 	-- integrated_title_buttons = { 'Hide', 'Maximize', 'Close' }
 	-- 'kanagawabones', 'Dracula (Official)'
 	-- https://wezfurlong.org/wezterm/colorschemes/d/index.html
