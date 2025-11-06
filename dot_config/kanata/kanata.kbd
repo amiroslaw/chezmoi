@@ -30,7 +30,7 @@ look if some programs need to be execute with shell
   @tab  q    w     e    r    t    y    @u    @i    @o    p    [    ]    \
   @cap  @alt_a   @met_s	@ctl_d @sft_f g	h @sft_j  @ctl_k @met_l @alt_; '    ret
   @lsft @z    x    @c    v    b    n    @m    ,    .    /    @rsft
-  lctl lmet @lalt           @spc            @ralt cmp lmet
+  lctl lmet @lalt           @spc            ralt cmp lmet
 ) ;; doubled lmet
 
 (deflayer apps
@@ -73,8 +73,8 @@ look if some programs need to be execute with shell
   lsft (tap-hold-press 200 200 bspc lsft) ;;  left backspace
   rsft (tap-hold-press 200 200 S-0 rsft) ;; right bracket
 ;; tap shortcuts
-  pl (one-shot 500 (layer-while-held pl))
-  ralt (tap-hold-release 200 200 @pl ralt) ;; TODO maybe double pl layer and make actions on hold
+  ;;pl (one-shot 500 (layer-while-held pl)) ;; I can use taht layer, idk if it is a great idea to bind it to ralt
+  ;;ralt (tap-hold-release 200 200 @pl ralt) ;; TODO maybe double pl layer and make actions on hold
   apps (one-shot 500 (layer-while-held apps))
   lalt (tap-hold-release 200 200 @apps lalt)
 ;; hold shortcuts
