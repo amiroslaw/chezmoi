@@ -126,9 +126,9 @@ _fasder_preexec() {
 autoload -Uz add-zsh-hook
 add-zsh-hook preexec _fasder_preexec
 
-# completions
+# completions - use double qoutes to prevent Zsh's suffix aliases
 fpath=($XDG_CONFIG_HOME/zsh/completions $fpath)
-source <(yt.clj completions)
-source <(clipcat.clj completions)
+source <("yt.clj" completions)
+source <("clipcat.clj" completions)
 
 # vi: ft=zsh

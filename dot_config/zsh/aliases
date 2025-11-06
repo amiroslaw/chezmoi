@@ -169,7 +169,8 @@ alias rest='wuzz'
 alias viswap_rm='rm -f ~/.local/state/nvim/swap/*'
 alias cad='chezmoi add'
 alias ced='chezmoi edit'
-alias cap='chezmoi apply'
+alias capt='chezmoi apply'
+alias caps='chezmoi apply --source-path'
 alias cea='chezmoi edit --apply'
 alias ccd='chezmoi cd'
 alias cdi='chezmoi diff'
@@ -367,6 +368,7 @@ alias ......='cd ../../../../..'
 
 #{{{ list of the files/directories
 
+# can't list files or multiple paths
 # --no-columns --icons-use-file-color
 #--no-classify --no-files-counter - no file counter
 # alias l='clifm --list-and-quit --no-clear-screen --no-eln --no-classify --no-files-counter --light-mode'
@@ -446,7 +448,7 @@ fo() {
 #ZSH
 # {{{ ZSH extensions 
 # open files based on their extensions in default app
-alias -s {tex,txt,md,adoc,java,html}=nvim
+alias -s {tex,txt,md,adoc,java,html,clj,kt}=nvim
 alias -s html=w3m
 alias -s {avi,mp4,webm,m3u,mkv}='mpv --profile=stream '
 alias -s pdf='zathura'
