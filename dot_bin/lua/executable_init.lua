@@ -284,9 +284,9 @@ function run(cmd, errorMsg)
    end
 
       Command_s = "( " .. Command_s .. " )" .. " 1> " .. OutFile_s .. " 2> " .. ErrFile_s
-   local _,_, Status_code = os.execute(Command_s)
+   -- local _,_, Status_code = os.execute(Command_s)
    -- in LuaJIT 2.1. Status_code is a 3rd return type 
-   -- local Status_code = os.execute(Command_s)
+   local Status_code = os.execute(Command_s)
   Out_t = readf(OutFile_s) -- sometimes is nil - I think I fix that
 	local err_f  = io.open(ErrFile_s, "r")
 	local status = Status_code == 0
