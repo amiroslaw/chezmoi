@@ -75,7 +75,6 @@
         "custom/lock",
         "custom/reboot",
         "custom/sleep",
-        "custom/power2",
     ]
 },
 
@@ -114,14 +113,7 @@
 },
 "custom/power": {
     "format": " ",
-    "on-click": "shutdown now",
-    // "tooltip": false,
-        "tooltip": true,
-        "tooltip-format": "Shutdown",
-},
-"custom/power2": {
-    "format": " ",
-    "on-click": "shutdown now",
+    "on-click": "systemctl poweroff",
     // "tooltip": false,
         "tooltip": true,
         "tooltip-format": "Shutdown",

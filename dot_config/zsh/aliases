@@ -611,13 +611,13 @@ alias sdkc='sdk current'
 alias sdkup='sdk upgrade'
 
 
-# show files which contain a term
+# show files which contain a term - it will highlight that term in vim
 grep_open() {
     local editor="$EDITOR"
     if [ "$EDITOR" = "vim" ] || [ "$EDITOR" = "nvim" ]; then
         local editor="$EDITOR +/$1 +'norm! n'"
     fi
-    rg -l "$1" | fzf --bind "enter:execute($editor + {})"
+    rg -l "$1" | fzf --bind "enter:execute($editor + {})" --preview "rg --color=always -n \"$1\" {}" 
 }
 
 # show staged and unstaged file changes
