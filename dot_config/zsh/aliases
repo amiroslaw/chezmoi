@@ -373,7 +373,7 @@ alias ......='cd ../../../../..'
 #--no-classify --no-files-counter - no file counter
 # alias l='clifm --list-and-quit --no-clear-screen --no-eln --no-classify --no-files-counter --light-mode'
 alias l='clifm --list-and-quit --no-clear-screen --no-eln --light-mode'
-alias ls='clifm --list-and-quit --no-clear-screen --no-eln --no-truncate-names --light-mode'
+alias lf='clifm --list-and-quit --no-clear-screen --no-eln --no-truncate-names --light-mode'
 alias la='clifm --list-and-quit --no-clear-screen --no-eln --light-mode -a'
 alias ld='clifm --list-and-quit --no-clear-screen --no-eln --light-mode --only-dirs'
 alias ll='clifm --list-and-quit --no-clear-screen --no-eln  --no-truncate-names --no-classify --no-files-counter --light-mode -l --prop-fields="pIGsm"'
@@ -514,29 +514,16 @@ alias -g H='$(fd --hidden | fzf) '
 #}}}
 
 #{{{ FUNCTIONS
-# Runs when tab is pressed after ,
-# I have plugin for it so I don't know, how it will be useful
-_fzf_comprun() {
-    local command=$1
-    shift
-
-    case "$command" in
-    cd) fzf "$@" --preview 'exa -TFl --group-directories-first --icons --git -L 2 --no-user {}' ;;
-    nvim) fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' ;;
-    vim) fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' ;;
-    *) fzf "$@" ;;
-    esac
-}
 # alias mkcd='take'
 take () {
   case "$1" in /*) :;; *) set -- "./$1";; esac
   mkdir -p "$1" && cd "$1"
   }
 
-# "I'm feeling lucky" 
-# deep broot cd of broot
+# "I'm feeling lucky cd " 
 function c {
-    br -h --only-folders --cmd "$1;:cd"
+	cd "$(fd -E .git -E node_modules -E target --hidden -t d "$1" . | head -n1)"
+    # br -h --only-folders --cmd "$1;:cd"
 }
 # fasder
 jj () {
@@ -662,6 +649,20 @@ while true; do
      printf "%s\r" $(TZ=UTC date --date now-$now +%H:%M:%S)
      sleep 0.1
   done
+}
+
+# Runs when tab is pressed after ,
+# I have plugin for it so I don't know, how it will be useful
+_fzf_comprun() {
+    local command=$1
+    shift
+
+    case "$command" in
+    cd) fzf "$@" --preview 'eza -TFl --group-directories-first --icons --git -L 2 --no-user {}' ;;
+    nvim) fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' ;;
+    vim) fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' ;;
+    *) fzf "$@" ;;
+    esac
 }
 
 #}}}
