@@ -261,7 +261,7 @@ nmap <dd> :!gomi %f<cr>
 "nmap <delete> :!trash-put %f<cr>
 nmap DD :!rm -rf %f<cr>
 "open in file manager
-nmap <F3> :! wezterm start --cwd %d %i & <cr> 
+nmap <F3> :! wezterm start --always-new-process --cwd %d %i & <cr> 
 " opens in different terminal- has different pane list
 " nmap <F3> :! wezterm cli spawn --pane-id $WEZTERM_PANE --cwd %d %i & <cr>
 " open shell
