@@ -45,7 +45,7 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 	command = [[set filetype=text]],
 })
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-	pattern = { 'qutebrowser-editor-*', 'tmpcompose.txt', '/tmp/*.md', '/tmp/txt/*' },
+	pattern = { 'qutebrowser-editor-*', 'compose.txt', '/tmp/*.md', '/tmp/txt/*' },
 	command = [[setlocal spell spelllang=en | startinsert]],
 })
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
