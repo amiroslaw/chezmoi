@@ -150,6 +150,7 @@ look if some programs need to be execute with shell
   news (cmd sh -c r#"scratchpad.clj -n news $(printf "$TERMINAL $TERM_RUN" "news" "newsboat")"#)
   quake (cmd sh -c r#"scratchpad.clj -n drop $(printf "$TERMINAL $TERM_RUN" "drop" "")"#)
   tw (cmd sh -c r#"scratchpad.clj -n task $(printf "$TERM_LT $TERM_LT_RUN" "task" "taskwarrior-tui")"#)
+  chat (cmd sh -c r#"scratchpad.clj -n chat $(printf "$TERMINAL $TERM_RUN" "chat" "nchat")"#)
   off (cmd sh -c "rofi -show power-menu -modi power-menu:$ROFI/power.sh")
   kee (cmd setsid keecli.sh)
   todo (cmd todo.lua add)
@@ -157,7 +158,6 @@ look if some programs need to be execute with shell
 clip-primary (cmd clipcat.clj primary --paste)
 
   ;; old or change to wayland
-  chat (cmd setsid scratchpad.sh chat "wezterm start --class chat -- nchat")
   audio (cmd audio.sh toggle) ;; x11
   clip (cmd "/home/miro/.config/rofi/scripts/clipster/roficlip" )
   fm (cmd setsid pcmanfm )
