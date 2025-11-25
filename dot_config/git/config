@@ -8,7 +8,6 @@
 	editor = nvim
 [merge]
 	tool = meld
-; https://difftastic.wilfred.me.uk/git.html
 [diff]
 	; tool = meld
 	tool = difftastic
@@ -22,6 +21,7 @@
 [mergetool "nvim"]
     cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [difftool "difftastic"]
+; https://difftastic.wilfred.me.uk/git.html
 	cmd = difft "$LOCAL" "$REMOTE"
 [pager]
 	difftool = true

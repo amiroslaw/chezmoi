@@ -360,11 +360,11 @@ nmap('<a-f>', ':Neoformat! java astyle <CR>')
 
 --""""""""""""""""""
 -- https://github.com/is0n/fm-nvim
-nmap(',g', ':Lazygit <cr>')
 nmap('<leader>w', ':TaskWarriorTUI <cr>')
 nmap('<F3>', ':Vifm<CR>')
 nmap('<leader>n', ':Vifm<CR>')
 nmap('<leader>N', ':Ranger<CR>')
+-- nmap(',g', ':Lazygit <cr>') -- neogit
 
 --""""""""""""""""""
 -- surround
@@ -802,7 +802,7 @@ dict.setup {
 require('gitsigns').setup {
 	on_attach = function(bufnr)
 		local gs = package.loaded.gitsigns
-		-- Navigation
+		-- Navigation in diff-mode there are [c ]c
 		vim.keymap.set('n', ',n', function()
 			if vim.wo.diff then
 				return ',n'
@@ -823,19 +823,65 @@ require('gitsigns').setup {
 			return '<Ignore>'
 		end, { expr = true, buffer = bufnr })
 		-- can be convert to  vim.keymap.set
-		-- Actions
 		nmap(',r', ':Gitsigns reset_hunk<CR>')
 		vmap(',r', ':Gitsigns reset_hunk<CR>')
-		nmap(',s', '<cmd>Gitsigns preview_hunk<CR>')
-		nmap(',d', '<cmd>Gitsigns diffthis<CR>')
+		nmap(',s', '<cmd>Gitsigns preview_hunk_inline<CR>')
+		-- nmap(',d', '<cmd>Gitsigns diffthis<CR>')
 		nmap(',D', '<cmd>lua require"gitsigns".diffthis("~")<CR>')
 		nmap(',t', '<cmd>Gitsigns toggle_deleted<CR>')
+		nmap(',l', '<cmd>Gitsigns setloclist<CR>') -- quickfix setqflist
 
 		-- Text object
 		omap('oh', ':<C-U>Gitsigns select_hunk<CR>')
 		xmap('oh', ':<C-U>Gitsigns select_hunk<CR>')
 	end,
 } -- }}} 
+
+--{{{ diffview https://github.com/sindrets/diffview.nvim
+local actions = require("diffview.actions")
+nmap(',h', '<cmd>DiffviewFileHistory<CR>')
+nmap(',f', '<cmd>DiffviewFileHistory %<CR>') -- current file
+nmap(',d', '<cmd>DiffviewOpen<CR>')
+nmap(',m', '<cmd>DiffviewOpen master<CR>')
+
+require("diffview").setup({
+  enhanced_diff_hl = true, -- See |diffview-config-enhanced_diff_hl|
+  use_icons = true,         -- Requires nvim-web-devicons
+  show_help_hints = true,   -- Show hints for how to open the help panel
+  watch_index = true,       -- Update views and index buffers when the git index changes.
+  view = { -- For more info, see |diffview-config-view.x.layout|.
+    --    |'diff3_horizontal' |'diff3_mixed' |'diff4_mixed'
+    merge_tool = {
+      layout = "diff3_horizontal",
+      disable_diagnostics = true,   -- Temporarily disable diagnostics for diff buffers while in the view.
+      winbar_info = true,           -- See |diffview-config-view.x.winbar_info|
+    },
+  },
+
+  keymaps = {
+    disable_defaults = false, -- Disable the default keymaps
+    view = {
+      -- The `view` bindings are active in the diff buffers, only when the current
+      -- tabpage is a Diffview.
+      { "n", ",p",      "[c"    ,                  { desc = "jump to the previous conflict" } },
+      { "n", ",n",         "]c" ,                  { desc = "jump to the next conflict" } },
+      { "n", "[x",          actions.prev_conflict,                  { desc = "In the merge-tool: jump to the previous conflict" } },
+      { "n", "]x",          actions.next_conflict,                  { desc = "In the merge-tool: jump to the next conflict" } },
+    },
+  },
+}) --}}} 
+
+--{{{ neogit https://github.com/NeogitOrg/neogit
+local neogit = require('neogit')
+vim.keymap.set("n", ",g", neogit.open, { desc = "Open Neogit UI" })
+vim.keymap.set("n", ",hp", "<cmd>Neogit pull<CR>", { desc = "Neogit pull" })
+vim.keymap.set("n", ",hP", "<cmd>Neogit push<CR>", { desc = "Neogit push" })
+vim.keymap.set("n", ",c", "<cmd>Neogit commit<CR>", { desc = "Neogit commit" })
+vim.keymap.set("n", ",b", ":Telescope git_branches<CR>", { desc = "Neogit push" }, {silent = true, noremap = true})
+
+neogit.setup {
+graph_style = "kitty",
+} --}}} 
 
 -- translate {{{
 --https://github.com/uga-rosa/translate.nvim
@@ -970,48 +1016,49 @@ group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 			mode = mode or 'n'
 			vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
 		end
+		-- HELP
+		-- hover on fun - doc and params list
 		map('grs', vim.lsp.buf.signature_help, '[S]ignature help')
 		map('grh', vim.lsp.buf.hover, '[H]over')
 
 		-- Rename the variable under your cursor.
 		map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
 
-		-- Execute a code action, usually your cursor needs to be on top of an error
-		-- or a suggestion from your LSP for this to activate.
-		map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
-
-		-- Find references for the word under your cursor.
-		map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-
-		-- Jump to the implementation of the word under your cursor.
-		--  Useful when your language has ways of declaring types without an actual implementation.
-		map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-
+		-- JUMP
 		-- Jump to the definition of the word under your cursor.
 		--  This is where a variable was first declared, or where a function is defined, etc.
 		--  To jump back, press <C-t>.
 		map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-
+		-- Find references for the word under your cursor.
+		map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+		-- Jump to the implementation of the word under your cursor.
+		--  Useful when your language has ways of declaring types without an actual implementation.
+		map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
 		-- WARN: This is not Goto Definition, this is Goto Declaration.
 		--  For example, in C this would take you to the header.
 		map('grd', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+		-- FIND
 		-- Fuzzy find all the symbols in your current document.
 		--  Symbols are things like variables, functions, types, etc.
 		map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
-
 		-- Fuzzy find all the symbols in your current workspace.
 		--  Similar to document symbols, except searches over your entire project.
 		map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
+
+		-- Diagnostic
+		map('gre', require('telescope.builtin').diagnostics, 'Show [E]rrors')
+		map(',j', function() vim.diagnostic.jump({count= 1,float = true}) end, 'Go to next error')
+		map(',k', function() vim.diagnostic.jump({count= -1,float = true}) end, 'Go to prev error')
+
+		-- Execute a code action, usually your cursor needs to be on top of an error
+		-- or a suggestion from your LSP for this to activate.
+		map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
 
 		-- Jump to the type of the word under your cursor.
 		--  Useful when you're not sure what type a variable is and you want to see
 		--  the definition of its *type*, not where it was *defined*.
 		map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
-		-- Diagnostic
-		map('gre', require('telescope.builtin').diagnostics, 'Show [E]rrors')
-		map(',j', function() vim.diagnostic.jump({count= 1,float = true}) end, 'Go to next error')
-		map(',k', function() vim.diagnostic.jump({count= -1,float = true}) end, 'Go to prev error')
   end,
 })
 
