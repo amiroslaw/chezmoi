@@ -138,6 +138,18 @@ vim.wo.cursorcolumn = true
 
 vim.opt.iskeyword:append('-') -- words separeted by - will recognise as a one word
 
+-- diff mode
+vim.opt.diffopt = {
+"internal",
+"filler",
+"closeoff",
+"context:12",
+"algorithm:histogram",
+"linematch:200",
+"indent-heuristic",
+"iwhite" -- I toggle this one, it doesn't fit all cases.
+}
+
 -- }}} 
 
 -- SHORTCUTS {{{
@@ -839,10 +851,18 @@ require('gitsigns').setup {
 
 --{{{ diffview https://github.com/sindrets/diffview.nvim
 local actions = require("diffview.actions")
-nmap(',h', '<cmd>DiffviewFileHistory<CR>')
-nmap(',f', '<cmd>DiffviewFileHistory %<CR>') -- current file
-nmap(',d', '<cmd>DiffviewOpen<CR>')
-nmap(',m', '<cmd>DiffviewOpen master<CR>')
+local function toggle_diffview(cmd)
+  if next(require("diffview.lib").views) == nil then
+    vim.cmd(cmd)
+    vim.cmd("DiffviewToggleFiles")
+  else
+    vim.cmd("DiffviewClose")
+  end
+end
+key('n', ',h', function() toggle_diffview('DiffviewFileHistory') end,  {desc = 'Diffview view history files in repo.'} )
+key('n', ',f', function() toggle_diffview('DiffviewFileHistory %') end,  {desc = 'Diffview view history for the current file.'} )
+key('n', ',d', function() toggle_diffview('DiffviewOpen') end,  {desc = 'Diffview'} )
+key('n', ',m', function() toggle_diffview('DiffviewOpen master') end,  {desc = 'Diffview master'} )
 
 require("diffview").setup({
   enhanced_diff_hl = true, -- See |diffview-config-enhanced_diff_hl|
@@ -873,11 +893,32 @@ require("diffview").setup({
 
 --{{{ neogit https://github.com/NeogitOrg/neogit
 local neogit = require('neogit')
-vim.keymap.set("n", ",g", neogit.open, { desc = "Open Neogit UI" })
-vim.keymap.set("n", ",hp", "<cmd>Neogit pull<CR>", { desc = "Neogit pull" })
-vim.keymap.set("n", ",hP", "<cmd>Neogit push<CR>", { desc = "Neogit push" })
-vim.keymap.set("n", ",c", "<cmd>Neogit commit<CR>", { desc = "Neogit commit" })
-vim.keymap.set("n", ",b", ":Telescope git_branches<CR>", { desc = "Neogit push" }, {silent = true, noremap = true})
+key("n", ",g", neogit.open, { desc = "Open Neogit UI" })
+key("n", ",hp", "<cmd>Neogit pull<CR>", { desc = "Neogit pull" })
+key("n", ",hP", "<cmd>Neogit push<CR>", { desc = "Neogit push" })
+key("n", ",c", "<cmd>Neogit commit<CR>", { desc = "Neogit commit" })
+key("n", ",b", ":Telescope git_branches<CR>", { desc = "Neogit push" }, {silent = true, noremap = true})
+key("n", ",al", function()
+  neogit.actions.stage.stage_all()
+  neogit.open({ "commit" })
+end, { desc = "Stage all files and commit" })
+
+key("n", ",au", function()
+  local msg = vim.fn.input("Commit message: ")
+  if msg ~= "" then
+    vim.fn.system("git add -u")
+    vim.fn.system("git commit -m " .. vim.fn.shellescape(msg))
+    print("Committed with message: " .. msg)
+  else
+    print("Commit aborted: no message provided")
+  end
+end, { desc = "Stage all untracked files and commit with prompt" })
+
+key("n", ",aa", function()
+	vim.fn.system("git add -u")
+	vim.fn.system("git commit --amend --no-edit")
+	print("Amended last commit with staged changes (message unchanged)")
+end, { desc = "Stage tracked files and amend commit" })
 
 neogit.setup {
 graph_style = "kitty",
@@ -975,13 +1016,13 @@ key({ "n", "v" }, '<LocalLeader>of', "<cmd>OGPTRun format-adoc table<CR>", { des
 require("substitute").setup({
   on_substitute = require("yanky.integration").substitute(),
 })
-vim.keymap.set("n", '<LocalLeader>s', require('substitute').operator, { noremap = true, desc = 'Substitute [text object]'})
-vim.keymap.set("n", '<LocalLeader>ss', require('substitute').line, { noremap = true, desc ='Substitute - line'})
-vim.keymap.set("n", '<LocalLeader>S', require('substitute').eol, { noremap = true, desc ='Substitute - eol'})
-vim.keymap.set("x", '<LocalLeader>s', require('substitute').visual, { noremap = true, desc ='Substitute'})
+key("n", '<LocalLeader>s', require('substitute').operator, { noremap = true, desc = 'Substitute [text object]'})
+key("n", '<LocalLeader>ss', require('substitute').line, { noremap = true, desc ='Substitute - line'})
+key("n", '<LocalLeader>S', require('substitute').eol, { noremap = true, desc ='Substitute - eol'})
+key("x", '<LocalLeader>s', require('substitute').visual, { noremap = true, desc ='Substitute'})
 -- range, idk how does it work it alway apply to a paragraph
-vim.keymap.set("n", '<S-A-r>', require('substitute.range').word, { noremap = true, desc ='Substitute - range under a word'})
--- vim.keymap.set("n", '<A-r>', function() require('substitute.range').word({range = { motion = '%' }}) end, { noremap = true, desc ='Substitute - word in file'}) -- it doesn't work for whole file 
+key("n", '<S-A-r>', require('substitute.range').word, { noremap = true, desc ='Substitute - range under a word'})
+-- key("n", '<A-r>', function() require('substitute.range').word({range = { motion = '%' }}) end, { noremap = true, desc ='Substitute - word in file'}) -- it doesn't work for whole file 
 --}}}
 
 -- {{{ nvim-autopairs https://github.com/windwp/nvim-autopairs?tab=readme-ov-file#fastwrap

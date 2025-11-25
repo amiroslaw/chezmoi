@@ -222,9 +222,9 @@ command! ffmpegSegment !for i in %f; do  ffmpeg -i "$i" -f segment -segment_time
 noremap cm :ffmpegSegment <cr>
 
 " diff
-nmap ,d :diffMeld<cr>
+nmap ,D :diffMeld<cr>
 command! diffMeld meld %c %C %i
-nmap ,D :diffVim<cr>
+nmap ,d :diffVim<cr>
 command! diffVim nvim -d %f %F
 nmap ,c :compare listall<cr>
 command! checkout ~/.bin/checkout.lua %d
