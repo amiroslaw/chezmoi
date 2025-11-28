@@ -837,7 +837,7 @@ require('gitsigns').setup {
 		-- can be convert to  vim.keymap.set
 		nmap(',r', ':Gitsigns reset_hunk<CR>')
 		vmap(',r', ':Gitsigns reset_hunk<CR>')
-		nmap(',s', '<cmd>Gitsigns preview_hunk_inline<CR>')
+		nmap(',v', '<cmd>Gitsigns preview_hunk_inline<CR>')
 		-- nmap(',d', '<cmd>Gitsigns diffthis<CR>')
 		nmap(',D', '<cmd>lua require"gitsigns".diffthis("~")<CR>')
 		nmap(',t', '<cmd>Gitsigns toggle_deleted<CR>')
@@ -860,7 +860,8 @@ local function toggle_diffview(cmd)
   end
 end
 key('n', ',h', function() toggle_diffview('DiffviewFileHistory') end,  {desc = 'Diffview view history files in repo.'} )
-key('n', ',f', function() toggle_diffview('DiffviewFileHistory %') end,  {desc = 'Diffview view history for the current file.'} )
+key('n', ',F', function() toggle_diffview('DiffviewFileHistory %') end,  {desc = 'Diffview view history for the current file.'} )
+key('n', ',f', function() toggle_diffview('DiffviewFileHistory % --base=LOCAL') end,  {desc = 'Diffview view history for the current file. Local base.'} )
 key('n', ',d', function() toggle_diffview('DiffviewOpen') end,  {desc = 'Diffview'} )
 key('n', ',m', function() toggle_diffview('DiffviewOpen master') end,  {desc = 'Diffview master'} )
 
@@ -913,6 +914,16 @@ key("n", ",au", function()
     print("Commit aborted: no message provided")
   end
 end, { desc = "Stage all untracked files and commit with prompt" })
+
+key("n", ",as", function()
+  local msg = vim.fn.input("Stash message: ")
+  if msg ~= "" then
+    vim.fn.system("git stash push -m " .. vim.fn.shellescape(msg))
+    print("Stashed with message: " .. msg)
+  else
+    print("Stash aborted: no message provided")
+  end
+end, { desc = "Stash all untracked files" })
 
 key("n", ",aa", function()
 	vim.fn.system("git add -u")
