@@ -448,7 +448,7 @@ fo() {
 #ZSH
 # {{{ ZSH extensions 
 # open files based on their extensions in default app
-alias -s {tex,txt,md,adoc,java,html,clj,kt}=nvim
+alias -s {tex,txt,md,adoc,java,html,kt}=nvim
 alias -s html=w3m
 alias -s {avi,mp4,webm,m3u,mkv}='mpv --profile=stream '
 alias -s pdf='zathura'

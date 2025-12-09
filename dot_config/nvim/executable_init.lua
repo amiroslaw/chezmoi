@@ -40,6 +40,11 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 	pattern = { '*.json' },
 	command = [[set filetype=json]],
 })
+-- doesn't work well and runs plugin
+-- vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+-- 	pattern = { '*.edn' },
+-- 	command = [[set filetype=clojure]],
+-- })
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 	pattern = { '/tmp/*' },
 	command = [[set filetype=text]],
