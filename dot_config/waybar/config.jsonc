@@ -29,6 +29,7 @@
 		"mpris",
         "tray",
 		"custom/pomodoro",
+		"custom/mega",
         // "pulseaudio/slider",
         "pulseaudio",
 		"bluetooth",
@@ -393,5 +394,13 @@
 	  "tooltip": true,
 	  "tooltip-format": "pomodoro"
 	},
+	"custom/mega": {
+	"exec": "~/.config/waybar/scripts/mega.sh",
+        "format": " {} ",
+	  "interval": 60,
+	  "on-click": "$BROWSER 'https://mega.nz/fm'",
+	  "tooltip": true,
+	  "tooltip-format": "MEGAsync"
+	},	
 
 }
