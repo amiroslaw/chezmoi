@@ -31,7 +31,8 @@
   "Retrieves information about the active window, including its title and geometry."
   []
   {:post [(is (map? %))]}
-  (let [{[x y] :at, [w h] :size, title :initialTitle} (hypr-props "activewindow")]
+  (let [{[x y] :at, [w h] :size, title :title} (hypr-props "activewindow")
+        title (str/escape title {\/ "", \$ "", \' "`"}) ] ;; :initialTitle
     {:name "Active window", :title title, :geometry (format "%s,%s %sx%s" x y w h)}))
 
 (defn- grab-with-slurp
