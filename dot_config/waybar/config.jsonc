@@ -28,8 +28,9 @@
     "modules-right": [
 		"mpris",
         "tray",
-		"custom/pomodoro",
+		"custom/zypper",
 		"custom/mega",
+		"custom/pomodoro",
         // "pulseaudio/slider",
         "pulseaudio",
 		"bluetooth",
@@ -402,5 +403,11 @@
 	  "tooltip": true,
 	  "tooltip-format": "MEGAsync"
 	},	
-
+	"custom/zypper": {
+	"exec": "~/.config/waybar/scripts/zypper.sh",
+        "format": " {} ",
+	  "interval": 3000,
+	  "tooltip": true,
+	  "tooltip-format": "Updates"
+	},	
 }

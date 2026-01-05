@@ -23,7 +23,7 @@ sudo zypper remove <package-name>
 sudo zypper remove --clean-deps <package-name>
 
 # Update packages
-sudo zypper update
+sudo env ZYPP_PCK_PRELOAD=1 zypper update
 
 # Only download the packages, do not install
 sudo zypper update --download-only 
