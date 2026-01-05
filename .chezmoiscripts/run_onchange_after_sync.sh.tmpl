@@ -1,0 +1,19 @@
+#!/bin/sh
+# after syncing data from megasync
+# opi megasync
+set -e
+
+mkdir -p  $HOME/Videos/YouTube/ $HOME/Downloads/wget $HOME/Musics/PODCASTS/ $HOME/Pictures/gallery-dl/ && echo "created dirs "
+
+{{ if eq .chezmoi.hostname "pc" }}
+LOCAL_MPV="$PRIVATE/mpv/local-pc"
+{{ else if eq .chezmoi.hostname "laptop" }}
+LOCAL_MPV="$PRIVATE/mpv/local-lap"
+{{ end }}
+LINK="$PRIVATE/mpv/playlist/local"
+# todo it makes a loop
+[ ! -e "$LINK" ] && ln -s "$LOCAL_MPV" $LINK  && echo "Link created. $LINK" 
+
+
+# vi: ft=bash
+
