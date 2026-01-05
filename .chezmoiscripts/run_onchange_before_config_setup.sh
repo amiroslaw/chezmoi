@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e
+set +e
 sudo zypper install -y zsh
 
 chsh -s $(which zsh)
