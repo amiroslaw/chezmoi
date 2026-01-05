@@ -9,7 +9,6 @@ mkdir -p "$HOME"/Documents "$HOME"/Downloads "$HOME"/Pictures "$HOME"/Videos
 sudo zypper addrepo -cfp 90 'http://ftp.fau.de/packman/suse/openSUSE_Tumbleweed/' packman
 sudo zypper ref
 sudo zypper dup --from packman --allow-vendor-change
-sudo zypper install -y yad opi
 
 
 # {{ if eq .chezmoi.hostname "pc" }}
