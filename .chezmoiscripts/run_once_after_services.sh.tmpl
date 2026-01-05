@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+sudo systemctl enable greetd
+sudo systemctl start greetd
 systemctl --user start pueued.service
 systemctl --user enable pueued.service
 systemctl --user enable --now ydotool.service
