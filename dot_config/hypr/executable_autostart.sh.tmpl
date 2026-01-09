@@ -1,0 +1,8 @@
+#!/bin/bash
+
+{{ if eq .chezmoi.hostname "pc" }}
+sleep 300 && megasync || notify-send "Megasync"
+{{ else if eq .chezmoi.hostname "laptop" }}
+sleep 300 && mega-sync || notify-send "Megasync"
+{{ end }}
+
