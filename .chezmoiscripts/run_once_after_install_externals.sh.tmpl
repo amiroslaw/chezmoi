@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+export GOPATH="$HOME/.local/share/go"
+
 LOCAL_BIN_DIR="$HOME/.local/bin"
 TMP="$HOME/tmp-chezmoi"
 mkdir -p "$TMP"

@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+export CARGO_HOME="$HOME/.local/share/cargo"
+
+cargo install --locked pueue --git https://github.com/Nukesor/pueue
+cargo install --locked --features cmd kanata --git  https://github.com/jtroo/kanata
+# for nvim
+cargo install --locked tree-sitter-cli --git https://github.com/tree-sitter/tree-sitter
+# it has rpm version
+cargo install --locked taskwarrior-tui --git https://github.com/kdheepak/taskwarrior-tui
+cargo install --locked navi --git https://github.com/denisidoro/navi
+# no nchat
+# cargo install --locked tgt --git https://github.com/FedericoBruzzone/tgt
+
+# vi: ft=bash
+

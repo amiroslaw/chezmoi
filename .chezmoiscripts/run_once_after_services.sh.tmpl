@@ -1,17 +1,16 @@
 #!/bin/sh
 set -e
 
-sudo systemctl enable greetd
-sudo systemctl start greetd
-systemctl --user start pueued.service
-systemctl --user enable pueued.service
-systemctl --user enable --now ydotool.service
+sudo systemctl enable --now greetd
+sudo systemctl set-default graphical
 sudo systemctl enable --now NetworkManager.service             
+systemctl --user enable --now pueued.service
+systemctl --user enable --now ydotool.service
 # sudo systemctl enable --now NetworkManager-dispatcher.service  
 # sudo systemctl enable --now NetworkManager-wait-online.service 
 {{ if eq .chezmoi.hostname "pc" }}
-systemctl --user enable --now ollama.service               
-sudo systemctl enable --now lm_sensors.service 
+# systemctl --user enable --now ollama.service               
+# sudo systemctl enable --now lm_sensors.service 
 # sudo systemctl enable --now nvidia-hibernate.service           
 # sudo systemctl enable --now nvidia-resume.service              
 # sudo systemctl enable --now nvidia-suspend.service             
