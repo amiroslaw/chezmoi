@@ -78,9 +78,9 @@ c.content.autoplay = False
 # c.content.geolocation = False # default - ask
 
 config.set("fileselect.handler", "external")
-config.set( "fileselect.single_file.command", ["st", "-c", "qb", "-e", "vifm", "--choose-file", "{}"])
-config.set( "fileselect.multiple_files.command", ["st", "-c", "qb", "-e", "vifm", "--choose-files", "{}"])
-config.set( "fileselect.folder.command", ["st", "-c", "qb", "-e", "vifm", "--choose-dir", "{}"])
+config.set( "fileselect.single_file.command", [os.environ["TERM_LT"], "--app-id", "qb", "-e", "vifm", "--choose-file", "{}"])
+config.set( "fileselect.multiple_files.command", [os.environ["TERM_LT"], "--app-id", "qb", "-e", "vifm", "--choose-files", "{}"])
+config.set( "fileselect.folder.command", [os.environ["TERM_LT"], "--app-id", "qb", "-e", "vifm", "--choose-dir", "{}"])
 
 # dependency needed and executing command :adblock-update
 c.content.blocking.method = 'both'
