@@ -1151,6 +1151,8 @@ vim.diagnostic.config({
 })
 
 -- nvim-treesitter
+-- this option is avialiable only in the old "master" version of this plugin in the new one you need to use an additional plugin 
+--https://github.com/daliusd/incr.nvim
 require'nvim-treesitter.configs'.setup {
   incremental_selection = {
     enable = true,

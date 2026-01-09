@@ -257,8 +257,9 @@ return {
 	-- { 'jose-elias-alvarez/null-ls.nvim', branch = 'main', dependencies = { 'nvim-lua/plenary.nvim' } },
 	{ 'NTBBloodbath/rest.nvim', branch = 'main', ft = { 'http' }, dependencies = { 'nvim-lua/plenary.nvim' } }, -- maybe delete
 	{'nvim-treesitter/nvim-treesitter-context'},
-	{ 'nvim-treesitter/nvim-treesitter',
-		build = ':TSUpdate',
+	{ 'nvim-treesitter/nvim-treesitter', 
+	branch = 'master',  -- it is a locket version, new one changes config
+	lazy = false, build = ':TSUpdate',
 		config = function()
 			require('nvim-treesitter.configs').setup {
 				ensure_installed = {

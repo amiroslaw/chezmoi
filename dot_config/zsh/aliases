@@ -96,6 +96,8 @@ alias sysstop='navialias sxx'
 alias sysreload='navialias srd'
 alias zin='navialias zin'
 alias zse='zypper search'
+alias zif='zypper info --requires --recommends'
+alias zre='sudo zypper remove -u'
 alias shut='navialias shut'
 
 #}}}

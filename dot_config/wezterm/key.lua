@@ -122,10 +122,10 @@ local key_tables = {
 	move = {
 		{ key = 'j', action = act { ScrollByLine = 1 } },
 		{ key = 'k', action = act { ScrollByLine = -1 } },
-		{ key = "u",      action = act { ScrollByLine = -15 } },
-		{ key = "d",      action = act { ScrollByLine = 15 } },
-		{ key = "g",      action = "ScrollToTop" },
-		{ key = "g",      mods = "SHIFT", action = "ScrollToBottom" },
+		{ key = 'u',      action = act { ScrollByLine = -15 } },
+		{ key = 'd',      action = act { ScrollByLine = 15 } },
+		{ key = 'g',      action = "ScrollToTop" },
+		{ key = 'g',      mods = "SHIFT", action = "ScrollToBottom" },
 		{ key = 'Escape', action = 'PopKeyTable' },
 	}
 }
@@ -134,6 +134,8 @@ local key_tables = {
 map('F8', act { ShowLauncherArgs = { flags = 'FUZZY|WORKSPACES' } }, 'ALT') -- not important with sessionizer plugin
 mapCS('{', act { SwitchWorkspaceRelative = -1 })
 mapCS('}', act { SwitchWorkspaceRelative = 1 })
+
+-- plugins
 mapCS('i', plugins.sessionizer.show(plugins.smart_workspace_switcher_replica)) 
 mapCS('b', plugins.newWorkspace )
 mapCS('m', plugins.history.switch_to_most_recent_workspace)
