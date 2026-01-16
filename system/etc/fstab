@@ -1,0 +1,29 @@
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a device; this may
+# be used with UUID= as a more robust way to name devices that works even if
+# disks are added and removed. See fstab(5).
+#
+# <file system>             <mount point>  <type>  <options>  <dump>  <pass>
+# m2
+UUID=F7A5-2477                            /boot/efi      vfat    umask=0077 0 2
+UUID=601bfda3-c986-4ad8-83e6-5cf11f20b504 /              ext4    noatime,nodiratime,errors=remount-ro 0 1
+UUID=8311cf61-66c7-46ce-992a-4e0c3586298d /home          ext4    defaults,noatime 0 2
+/swap.img none swap  defaults,pri=-2 0 0
+# UUID=601bfda3-c986-4ad8-83e6-5cf11f20b504 /              ext4    defaults,noatime 0 1
+
+# DATA
+#Entry 320 GB multimedia
+UUID=44EE70F12DE2AABD	/media/multimedia	ntfs	defaults,locale=pl_PL.UTF-8,nofail	0	0
+#Entry 250 GB win
+UUID=344409A95DAFFD5B	/media/winC	ntfs	defaults,locale=pl_PL.UTF-8,nofail	0	0
+# UUID=D24A1EE44A1EC55F	/media/winC	ntfs	defaults,locale=pl_PL.UTF-8,nofail	0	0
+UUID=922E25AB2E2588F5	/media/backup	ntfs	defaults,locale=pl_PL.UTF-8,nofail	0	0
+#Entry 80 GB multi
+UUID=003A554D20D9F096	/media/multi	ntfs	defaults,locale=pl_PL.UTF-8,nofail	0	0
+
+# tmpfs - files in RAM
+# SSD tweak : temporary directories as tmpfs
+tmpfs /tmp tmpfs defaults,noatime,mode=1777,size=20% 0 0
+# SSD tweak : log directory as tmpfs
+# tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0

@@ -3,9 +3,9 @@
 vt = 1
 
 [default_session]
-command = "tuigreet --cmd Hyprland --theme border=magenta;text=cyan;prompt=green;time=red;action=blue;button=yellow;container=black;input=red"
+command = "tuigreet --cmd start-hyprland --theme border=magenta;text=cyan;prompt=green;time=red;action=blue;button=yellow;container=black;input=red"
 user = "greeter"
 
 [initial_session]
-command = "Hyprland"
+command = "start-hyprland"
 user = "miro"
