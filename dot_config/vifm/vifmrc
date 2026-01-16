@@ -1,10 +1,6 @@
 " vim: filetype=vim :
 " DEPENDENCY
 " fd, rg, fzf, tree, patool or atool, dua,  eza, pdfunite, udevil meld dragon-drop tesseract, fasder
-"sxiv, xclip,trash-cli ,
-" wayland alternatives 
-" gomi wl-clipboard swayimg
-"
 " TODO
 " change separete command from keybinding `command!`, it will be posiible to see it in command list `:com`, or just execute it form command mode
 
@@ -42,7 +38,12 @@
 " The command macros %f, %F, %d, %F may be used in the commands.
 " The %a macro is ignored.  To use a % you must put %%.
 
-set vicmd=nvim
+
+if executable('vim')
+    set vicmd=vim
+elseif executable('nvim')
+    set vicmd=nvim
+endif
 
 " With this option turned on you can run partially entered commands with unambiguous beginning using :! (e.g. :!Te instead of :!Terminal or :!Te<tab>).
 set fastrun
@@ -86,10 +87,16 @@ set timefmt=\ %Y/%m/%d\ %H:%M
 " set vifminfo=options,filetypes,commands,bookmarks,tui,state,cs,chistory,shistory,dirstack,registers,phistory
 set vifminfo=bookmarks,chistory,shistory,phistory,savedirs,dhistory
 
+
 """""""""" my config
 """""""
+" Filter-out build artifacts and temporary files
+" filter! {*.lo,*.o,*.d,*.class,*.pyc,*.pyo,.*~}
+set milleroptions+=rpreview:all
+
 " viewcolumn - lua plugin - brakes modification column for sorting by e.g. modification
 " set viewcolumns=-{NameLink},8.7{LsSize}
+" set viewcolumns=-{name}..,6{}.
 set relativenumber
 set mouse=a
 "don't create shortcut with d,y,p key
@@ -246,11 +253,9 @@ command! zzzInternalXS find -type f -print0 | xargs -0 ls -Sr | tail -%a | tac %
 nmap cc :copyTxtToFile <cr> 
 command! copyTxtToFile cat %c >> %C
 nmap <C-c> :copyTxtToClip <cr> 
-"command! copyTxtToClip cat %c | xclip -sel clip
 command! copyTxtToClip cat %c | wl-copy
 nmap <C-v> :appendTextFromClip <cr>
 command! appendTextFromClip  wl-paste >> %c
-"command! appendTextFromClip xclip -o -selection clipboard >> %c
 nmap <F1> :command <cr>
 "change name without extension
 nmap <F2> cW
@@ -355,25 +360,18 @@ nnoremap > 4<c-w><
 nnoremap < 4<c-w>>
 
 " CLIPBOARD COPY
-" TODO change to clipcat
 " yank current directory path into the clipboard
-" nnoremap yd :!echo -n %d | xclip -sel clip %i<cr>
 nnoremap yd :yankPathRoot <cr>
-"command! yankPathRoot echo -n %d | xclip -sel clip %i
 command! yankPathRoot echo -n %d | wl-copy %i
 " yank current file path into the clipboard
 nnoremap yp :yankPath <cr>
-"command! yankPath echo -n %c:p | xclip -sel clip %i
 command! yankPath echo -n %c:p | wl-copy %i
 " yank current filename without path into the clipboard
 nnoremap yn :yankName <cr>
-"command! yankName echo -n %c | xclip -sel clip %i
 command! yankName echo -n %c | wl-copy %i
 " yank root of current file's name (without extension) into the clipboard
 nnoremap yr :yankRootName <cr>
 command! yankPathRoot echo -n %c:r | wl-copy %i
-"command! yankPathRoot echo -n %c:r | xclip -sel clip %i
-" copy and paste - xclip tool
 nnoremap yc :copyFile <cr>
 command! copyFile xclip-copyfile %f
 nnoremap yx :cutFile <cr>
@@ -545,7 +543,7 @@ fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
 "fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
 	"\ timg -U --grid=2 -p k -g%pwx%ph %c %pd 2>/dev/null
 	
-fileviewer <video/*>
+fileviewer {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,*.fl[icv],*.m2v,*.mov,*.webm,*.mts,*.m4v,*.r[am],*.qt,*.divx,*.as[fx]},<video/*>
 	\ timg -U -p sixel --frames=1 -g%pwx%ph %c %pd 2>/dev/null
 
 fileviewer {*.pdf},<application/pdf> timg -p sixel -W --auto-crop --frames=1 -g%pwx%ph %c %pd
@@ -625,5 +623,27 @@ mark y /home/miro/Videos/YouTube
 mark w /media/winD
 mark W /media/winC
 " }}} 
+
+"{{{ x11
+
+"sxiv, xclip,trash-cli ,
+" wayland and x11 support
+"if executable('xclip')
+"	nnoremap yd :!echo -n %d | xclip -selection clipboard %i<cr>
+"elseif executable('wl-copy')
+"endif
+" wayland alternatives 
+" gomi wl-clipboard swayimg
+"
+" copy and paste - xclip tool
+"command! yankPathRoot echo -n %c:r | xclip -sel clip %i
+"command! copyTxtToClip cat %c | xclip -sel clip
+"command! appendTextFromClip xclip -o -selection clipboard >> %c
+" nnoremap yd :!echo -n %d | xclip -sel clip %i<cr>
+"command! yankPathRoot echo -n %d | xclip -sel clip %i
+"command! yankPath echo -n %c:p | xclip -sel clip %i
+"command! yankName echo -n %c | xclip -sel clip %i
+"}}} 
+
 
 " vim: foldmethod=marker
