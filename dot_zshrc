@@ -130,6 +130,7 @@ add-zsh-hook preexec _fasder_preexec
 fpath=($XDG_CONFIG_HOME/zsh/completions $fpath)
 source <("yt.clj" completions)
 source <("clipcat.clj" completions)
+source <(navi widget zsh) # ctrl-g
 
 command_not_found_handle() {
 # don't run if not in a container

@@ -1,8 +1,9 @@
 % zypper
 @ util
+## TODO add autofill for remove, info 
 
 # Install packages ::zin
-sudo zypper install <recommends> <package-name>
+sudo zypper install --auto-agree-with-licenses <recommends> <confirm> <package-name>
 
 # Install local rpm package
 sudo zypper install <files>
@@ -13,14 +14,25 @@ sudo zypper install --download-only <package-name>
 # Downgrade or install a package with a specific version
 sudo zypper install --force <package-name>-<package-version>
 
-# Install a package and remove a package in one go
-sudo zypper install <package-name-1> -<package-name-2>
-
 # Remove package
-sudo zypper remove <package-name>
+sudo zypper remove <deps> <confirm> <package-name>
 
-# Automatically remove unneeded dependencies
-sudo zypper remove --clean-deps <package-name>
+# Search packages ::zse
+zypper --no-refresh search <installed> <type> <query>
+# list all packages depended on the package
+zypper --no-refresh search --requires <package-name>
+
+# Show full information for specified packages
+zypper --no-refresh info --requires --recommends --suggests --provides <package-name>
+
+# List packages
+zypper --no-refresh packages <installed-pa>
+# List packages orphaned
+zypper --no-refresh packages --orphaned
+# List packages unneeded
+zypper --no-refresh packages --unneeded
+# List all packages from the  repo
+zypper --no-refresh packages <installed-pa> <repo-name>
 
 # Update packages
 sudo env ZYPP_PCK_PRELOAD=1 zypper update
@@ -37,44 +49,21 @@ sudo zypper update <package-name>
 # Perform a distribution upgrade
 sudo zypper dist-upgrade
 
-# Search packages
-zypper search <query>
-
-# Search in the file list of packages 
-zypper search --file-list <query>
-
-# list all packages depended on the package
-zypper search --requires <package-name>
-
-# List all packages providing the specified capability
-zypper what-provides <query>
-
-# Show full information for specified packages
-zypper info <package-name>
-
-# List dependencies of package
-zypper info --requires <package-name>
-
-# List what the current package provides
-zypper info --provides <package-name>
-
-# List all available packages
-zypper packages
-
-# List all installed packages
-zypper packages --installed-only
-
 # Clean up all local caches
 zypper clean
 
 # Clean both metadata and package caches
 zypper clean --all
 
+# add repository
+sudo zypper addrepo <repo>
+
 # Start a shell to enter multiple commands in one session
 sudo zypper shell
 
 $ recommends: echo ' \n--no-recommends'
-
-
-
-
+$ deps: echo '--clean-deps\n '
+$ confirm: echo ' \n--no-confirm'
+$ installed: echo ' \n--installed-only'
+$ installed-pa: echo ' \n--installed-only\n--userinstalled\n--system'
+$ type: echo ' \n--requires\n--provides\n--file-list' 

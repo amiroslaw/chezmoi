@@ -94,12 +94,18 @@ alias sysstat='navialias sst'
 alias sysrestart='navialias sre'
 alias sysstop='navialias sxx'
 alias sysreload='navialias srd'
-alias zin='navialias zin'
-alias zse='zypper search'
-alias zif='zypper info --requires --recommends'
-alias zre='sudo zypper remove -u'
 alias shut='navialias shut'
 
+# zypper
+alias zin='navialias zin'
+alias zsen='navialias zse'
+alias zinn='sudo zypper install --no-recommends --auto-agree-with-licenses'
+alias zinr='sudo zypper install --auto-agree-with-licenses'
+alias zse='zypper --no-refresh search'
+alias zsei='zypper --no-refresh search --installed-only'
+alias zif='zypper --no-refresh info --requires --recommends --suggests --provides'
+alias zpa='zypper --no-refresh packages --installed-only'
+alias zre='sudo zypper remove --clean-deps'
 #}}}
 
 

@@ -1,8 +1,8 @@
 % OS
 
 # Create snapshot
-sudo snapper create --userdata important=<options> --description "<description>"
-$ options: echo 'yes no' | tr ' ' '\n' 
+sudo snapper create --userdata important=<important> --description "<description>"
+$ important: echo 'yes no' | tr ' ' '\n' 
 # snapshot list 
 sudo snapper list
 # snapshot rollback
