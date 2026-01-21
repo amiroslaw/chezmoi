@@ -10,9 +10,9 @@ LOCAL_MPV="$PRIVATE/mpv/local-pc"
 LOCAL_MPV="$PRIVATE/mpv/local-lap"
 {{ end }}
 LINK="$PRIVATE/mpv/playlist/local"
-# todo it makes a loop
-[ ! -e "$LINK" ] && ln -s "$LOCAL_MPV" $LINK  && echo "Link created. $LINK" 
-
+if ! ln -s "$LOCAL_MPV" "$LINK" 2>/dev/null; then 
+	echo "Link already exists or cannot be created" 
+fi
 
 # vi: ft=bash
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-sudo zypper install -y go rust luajit luajit-devel
-sudo zypper install -y nvim rofi wezterm curl gawk ImageMagick wget btop xdg-user-dirs xdg-utils mpv mpv-mpris vifm 7zip qutebrowser vifm fzf fd ripgrep timewarrior taskwarrior lazygit git-delta tealdeer bat libnotify-tools timg zathura-plugin-pdf-poppler
+sudo zypper install -y go rust luajit luajit-devel podman
+sudo zypper install -y nvim rofi wezterm curl gawk ImageMagick wget btop xdg-user-dirs xdg-utils mpv mpv-mpris vifm 7zip qutebrowser vifm fzf fd ripgrep timewarrior taskwarrior lazygit git-delta tealdeer bat libnotify-tools timg zathura-plugin-pdf-poppler distrobox
 # zathura-plugin-pdf-mupdf - mupdf backend faster and support epub but it could not work
 sudo zypper install -y meld qalculate-gtk 
 sudo zypper install -y --no-recommends git NetworkManager-applet playerctl newsboat clojure keepassxc
@@ -14,20 +14,25 @@ sudo zypper install -y yad opi
 sudo opi -n megasync
 sudo opi -n brave
 sudo opi -n satty
+sudo opi -n neovim-qt
+sudo opi -n codecs
+sudo opi -n dua-cli
 
 # maybe
-# neovim fastfetch 
 # sudo zypper install -y --no-recommends pdfunite broot fastfetch 
-# dua-cli
 
 #too old versions or no package in repos
 # sudo zypper install -y pueue  
 # tree-sitter - są wersje node i rust, starsza jest na node
-# sudo zypper install -y dua rofi-buku   mpd?--no-recommends
+# sudo zypper install -y rofi-buku   mpd?--no-recommends
 
 # clojure installs with java; I could use sdkman and download jar clojure package
 
+# for scripts
+sudo luarocks --lua-version=5.1 install gumbo
+
 {{ if eq .chezmoi.hostname "pc" }}
+# pavucontrol can be replaced by waylant native: opi pwvucontrol or flatpak (gtk takes a lot of space)
 sudo zypper install -y --no-recommends pavucontrol rmpc
 {{ else if eq .chezmoi.hostname "laptop" }}
 sudo zypper install -y --no-recommends blueman bluez
