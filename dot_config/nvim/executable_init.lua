@@ -1053,12 +1053,12 @@ require("mason").setup()
 vim.lsp.enable({
 	"lua_ls",
 	"clojure_lsp",
-	"bashls",
 	'marksman',
+	"bash-language-server",
+	"docker-language-server",
 -- 'java_language_server'
   -- "css_ls",
   -- "html_ls",
-  -- "docker_ls",
 })
 
 vim.api.nvim_create_autocmd('LspAttach', {
