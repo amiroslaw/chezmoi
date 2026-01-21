@@ -406,6 +406,7 @@ function editor(text, editorName)
 	if os.execute( "test -f " .. text ) == 0 then
 		local ok = os.execute(editorName .. ' ' .. text )
 		assert(ok, 'Could not open ' .. text)
+		-- assert(ok == 0, 'Could not open ' .. text)
 		return 0
 	end
 
@@ -418,6 +419,7 @@ function editor(text, editorName)
 		io.open(file, 'w'):write(text)
 		local ok = os.execute(editorName .. ' ' .. file )
 		assert(ok, 'Could not open ' .. file)
+		-- assert(ok == 0, 'Could not open ' .. file)
 	end
 end 
 --- >>>
@@ -552,10 +554,10 @@ function rofiMenu(entriesTab, options)
 	if code == 256 then
 		return {''}, false
 	end
-	-- if next(keys) and code > 256 then
-	if next(keys) then
-		-- code = code/256 - 9
-		code = code - 9
+	if next(keys) and code > 256 then
+	-- if next(keys) then
+		code = code/256 - 9
+		-- code = code - 9
 		code = keys[code] 
 	end
 	if options and options.multi then
