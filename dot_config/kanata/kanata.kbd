@@ -58,11 +58,11 @@ look if some programs need to be execute with shell
 )
 ;; _    $    +    \(    \)    @    |    -    =    \_    *    '    ret
 ;; _    !    #    {    }    ~    &    [    ]    %    ^    @mdf
-;; TODO right doesn't work??
+
 (deflayer navigation ;; plus media
   XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX
   XX    XX    XX    XX    XX    XX    C-c   C-z	C-x   C-v  S-ins  XX    XX   XX
-  XX    mute    vold  volu	XX    XX    left down   up   rght   ret   XX    XX    
+  XX    mute    vold  volu	XX    XX    left down   up   right   ret   XX    XX    
   XX    XX    XX    XX    XX    XX    home	pgdn pgup	end	  ins   XX
   XX    XX    XX              XX              XX    XX    XX 
 )
@@ -157,8 +157,8 @@ look if some programs need to be execute with shell
   ;; aliases
 clip-primary (cmd clipcat.clj primary --paste)
 
+  audio (cmd audio.clj toggle)
   ;; old or change to wayland
-  audio (cmd audio.sh toggle) ;; x11
   clip (cmd "/home/miro/.config/rofi/scripts/clipster/roficlip" )
   fm (cmd setsid pcmanfm )
   ;; scripts (cmd sh -c "$(ls ~/.bin | rofi -dmenu)")
