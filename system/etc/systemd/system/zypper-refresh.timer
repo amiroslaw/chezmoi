@@ -1,0 +1,12 @@
+# verify
+# systemctl list-timers zypper-update.timer
+[Unit]
+Description=Run zypper update one hour after boot, then daily
+
+[Timer]
+OnBootSec=1h
+OnUnitActiveSec=1d
+Persistent=true
+
+[Install]
+WantedBy=timers.target

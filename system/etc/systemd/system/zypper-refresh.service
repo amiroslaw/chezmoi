@@ -1,0 +1,6 @@
+[Unit]
+Description=Zypper metadata refresh
+
+[Service]
+Type=oneshot
+ExecStart=env ZYPP_CURL2=1 /usr/bin/zypper refresh
