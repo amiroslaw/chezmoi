@@ -84,21 +84,24 @@ alias nn='navi'
 alias nc="navi --cheatsh"
 alias nt="navi --tldr"
 
-# aliases using query 
+# aliases using query; waits for execution 
+# TODO change navi aliases to pattern PPCCC 5 characters where 2 are from a program name and 3 from a command
 navialias() {
-    navi --query "::$1" --best-match
+ local cmd=$(navi --print --query "::$1" --best-match)
+  if [ -n "$cmd" ]; then
+    print -z "$cmd"
+  fi
 }
 
 # navi
-alias sysstat='navialias sst'
-alias sysrestart='navialias sre'
-alias sysstop='navialias sxx'
-alias sysreload='navialias srd'
-alias shut='navialias shut'
+alias sysstat='navialias sdsta'
+alias sysrestart='navialias sdres'
+alias sysstop='navialias sdsto'
+alias shut='navialias shutd'
 
 # zypper
-alias zin='navialias zin'
-alias zsen='navialias zse'
+alias zin='navialias zyins'
+alias zsen='navialias zyser'
 alias zinn='sudo zypper install --no-recommends --auto-agree-with-licenses'
 alias zinr='sudo zypper install --auto-agree-with-licenses'
 alias zse='zypper --no-refresh search'

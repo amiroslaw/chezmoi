@@ -2,7 +2,7 @@
 @ util
 ## TODO add autofill for remove, info 
 
-# Install packages ::zin
+# Install packages ::zyins
 sudo zypper install --auto-agree-with-licenses <recommends> <confirm> <package-name>
 
 # Install local rpm package
@@ -17,7 +17,7 @@ sudo zypper install --force <package-name>-<package-version>
 # Remove package
 sudo zypper remove <deps> <confirm> <package-name>
 
-# Search packages ::zse
+# Search packages ::zyser
 zypper --no-refresh search <installed> <type> <query>
 # list all packages depended on the package
 zypper --no-refresh search --requires <package-name>

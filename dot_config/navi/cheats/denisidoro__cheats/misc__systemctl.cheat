@@ -1,28 +1,28 @@
 % systemctl, service
 
-# shutdown ::shut
+# shutdown ::shutd
 sleep <timer> && systemctl poweroff
 $ timer: echo '900\n1800\n2700\n3600\n4'
 
 # start service
 systemctl <user> start <service_inactive>
 
-# Stop service ::sxx
+# Stop service ::sdsto
 systemctl <user> stop <service_active>
 
-# Enable service ::sen
+# Enable service ::sdena
 systemctl <user> enable <service_disabled>
 
 # Disable service
 systemctl <user> disable <service_enabled>
 
-# Restart service
+# Restart service ::sdres
 systemctl <user> restart <service>
 
 # Reload service
 systemctl <user> reload <service_active>
 
-# Service status ::sst
+# Service status ::sdsta
 systemctl <user> status <service>
 
 # List running services
@@ -34,7 +34,7 @@ systemctl <user> list-unit-files --type=service --state=enabled
 # List disabled services
 systemctl <user> list-unit-files --type=service --state=disabled
 
-# reload daemon ::srd
+# reload daemon ::sdrel
 systemctl <user> daemon-reload
 
 $ service_inactive: systemctl <user> list-units --type=service --state=inactive | awk '{print $1}' | grep .service | sed 's/.service$//'
