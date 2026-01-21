@@ -31,9 +31,12 @@ sudo opi -n dua-cli
 # for scripts
 sudo luarocks --lua-version=5.1 install gumbo
 
+# flatpak installed with distrobox
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
 {{ if eq .chezmoi.hostname "pc" }}
 # pavucontrol can be replaced by waylant native: opi pwvucontrol or flatpak (gtk takes a lot of space)
-sudo zypper install -y --no-recommends pavucontrol rmpc
+sudo zypper install -y --no-recommends pavucontrol mpd rmpc
 {{ else if eq .chezmoi.hostname "laptop" }}
 sudo zypper install -y --no-recommends blueman bluez
 # Optimizes power usage on laptops by applying advanced power management settings.      

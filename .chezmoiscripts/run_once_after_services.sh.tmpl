@@ -8,6 +8,7 @@ systemctl --user enable --now pueued.service
 systemctl --user enable --now ydotool.service
 # sudo systemctl enable --now NetworkManager-dispatcher.service  
 # sudo systemctl enable --now NetworkManager-wait-online.service 
+
 {{ if eq .chezmoi.hostname "pc" }}
 # systemctl --user enable --now ollama.service               
 # sudo systemctl enable --now lm_sensors.service 
