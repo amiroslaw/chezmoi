@@ -10,43 +10,9 @@
     "height": 28,
     "margin-right": 5,
     "margin-left": 5, 
-
-    "modules-left": [
-        "custom/rofi",
-        // "custom/weather",
-        // "custom/khorshididate",
-        // "wlr/taskbar",
-        "hyprland/workspaces",
-		"hyprland/windowcount",
-		"hyprland/submap",
-    ],
-
-    // "modules-center": [
-        // "hyprland/window",
-    // ],
-
-    "modules-right": [
-		"mpris",
-        "tray",
-		"custom/zypper",
-		"custom/mega",
-		"custom/pomodoro",
-        // "pulseaudio/slider",
-        "pulseaudio",
-		"bluetooth",
-        "clock",
-        // "battery",
-        // "pulseaudio#microphone",
-        "backlight",
-        "memory",
-		"custom/weather",
-        "cpu",
-        "disk",
-        "temperature",
-        "network",
-        // "custom/updates",
-        "group/power"
-    ],
+	"include": [
+			"~/.config/waybar/modules.jsonc",
+		],
 "bluetooth": {
 	"format": " {status}",
 	"format-connected": " {device_alias}",
@@ -328,16 +294,6 @@
         "return-type" : "json"
     },
 
-    "custom/updates": {
-        "format": "{}",
-        "exec": "~/.config/waybar/scripts/update-sys",
-        "on-click": "~/.config/waybar/scripts/update-sys update",
-        "interval": 3600,
-        "tooltip": true,
-        "signal": 8,
-        "return-type" : "json"
-    },
-
     "network": {
         "format": "{ifname}",
         "format-wifi": " ",
@@ -350,8 +306,8 @@
         "max-length": 50
     },
 "clock": {
-        "format": " {:%H:%M}",
-        "format-alt": "{:%d-%m-%Y} ",
+        "format": "{:%H:%M}",
+        "format-alt": "{:%d-%m-%Y}",
         // "tooltip-format": "\n<span size='9pt' font='WenQuanYi Zen Hei Mono'>{calendar}</span>",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "calendar": {
@@ -362,7 +318,7 @@
                     "format": {
                               "months":     "<span color='#ffead3'><b>{}</b></span>",
                               "days":       "<span color='#ecc6d9'><b>{}</b></span>",
-                              "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
+                              "weeks":      "<span color='#99ffdd'><b>W{:%U}</b></span>",
                               "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
                               "today":      "<span color='#ff6699'><b><u>{}</u></b></span>"
                               }
@@ -375,6 +331,13 @@
                     "on-scroll-down": "shift_down"
                     }
     },
+    "custom/web-cal": { 
+        "format": " ",
+		"on-click": "brave-browser --class=cal --password-store=basic --args --profile-directory='profile-cal'",
+	  "tooltip": true,
+	  "tooltip-format": "web-cal"
+	},
+
     "custom/khorshididate": { 
         "tooltip" : true,
         "format": " {}",
@@ -410,4 +373,14 @@
 	  "tooltip": true,
 	  "tooltip-format": "Updates"
 	},	
+    "custom/updates": {
+        "format": "{}",
+        "exec": "~/.config/waybar/scripts/update-sys-paru",
+        "on-click": "~/.config/waybar/scripts/update-sys-paru update",
+        "interval": 3600,
+        "tooltip": true,
+        "signal": 8,
+        "return-type" : "json"
+    },
+
 }

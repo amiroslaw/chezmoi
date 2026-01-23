@@ -1,0 +1,73 @@
+// killall -SIGUSR2 waybar
+// or pkill -SIGUSR2 waybar
+{
+{{ if eq .chezmoi.hostname "pc" }}
+    "modules-left": [
+        "custom/rofi",
+        // "custom/khorshididate",
+        // "wlr/taskbar",
+        "hyprland/workspaces",
+		"hyprland/windowcount",
+		"hyprland/submap",
+    ],
+    "modules-center": [
+        "hyprland/window",
+    ],
+    "modules-right": [
+		"mpris",
+        "tray",
+		"custom/zypper",
+		"custom/mega",
+        "pulseaudio/slider",
+        "pulseaudio#microphone",
+		"custom/pomodoro",
+		"custom/web-cal",
+        "clock",
+        "memory",
+		"custom/weather",
+        "cpu",
+        "disk",
+        "temperature",
+        "network",
+        "group/power"
+    ],
+{{ else if eq .chezmoi.hostname "laptop" }}
+    "modules-left": [
+        "custom/rofi",
+        // "custom/khorshididate",
+        // "wlr/taskbar",
+        "hyprland/workspaces",
+		"hyprland/windowcount",
+		"hyprland/submap",
+    ],
+
+    // "modules-center": [
+        // "hyprland/window",
+    // ],
+
+    "modules-right": [
+		"mpris",
+        "tray",
+		"custom/zypper",
+		"custom/mega",
+		"custom/pomodoro",
+        // "pulseaudio/slider",
+        "pulseaudio",
+		"bluetooth",
+        "clock",
+        // "battery",
+        // "pulseaudio#microphone",
+        "backlight",
+        "memory",
+		"custom/weather",
+        "cpu",
+        "disk",
+        "temperature",
+        "network",
+        "group/power"
+    ],
+{{ end }}
+
+}
+
+// vi: ft=jsonc
