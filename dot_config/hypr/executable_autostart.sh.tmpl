@@ -1,8 +1,9 @@
 #!/bin/bash
 
 {{ if eq .chezmoi.hostname "pc" }}
-sleep 300 && megasync || notify-send "Megasync"
+sleep 300 && megasync && notify-send "Megasync" &
+sleep 200 && newsboat -x reload && notify-send "newsboat updated" &
 {{ else if eq .chezmoi.hostname "laptop" }}
-sleep 300 && mega-sync || notify-send "Megasync"
+sleep 300 && mega-sync && notify-send "Megasync"
 {{ end }}
 
