@@ -11,4 +11,6 @@ borg create --compression zlib --stats /media/backup/backup-borg/weekly::{hostna
 	--exclude '*.class'	>> ~/Documents/Ustawienia/logs/borg-pc/log_weekly.txt 2>&1
 	# --exclude **/.debris	\
 
-dunstify "backuped weekly"
+notify-send "weekly backup was made"
+
+

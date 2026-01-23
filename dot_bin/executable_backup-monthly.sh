@@ -45,4 +45,4 @@ borg create --stats --compression lzma /media/backup/backup-borg/monthly::{hostn
 	# --exclude /run/media  \
 	# --exclude /run/mount  \
 
-dunstify "backuped monthly"
+notify-send "monthly backup was made"

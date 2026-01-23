@@ -13,4 +13,4 @@ borg create --stats /media/backup/backup-borg/daily::{hostname}-daily-{now:%Y-%m
 
 	# --exclude **/.debris \
 
-dunstify "backuped daily"
+notify-send "daily backup was made"
