@@ -2,8 +2,11 @@
 @ util
 ## TODO add autofill for remove, info 
 
-# Install packages ::zyins
+# Install packages 
 sudo zypper install --auto-agree-with-licenses <recommends> <confirm> <package-name>
+
+# Install packages fzf ::zyins
+sudo zypper install --auto-agree-with-licenses <recommends> <confirm> <search> 
 
 # Install local rpm package
 sudo zypper install <files>
@@ -14,16 +17,22 @@ sudo zypper install --download-only <package-name>
 # Downgrade or install a package with a specific version
 sudo zypper install --force <package-name>-<package-version>
 
-# Remove package
-sudo zypper remove <deps> <confirm> <package-name>
+# Remove user package fzf ::zyres
+sudo zypper --no-refresh remove <deps> <confirm> <installed-fzf-system>
+# Remove system package fzf ::zyreu
+sudo zypper --no-refresh remove <deps> <confirm> <installed-fzf-user>
 
 # Search packages ::zyser
 zypper --no-refresh search <installed> <type> <query>
-# list all packages depended on the package
-zypper --no-refresh search --requires <package-name>
+# dependencis list all packages depended on the package
+zypper --no-refresh search --requires --installed-only <package-name>
+# there is also --requires-pkg
 
-# Show full information for specified packages
-zypper --no-refresh info --requires --recommends --suggests --provides <package-name>
+# Show full information for specified packages ::zyifs
+zypper -q --no-refresh info --requires --recommends --suggests --provides <installed-fzf-system>
+
+# Show full information for user installed packages ::zyifu
+zypper -q --no-refresh info --requires --recommends --suggests --provides <installed-fzf-user>
 
 # List packages
 zypper --no-refresh packages <installed-pa>
@@ -67,3 +76,8 @@ $ confirm: echo ' \n--no-confirm'
 $ installed: echo ' \n--installed-only'
 $ installed-pa: echo ' \n--installed-only\n--userinstalled\n--system'
 $ type: echo ' \n--requires\n--provides\n--file-list' 
+$ installed-fzf-system: rpm -qa --qf "%{NAME}\n" | sort
+# $ installed-fzf-system: zypper --no-refresh -q search --installed-only | awk 'BEGIN { FS="|"}  {print $2}'
+$ installed-fzf-user: zypper --no-refresh -q packages --userinstalled | awk 'BEGIN { FS="|" } NR >2 {print $3}' | awk '!seen[$0]++'
+$ search: echo <search-desc> | awk '{print $1}' 
+$ search-desc: zypper -q search --not-installed-only | awk 'BEGIN { FS="|" } NR >2 {print $2 $3}' 

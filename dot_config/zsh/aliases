@@ -107,8 +107,12 @@ alias zinr='sudo zypper install --auto-agree-with-licenses'
 alias zse='zypper --no-refresh search'
 alias zsei='zypper --no-refresh search --installed-only'
 alias zif='zypper --no-refresh info --requires --recommends --suggests --provides'
+alias zifs='navialias zyifs'
+alias zifu='navialias zyifu'
 alias zpa='zypper --no-refresh packages --installed-only'
 alias zre='sudo zypper remove --clean-deps'
+alias zres='navialias zyres'
+alias zreu='navialias zyreu'
 #}}}
 
 
