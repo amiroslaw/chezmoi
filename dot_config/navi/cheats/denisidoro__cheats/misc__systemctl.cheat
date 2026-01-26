@@ -28,11 +28,8 @@ systemctl <user> status <service>
 # List running services
 systemctl <user> list-units --type=service --state=running
 
-# List enabled services
-systemctl <user> list-unit-files --type=service --state=enabled
-
-# List disabled services
-systemctl <user> list-unit-files --type=service --state=disabled
+# List services ; empty state will list all services, without running
+systemctl <user> list-unit-files --type=service <state> 
 
 # reload daemon ::sdrel
 systemctl <user> daemon-reload
@@ -43,4 +40,5 @@ $ service_enabled: systemctl <user> list-unit-files --type=service --state=enabl
 $ service_disabled: systemctl <user> list-unit-files --type=service --state=disabled | awk '{print $1}' | grep .service | sed 's/.service$//'
 $ service: systemctl <user> list-units --type=service --all | awk '{print $1}' | grep .service | sed 's/.service$//'
 
+$ state: echo ' \n--state=enabled\n--state=disabled'
 $ user: echo ' \n--user'

@@ -4,6 +4,7 @@ set -e
 pueue group add mpv-audio|| true; pueue group add dl-video|| true; pueue group add dl-audio|| true; pueue group add mpv-fullscreen|| true; pueue group add mpv-popup|| true; pueue group add wget|| true; pueue group add kindle || true
 pueue parallel -g default 9|| true; pueue parallel -g dl-video 9|| true; pueue parallel -g dl-audio 9|| true; pueue parallel -g kindle 9 || true
 
+ln -s /usr/lib64/mpv/mpris.so ~/.config/mpv/scripts/mpris.so || true 
 
 # vi: ft=bash
 
