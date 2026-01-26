@@ -1,23 +1,10 @@
 // killall -SIGUSR2 waybar
 // or pkill -SIGUSR2 waybar
 {
-    "layer": "top",
-    "position": "top",
-    "mod": "dock",
-    "exclusive": true,
-    "passthrough": false,
-    "gtk-layer-shell": true,
-    "height": 28,
-    "margin-right": 5,
-    "margin-left": 5, 
-	"include": [
-			"~/.config/waybar/modules.jsonc",
-		],
     "tray": {
         "icon-size": 12,
         "spacing": 10
     },
-
 "bluetooth": {
 	"format": " {status}",
 	"format-connected": " {device_alias}",

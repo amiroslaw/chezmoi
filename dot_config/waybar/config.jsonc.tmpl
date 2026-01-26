@@ -1,7 +1,18 @@
 // killall -SIGUSR2 waybar
 // or pkill -SIGUSR2 waybar
-{
 {{ if eq .chezmoi.hostname "pc" }}
+[{
+	"output": "DVI-D-1",
+    "layer": "top",
+    "position": "top",
+    "mod": "dock",
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "height": 28,
+    "margin-right": 5,
+    "margin-left": 5, 
+	"include": [ "~/.config/waybar/modules.jsonc", ],
     "modules-left": [
         "custom/rofi",
         // "custom/khorshididate",
@@ -14,9 +25,8 @@
         "hyprland/window",
     ],
     "modules-right": [
-		"mpd",
-		"mpris",
         "tray",
+		"mpris",
 		"custom/zypper",
 		"custom/mega",
         "pulseaudio/slider",
@@ -30,8 +40,48 @@
         "disk",
         "temperature",
         "group/power"
+    ]},
+	{
+	"output": "DVI-I-1",
+    "layer": "top",
+    "position": "top",
+    "mod": "dock",
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "height": 28,
+    "margin-right": 5,
+    "margin-left": 5, 
+	"include": [ "~/.config/waybar/modules.jsonc"],
+    "modules-left": [
+        "hyprland/workspaces",
+		"hyprland/windowcount",
+		"hyprland/submap",
     ],
+    "modules-center": [
+		"mpd",
+    ],
+    "modules-right": [
+        "pulseaudio",
+		"custom/web-cal",
+        "clock",
+        "group/power"
+    ],
+	}]
 {{ else if eq .chezmoi.hostname "laptop" }}
+
+{
+	"output": "DVI-D-1",
+    "layer": "top",
+    "position": "top",
+    "mod": "dock",
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "height": 28,
+    "margin-right": 5,
+    "margin-left": 5, 
+	"include": [ "~/.config/waybar/modules.jsonc", ],
     "modules-left": [
         "custom/rofi",
         // "custom/khorshididate",
@@ -46,8 +96,8 @@
     // ],
 
     "modules-right": [
-		"mpris",
         "tray",
+		"mpris",
 		"custom/zypper",
 		"custom/mega",
 		"custom/pomodoro",
@@ -66,8 +116,8 @@
         "network",
         "group/power"
     ],
+}
 {{ end }}
 
-}
 
 // vi: ft=jsonc
