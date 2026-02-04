@@ -1,6 +1,6 @@
 #!/bin/sh
 # should not have any space on the first param
-borg create --stats /media/backup/backup-borg/daily::{hostname}-daily-{now:%Y-%m-%dT%H}	\
+/usr/bin/borg create --stats /media/backup/backup-borg/daily::{hostname}-daily-{now:%Y-%m-%dT%H}	\
 	~/Documents/Ustawienia \
 	~/Documents/notebook \
 	~/Code/Projects \
@@ -13,4 +13,4 @@ borg create --stats /media/backup/backup-borg/daily::{hostname}-daily-{now:%Y-%m
 
 	# --exclude **/.debris \
 
-notify-send "daily backup was made"
+/usr/bin/notify-send "daily backup was made"
