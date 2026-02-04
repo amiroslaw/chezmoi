@@ -327,7 +327,7 @@
    :m3u {:desc   "Create m3u playlist from a Youtube playlist."
          :coerce :boolean
          :alias  :m}}) ;; TODO add saving path
-;local DIR_PLAYLISTS = os.getenv 'HOME' .. '/Templates/mpvlists'
+;local DIR_PLAYLISTS = os.getenv 'HOME' .. '/tmp/mpvlists'
 
 (def spec-source
   {:clip    {:desc   "Take a URL from clipboard - default."

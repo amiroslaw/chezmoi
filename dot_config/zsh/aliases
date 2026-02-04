@@ -248,9 +248,9 @@ alias ytm='youtube-viewer -C -n'
 alias ytaudio='youtube-dl -x --audio-format mp3 '
 # alias ytlisten='mpv --no-video "$(xclip -o -selection clipboard)"'
 alias ytlisten='mpv --no-video "$(wl-paste)"'
-alias mpvlist='cd ~/Templates/mpvlists && mpv --profile=stream "$(ls -tp | grep -e "video" | rofi -dmenu)"'
-alias mpvlistpopup='cd ~/Templates/mpvlists && mpv --x11-name=videopopup --profile=stream-popup "$(ls -tp | grep -e "video" | rofi -dmenu)"'
-alias mpvlistauido='cd ~/Templates/mpvlists && st -c audio -e mpv --ytdl --no-video --cache=yes --demuxer-max-bytes=500M --demuxer-max-back-bytes=100M --input-ipc-server=/tmp/mpvsocket "$(ls -tp | grep -e "audio" | rofi -dmenu)"'
+alias mpvlist='cd $PRIVATE/mpv/playlist && mpv --profile=stream "$(ls -tp | grep -e "video" | rofi -dmenu)"'
+alias mpvlistpopup='cd $PRIVATE/mpv/playlist "$(ls -tp | grep -e "video" | rofi -dmenu)"'
+alias mpvlistauido='cd $PRIVATE/mpv/playlist/audio/ && foot --app-id audio -e mpv --ytdl --no-video --cache=yes --demuxer-max-bytes=500M --demuxer-max-back-bytes=100M --input-ipc-server=/tmp/mpvsocket "$(rofi -dmenu)"'
 alias qbmpvvideo='mpv.lua --videoplay -r'
 alias qbmpvaudio='mpv.lua --audioplay -r'
 alias kindlecp-run='cp /run/media/miro/Kindle/documents/My\ Clippings.txt ~/Documents/notatki/kindle/clippings-$(date -u +"%Y-%m-%d").txt'
@@ -273,7 +273,7 @@ alias plen='trans -shell pl:en -show-original n  -show-prompt-message n -show-la
 alias enpl='trans -shell en:pl -show-original n  -show-prompt-message n -show-languages n -play -speak'
 alias dic='trans -sp en: -show-prompt-message n -show-languages n'
 alias irr='cat $path_note/Home/Angielski/irregular.adoc | grep'
-alias backup_note='cp -r $path_note ~/Templates/backup/note/notebook-$(date -u +"%Y-%m-%d")'
+alias backup_note='cp -r $path_note ~/tmp/backup/note/notebook-$(date -u +"%Y-%m-%d")'
 #}}}
 
 # gcalcli {{{
@@ -421,8 +421,8 @@ alias Rm='rm -iv'
 
 # {{{ FZF
 alias fenv='env | fzf'
-alias fn='nvim -o "$(fd --type f | fzf)"'
-alias fnh='nvim -o "$(fd --hidden --type f | fzf)"'
+alias fn='fzf-vim'
+alias fnh='fzf-vim hidden'
 alias ffh='"$(fd --hidden --type f | fzf)"'
 alias fp='rg --files | fzf --preview="bat {} --color=always"'
 alias fb='bat "$(fd --type f | fzf)"'
@@ -529,6 +529,21 @@ alias -g H='$(fd --hidden | fzf) '
 #}}}
 
 #{{{ FUNCTIONS
+fzf-vim() {
+  local fd_cmd="fd --type f --absolute-path"
+  if [ "$1" = "hidden" ]; then
+    fd_cmd="$fd_cmd --hidden"
+  fi
+
+  local cmd=$(eval "$fd_cmd" | fzf)
+
+  if [ -n "$cmd" ]; then
+    fasder -A "$cmd"
+    print "$cmd"
+    nvim -o "$cmd"
+  fi
+}
+
 # alias mkcd='take'
 take () {
   case "$1" in /*) :;; *) set -- "./$1";; esac

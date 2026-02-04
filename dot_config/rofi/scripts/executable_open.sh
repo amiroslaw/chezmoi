@@ -2,7 +2,7 @@
 #TODO change mpv to pueue
 
 ROFI_OPTIONS=(-theme-str 'window {width:  80%;}' -l 25 -i -dmenu -multi-select -monitor -4 -matching normal)
-STREAM_PLAYLIST=~/Templates/mpvlists
+STREAM_PLAYLIST=$PRIVATE/mpv/playlist  
 
 case "$1" in
 	fasd) fasd -Rfl | rofi "${ROFI_OPTIONS[@]}" -p "open fasd files:" | xargs -r -P 0 -I {} xdg-open {} ;;

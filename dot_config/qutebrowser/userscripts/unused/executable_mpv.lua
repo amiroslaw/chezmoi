@@ -3,7 +3,7 @@
 local quteFifo = os.getenv 'QUTE_FIFO'
 local tmpPlaylist = '/tmp/qt_mpvplaylist.m3u'
 local tmpPlay = '/tmp/qt_mpv.m3u'
-local dirPlaylists = os.getenv 'HOME' .. '/Templates/mpvlists'
+local dirPlaylists = os.getenv 'HOME' .. '/tmp/mpvlists'
 
 function errorMsg(msg)
 	io.open(quteFifo, 'a'):write('message-error "' .. msg .. '"')

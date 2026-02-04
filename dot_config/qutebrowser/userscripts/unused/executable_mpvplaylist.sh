@@ -1,6 +1,6 @@
 #!/bin/bash
 tmpPlaylist="/tmp/mpvplaylist.m3u"
-dirPlaylists="$HOME/Templates/mpvlists"
+dirPlaylists="$HOME/tmp/mpvlists"
 
 case "$1" in
 	"play" )
