@@ -122,9 +122,16 @@ look if some programs need to be execute with shell
     alt_; (tap-hold 200 200 ; lalt)
 )
 
-(defchordsv2 ;; can be only one
-;; mod keys are not good for it - they overlaps with home row
+(defchordsv2
+;; can be only one
+;; mod keys are not good for it - they overlaps with home row,
   (m ,) ret 100 first-release () ;; enter on m+,
+  ;; ydotool doesn't work in hyprland
+  (met sft x) (cmd ydotool click C0) 9000 first-release ()
+  (l k x) (cmd ydotool click C0) 9000 first-release ()
+  (met ctl x) (cmd ydotool click C1) 9000 first-release ()
+  (l j x) (cmd ydotool click C1) 9000 first-release ()
+  ;; has to be last, otherwise it will overlaps 3 key bindings!!
   (met x) @clip-primary 9000 first-release ()
   (l x) @clip-primary 9000 first-release ()
 )
