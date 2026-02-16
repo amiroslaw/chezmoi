@@ -68,8 +68,9 @@
         http-error-handler!
         (get-in [:candidates 0 :content :parts 0 :text])
         (str/trim)))
-  (models [this] [(->Gemini "gemini-2.0-flash") (->Gemini "gemini-2.0-flash-lite-preview-02-05") (->Gemini "gemini-1.5-flash") (->Gemini "gemini-1.5-pro")])
-  (model [this] (or model "gemini-2.0-flash")))
+  (models [this] [(->Gemini "gemini-2.5-flash-lite-preview-09-2025") (->Gemini "gemini-2.5-flash-lite") (->Gemini "gemini-2.5-flash") (->Gemini "gemini-2.5-pro")])
+  (model [this] (or model "gemini-2.5-flash-lite")))
+  ; (model [this] (or model "gemini-3-flash-preview")))
 
 (defrecord Ollama [model]
   Provider

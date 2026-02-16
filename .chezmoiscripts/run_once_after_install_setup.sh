@@ -6,7 +6,7 @@ set -e
 GROUP_NAME="uinput"
 if ! getent group "$GROUP_NAME" > /dev/null; then
   echo "Group '$GROUP_NAME' does not exist. Creating it now..."
-  sudo groupadd "$GROUP_NAME"
+  sudo groupadd --system "$GROUP_NAME"
   echo "Group '$GROUP_NAME' created successfully."
 else
   echo "Group '$GROUP_NAME' already exists. Skipping creation."

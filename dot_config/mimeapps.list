@@ -44,6 +44,7 @@ audio/oga=mpv.desktop
 x-scheme-handler/kite=kite-copilot.desktop
 x-scheme-handler/tg=userapp-Telegram Desktop-2VLBT1.desktop
 application/x-mimearchive=org.qutebrowser.qutebrowser.desktop
+x-scheme-handler/jetbrains=jetbrains-toolbox.desktop
 
 [Added Associations]
 text/plain=nvim.desktop;micro.desktop;libreoffice-writer.desktop;
