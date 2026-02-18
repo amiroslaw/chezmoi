@@ -6,7 +6,7 @@ Utility script for managing stream with the mpv program.
 Using: mpv.lua action [url]
 
 The url argument can be replace by `--clip` (it will be pulled from the clipboard using the clipcat application) or `--resume` (temporary file) options.
-Actions that run list, create a playlist (*.m3u) - after the player is closed script will make a file. 
+Actions that run list, create a playlist (*.m3u) - after the player is closed script will make a file.
 Actions that manage playlists can take `--save[=playlistName]` or `--input` options for overrate default name.
 
 Actions:
@@ -216,9 +216,9 @@ local function concatPath(files)
 end
 
 local function delete(selected)
-	if os.execute('command -v trash-put') then
+	if os.execute('command -v trash-put >/dev/null 2>&1') == 0 then
 		return 'trash-put ' .. concatPath(selected)
-	elseif os.execute('command -v gomi') then
+	elseif os.execute('command -v gomi >/dev/null 2>&1') == 0 then
 		return 'gomi ' .. concatPath(selected)
 	else
 		return 'rm ' .. concatPath(selected)
@@ -268,8 +268,7 @@ local function openPlaylist()
 	}
 
 	local selected, keybind = rofiMenu(playlists, {prompt = prompt, keys = keysFun, multi=true, width = '95%'})
-	-- todo
-	-- if not keybind then return end -- cancel
+	if not keybind or not selected[1] or selected[1] == '' then return end
 	if not keysFun[keybind] then -- default
 		-- notify(CMD_VIDEO:format(concatPath(selected)))
 		local _, ok, _ = run(CMD_VIDEO:format(concatPath(selected)))

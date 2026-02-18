@@ -550,8 +550,7 @@ function rofiMenu(entriesTab, options)
 		return {''}, false
 	end
 	-- only luajit returns different status code; I had that in one of the luajit version
-	-- TODO cancellation
-	if code == 256 then
+	if code == 256 or code == 1 then
 		return {''}, false
 	end
 	if next(keys) and code > 256 then
