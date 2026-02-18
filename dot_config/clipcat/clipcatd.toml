@@ -1,5 +1,8 @@
 daemonize = true
+# Clears the history on startup when set to true
+clear_history_on_start = false
 pid_file = "/run/user/1000/clipcatd.pid"
+# Controls how often the program updates its stored value of the Linux primary selection.
 primary_threshold_ms = 5000
 max_history = 500
 # i'm not sure for what is that if ther is enable_primary
@@ -8,6 +11,9 @@ history_file_path = "/home/miro/.cache/clipcat/clipcatd-history"
 # snippets = []
 
 [log]
+# Emit log messages to a log file.
+# If this value is omitted, `clipcatd` will disable logging to a file.
+file_path = "/path/to/log/file"
 emit_journald = true
 emit_stdout = false
 emit_stderr = false
@@ -20,6 +26,8 @@ enable_secondary = false
 sensitive_x11_atoms = ["x-kde-passwordManagerHint"]
 filter_text_min_length = 1
 filter_text_max_length = 20000000
+
+# Ignore text clips that match any of the provided regular expressions.
 denied_text_regex_patterns = []
 capture_image = true
 filter_image_max_size = 5242880
@@ -43,6 +51,10 @@ port = 45047
 enable = true
 icon = "accessories-clipboard"
 timeout_ms = 2000
+# Define the length of long plaintext.
+# If the length of plaintext is greater than or equal to `long_plaintext_length`,
+# a desktop notification will be emitted.
+# If this value is 0, no desktop notification will be emitted for long plaintext.
 long_plaintext_length = 2000
 
 [[snippets]]
@@ -57,6 +69,7 @@ path =  "/home/miro/Documents/Ustawienia/private/rofi/cat-snippet"
 # path = "/etc/os-release"
 
 # [[snippets]]
+# it can generate text using rust code
 # [snippets.Text]
 # name = "text"
 # content = '''
