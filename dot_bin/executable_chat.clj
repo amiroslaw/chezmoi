@@ -7,14 +7,15 @@
          '[clojure.string :as str]
          '[babashka.cli :as cli]
          '[babashka.http-client :as http]
+         '[clojure.test :refer [is]]
          '[clojure.java.io :as io]
          '[clojure.core.match :refer [match]]
          '[cheshire.core :as json])
 
 (declare subcommands)
 
-(def paste-prompt "Paste this prompt on the top of your answer. ")
-(def analyze-text-prompt (str ". " paste-prompt "Answer to that question based to following text:\n\n"))
+(def prompt-prefix "Paste this prompt on the top of your answer. ")
+(def analyze-text-prompt (str ". " prompt-prefix "Answer to that question based to following text:\n\n"))
 (def templates {:summary              "Summarize following text:\n\n",
                 :summary-short        "Summarize following text, be concise:\n\n"
                 :summary-adoc         "Summarize (use asciidoc format with lists and bold text if needed) following text:\n\n",
@@ -55,12 +56,14 @@
 (defprotocol Provider
   (request [this prompt])
   (models [this])
-  (model [this] "Get model or default provided if nil passed in a record"))
+  (get-model [this] "Get model or default provided if nil passed in a record"))
 
-(defrecord Gemini [model]
+(defrecord Gemini [model-name]
   Provider
   (request [this prompt]
-    (-> (format "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s" model gemini-api-key)
+    (println "in gemini")
+    (println model-name)
+    (-> (format "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s" model-name gemini-api-key)
         (http/post {:headers {"Content-Type" "application/json"}
                     :body    (json/generate-string {:contents [{:parts [{:text prompt}]}]})
                     :throw false
@@ -68,40 +71,49 @@
         http-error-handler!
         (get-in [:candidates 0 :content :parts 0 :text])
         (str/trim)))
-  (models [this] [(->Gemini "gemini-2.5-flash-lite-preview-09-2025") (->Gemini "gemini-2.5-flash-lite") (->Gemini "gemini-2.5-flash") (->Gemini "gemini-2.5-pro")])
-  (model [this] (or model "gemini-2.5-flash-lite")))
-  ; (model [this] (or model "gemini-3-flash-preview")))
+  (models [this] [ (->Gemini "gemini-2.5-flash-lite") 
+                  (->Gemini "gemini-2.5-flash") 
+                  (->Gemini "gemini-3-flash-preview") ; slow
+                  (->Gemini "gemini-2.0-flash-lite") ; not available
+                  (->Gemini "gemini-2.0-flash") ; gemini 2 expired on 31st of march
+                  (->Gemini "gemini-2.5-pro")])
+  (get-model [this] (or model-name "gemini-2.5-flash-lite")))
+  ; (get-model [this] (or model-name "gemini-3-flash-preview")))
 
-(defrecord Ollama [model]
+(defrecord Ollama [model-name]
   Provider
   (request [this prompt]
     (-> (str api-host "/api/generate")
-          (http/post {:body  (json/generate-string {:model model, :prompt prompt, :stream false})
+          (http/post {:body  (json/generate-string {:model model-name, :prompt prompt, :stream false})
                         :throw false})
           http-error-handler!
           :response
           str/trim))
   (models [this]
-    (as-> (str api-host "/api/tags") p
-          (http/get p {:throw false})
-          (:body p)
-          (json/parse-string p true)
-          (:models p)
-          (map :name p)
-          (map (fn [model] (->Ollama model)) p)
-          ))
-  (model [this]
-    (or model
+    (try
+      (as-> (str api-host "/api/tags") p
+            (http/get p {:throw false})
+            (:body p)
+            (json/parse-string p true)
+            (:models p)
+            (map :name p)
+            (map (fn [m] (->Ollama m)) p))
+      (catch Exception e
+        (println "DEBUG: Ollama not available:" (.getMessage e))
+        [])))
+  (get-model [this]
+    (or model-name
       (if-let [env (System/getenv "AI_MODEL")]
         env
         "llama3:latest"))))
 
-(def default-model (->Gemini (model (->Gemini nil))))
+; (def default-model (->Gemini "gemini-2.5-flash-lite"))
+(def default-model (->Gemini (get-model (->Gemini nil))))
 
 (defn- rofi-model-list []
   (let [models (concat (models (->Gemini nil)) (models (->Ollama nil)))
         selected (-> models
-                     (->> (map #(:model %)))
+                     (->> (map #(:model-name %)))
                      (rofi-menu! {:prompt "Select model", :format \i})
                      :out
                      first)]
@@ -109,19 +121,19 @@
       (nth models (parse-long selected))
       (System/exit 0))))
 
-;; czy pobierać z mojej listy czy z api, czy dać parametr z providerem
+;;pobiera z mojej listy  api, nie można podać jedynie nazwy bo używam protocol, trzeba by dać parametr z providerem
 (defn- create-model [model-name]
   (if-let [model (->> (concat (models (->Gemini nil)) (models (->Ollama nil)))
-                      (filter #(= model-name (:model %)))
+                      (filter #(= model-name (:model-name %)))
                       first)]
     model
     (notify-error! (str "Wrong model name: " model-name) true)))
 
 (defn- query-ai [prompt opts]
-  (let [user (:model opts)
-        list (:list opts)]
-    (match [user list]
-           [(m :guard some?) false] (request (create-model m) prompt)
+  {:pre  [(is (string? prompt))]}
+  (let [{:keys [model list]} opts ]
+    (match [model list]
+           [(m :guard some?) _] (request (create-model m) prompt)
            [nil true] (request (rofi-model-list) prompt)
            :else (request default-model prompt))))
 
@@ -162,10 +174,14 @@
 
 (defn- ask
   "Query AI with provided input."
-  [{:keys [dispatch opts]}]
-  (if (some #{"ask"} dispatch)
-    (query->display (str paste-prompt (prompt-input)) opts)
-    (query->display (str (prompt-input) analyze-text-prompt (get-text opts)) opts)))
+  [args]
+  (let [{:keys [dispatch opts]} args
+        has-text-source (or (:clip opts) (:primary opts) (:url opts))]
+    (println opts)
+    (cond
+      (:input opts) (query->display (str prompt-prefix (:input opts)) opts)
+      has-text-source (query->display (str (prompt-input) analyze-text-prompt (get-text opts)) opts)
+      :else (query->display (str prompt-prefix (prompt-input)) opts))))
 
 (defn- action
   "Query AI where prompt is based on a template."
@@ -253,36 +269,11 @@
 (when (= *file* (System/getProperty "babashka.file"))
   (cli/dispatch subcommands *command-line-args*))
 
-;; Testing
 (comment
-  (cli/dispatch subcommands ["help"])
-  (cli/dispatch subcommands ["ask"])
-  (cli/dispatch subcommands ["ask" "-o" "dialog"])
-  (cli/dispatch subcommands ["ask" "-o" "scratchpad"])
-  (cli/dispatch subcommands ["ask" "-l"])
-  (cli/dispatch subcommands ["text"])
-  (cli/dispatch subcommands ["text" "-i" "tell me a joke"])
-  (cli/dispatch subcommands ["text" "-o" "dialog"])
-  (def wiki "https://pl.wikipedia.org/wiki/Prawo_natury")
-  (cli/dispatch subcommands ["text" "-u" wiki "-l"])
-  (cli/dispatch subcommands ["text" "-u" "yt" "-l"])        ; wrong url
-  (cli/dispatch subcommands ["action"])
-  (cli/dispatch subcommands ["action" "-a"])
-  (cli/dispatch subcommands ["action" "-t" "translate-to-english"])
-  (cli/dispatch subcommands ["action" "-u" "yt" "args" "llama"]) ; fail
-  (cli/dispatch subcommands ["action" "-u" wiki])
-  (cli/dispatch subcommands ["action" "-u" "https://sklep.galakta.pl/gry-planszowe/1438-filary-ziemi.html"])
 
-  (html->txt "https://sklep.galakta.pl/gry-planszowe/1438-filary-ziemi.html")
-  (def invalid-url "https://slep.galakta.pl/gry-planszowe/1438-filary-ziemi.html")
-  (fetch-page-html invalid-url)
-  (get-properties! "/home/miro/t.pro")
-  (str (url? "https://search.brave.com/search"))
-  (str (url? "www.brave.com/search"))
-  (rofi-menu! (fetch-models) {:prompt "Select model"})
-  )
+  (deps/add-deps '{:deps {philoskim/debux {:mvn/version "0.9.1"}}})
+  (require '[debux.core :refer :all])
 
-(comment
   (require '[babashka.deps :as deps])
   (deps/add-deps '{:deps {djblue/portal {:mvn/version "0.58.1"}}})
   (require '[portal.api :as p])
@@ -294,3 +285,31 @@
   (deps/add-deps '{:deps {io.github.paintparty/fireworks {:mvn/version "0.10.4"}}})
   (require '[fireworks.core :refer [? !? ?> !?>]])
   )
+
+(comment
+  (cli/dispatch subcommands ["help"])
+  (cli/dispatch subcommands ["ask"])
+  (cli/dispatch subcommands ["ask" "-o" "dialog"])
+  (cli/dispatch subcommands ["ask" "-o" "scratchpad"])
+  (cli/dispatch subcommands ["ask" "-l"])
+  (cli/dispatch subcommands ["text"])
+  (cli/dispatch subcommands ["text" "-i" "what is 1+1" "-o" "dialog" "-l"])
+  (cli/dispatch subcommands ["text" "-i" "what is 1+1" "-o" "dialog" "-m" "gemini-3-flash-preview"])
+  (def wiki "https://pl.wikipedia.org/wiki/Prawo_natury")
+  (cli/dispatch subcommands ["text" "-u" wiki "-l"])
+  (cli/dispatch subcommands ["action"])
+  (cli/dispatch subcommands ["action" "-o" "dialog" "-a"]) ; from clipboard
+  (cli/dispatch subcommands ["action" "-o" "dialog" "-t" "translate-to-english" "-i" "Ala ma kota"])
+  (cli/dispatch subcommands ["action" "-o" "dialog" "-u" "yt" "args" "llama"]) ; fail
+  (cli/dispatch subcommands ["action" "-o" "dialog" "-u" wiki "-a"])
+  (cli/dispatch subcommands ["action" "-o" "dialog" "-u" "https://sklep.galakta.pl/gry-planszowe/1438-filary-ziemi.html"])
+
+  (html->txt "https://sklep.galakta.pl/gry-planszowe/1438-filary-ziemi.html")
+  (def invalid-url "https://slep.galakta.pl/gry-planszowe/1438-filary-ziemi.html")
+  (fetch-page-html invalid-url)
+  (get-properties! "/home/miro/t.pro")
+  (str (url? "https://search.brave.com/search"))
+  (str (url? "www.brave.com/search"))
+  (rofi-menu! (concat (models (->Gemini nil)) (models (->Ollama nil))) {:prompt "Select model"})
+  )
+
