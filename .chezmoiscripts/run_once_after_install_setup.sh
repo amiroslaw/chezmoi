@@ -11,14 +11,22 @@ if ! getent group "$GROUP_NAME" > /dev/null; then
 else
   echo "Group '$GROUP_NAME' already exists. Skipping creation."
 fi
+sudo modprobe uinput
 
 sudo usermod -aG input "$USER"
 sudo usermod -aG uinput "$USER"
 echo "✅ Added uinput group - kanata."
-KANATA_RULES='/etc/udev/rules.d/99-input.rules'
-sudo touch $KANATA_RULES
-sudo echo 'KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"' | sudo tee $KANATA_RULES
-sudo modprobe uinput
+
+# KANATA_RULES='/etc/udev/rules.d/99-input.rules'
+# sudo touch $KANATA_RULES
+# sudo echo 'KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"' | sudo tee $KANATA_RULES
+sudo tee /etc/udev/rules.d/99-input.rules > /dev/null <<EOF
+KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"
+EOF
+
+sudo udevadm control --reload-rules && sudo udevadm trigger
+ls -l /dev/uinput
+# kanata doesn't have acess to my env
 # sudo systemctl --user enable kanata.service
 # sudo systemctl --user start kanata.service
 
