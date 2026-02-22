@@ -1,5 +1,6 @@
 # Configuration documentation is available at https://dystroy.org/broot
 # internal - overrite shortcut
+# test 2
 
 #####################
 icon_theme = "nerdfont"
@@ -28,6 +29,11 @@ internal= ":toggle_stage"
 key = "ctrl-z"
 invocation = "stage_all"
 internal = ":stage_all_files"
+[[verbs]]
+key = "ctrl-x"
+invocation = "stage_print"
+cmd = ":panel_right;:pp"
+# internal = ":stage_all_files"
 
 ## VIMLIKE
 [[verbs]]
