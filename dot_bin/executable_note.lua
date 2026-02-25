@@ -7,12 +7,15 @@ List of the options:
 	clip, clipboard - clip notes from secondary clipboard 
 	sel, selection - clip notes from primary (selection) clipboard 
 	write - write note form form input
+	task - write task form form input
 	number - number of clipboard history, if it will be empty, input form will appear
 	-h help - write help
 
 -- dependency: rofi, clipcat
 ]]
 FILE_PATH = os.getenv('NOTE') ..  '/clip.adoc'
+-- in todo.lua there is the same but with /Zadania/inbox.adoc
+TASK_PATH = os.getenv('NOTE') ..  '/Zadania/day.adoc'
 action = arg[1]
 
 if not action then 
@@ -39,6 +42,11 @@ function writeNote()
 	return '\n' .. rofiInput({prompt = 'Note', width = '70%'}) .. '\n'
 end
 
+function writeTask()
+	local task = rofiInput({prompt = 'Task', width = '70%'}) .. '\n'
+	os.execute(string.format('sed -i "1i * [ ] %s" %s', task, TASK_PATH))
+end
+
 function writeToFile(text) 
 	file = io.open(FILE_PATH, "a+")
 	file:write('\n' .. text)
@@ -53,6 +61,7 @@ local switch = (function(name)
 		["sel"]= clipster('primary'),
 		["selection"]= clipster('primary'),
 		["write"] = writeNote,
+		["task"] = writeTask,
 		["-h"]= function() print(HELP); os.exit() end,
 		["#default"]= clipster('join'),
 	}
@@ -62,7 +71,7 @@ end)
 local exec = switch(action)
 local ok, val = pcall(exec)
 
-if not ok then 
+if not ok then
 	log(val, 'ERROR')
 	notifyError(val)
 else

@@ -529,6 +529,13 @@ alias -g H='$(fd --hidden | fzf) '
 #}}}
 
 #{{{ FUNCTIONS
+
+function zad() { 
+	echo "add daily task"
+	read task
+	sed -i "1i * [ ] $task" $NOTE/Zadania/day.adoc
+}
+
 fzf-vim() {
   local fd_cmd="fd --type f --absolute-path"
   if [ "$1" = "hidden" ]; then
@@ -722,13 +729,6 @@ bindkey -M isearch " " magic-space    # normal space during searches
 ## job
 # alias vpn='cd /home/miro/eversis/amiroslaw/eversis-pfs-node1-UDP4-1195-amiroslaw && sudo openvpn --config eversis-pfs-node1-UDP4-1195-amiroslaw.ovpn --auth-user-pass pass.txt'
 
-# alias zadView='cat $path_note/ZADANIA/today.todo' i have script for this
-# alias cfconky='nvim ~/.config/conky/conky_todo'
-# function zadAdd() { 
-# 	echo "add task"
-# 	read task
-# 	echo "- [ ]" $task >> $NOTE/ZADANIA/today.todo
-# }
 # alias dic='python ~/Exe/ProgramFile/dictator-0.9.7/dictator_start.py&'      
 # alias kee='kpcli --kdb ~/Documents/Ustawienia/personal/KeePass2.kdbx'
 # alias pom='~/Documents/Ustawienia/sync/pomodoro/pomodoro'
