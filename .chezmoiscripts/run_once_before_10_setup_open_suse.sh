@@ -1,15 +1,16 @@
 #!/bin/sh
-set +e
+set -e
 sudo zypper install -y zsh
 
 chsh -s $(which zsh)
 mkdir -p "$HOME"/Documents "$HOME"/Downloads "$HOME"/Pictures "$HOME"/Videos
 
 # packman
-sudo zypper addrepo -cfp 90 'http://ftp.fau.de/packman/suse/openSUSE_Tumbleweed/' packman
-sudo zypper ref
-sudo zypper dup --from packman --allow-vendor-change
-
+if ! zypper repos | grep -q "packman"; then
+    sudo zypper addrepo -cfp 90 'http://ftp.fau.de/packman/suse/openSUSE_Tumbleweed/' packman
+	sudo zypper ref
+	sudo zypper dup --from packman --allow-vendor-change
+fi
 
 # {{ if eq .chezmoi.hostname "pc" }}
 # {{ else if eq .chezmoi.hostname "laptop" }}
