@@ -1,12 +1,29 @@
 # Configuration documentation is available at https://dystroy.org/broot
 # internal - overrite shortcut
 # todo more preview_transformers
+# f keys don't work
 
+# mode = "image" or "tty"
 [[preview_transformers]]
 input_extensions = [ "pdf" ]
 output_extension = "png"
 mode = "image"
 command = [ "mutool", "draw", "-w", "1000", "-o", "{output-path}", "{input-path}" ]
+# output_extension = "png" sixel ale broot nie obsługuje
+# command = ["timg", "-p", "sixel", "-W", "--auto-crop", "--frames=1", "-g1000x500", "-o", "{output-path}", "{input-path}"]
+
+[[preview_transformers]]
+input_extensions = [ "avi","mp4","wmv","dat","3gp","ogv","mkv","mpg","mpeg","vob","m2v","mov","webm","mts","m4v","qt","divx" ]
+output_extension = "png"
+mode = "image"
+# command = ["timg", "-U", "-p", "kitty", "--frames=1", "-g1000x500", "-o", "|", "magick",  "{output-path}", "{input-path}"]
+command = ["timg", "-U", "-p", "kitty", "--frames=1", "-g1000x500", "|", "magick",  "{input-path}", "{output-path}.png" ]
+
+[[preview_transformers]]
+input_extensions = [ "7z","bz2","cab","cpio","deb","gz","msi","pkg","rar","tar","tgz","xz","zip"]
+output_extension = "txt"
+mode = "text"
+command = [ "als", "{input-path}" ]
 
 [[preview_transformers]]
 input_extensions = [ "xls", "xlsx", "doc", "docx", "ppt", "pptx", "ods", "odt", "odp" ]
@@ -158,6 +175,7 @@ internal = ":sort_by_type"
 [[verbs]]
 invocation = "remove"
 key = "ctrl-r"
+# keys = ["ctrl-r", "delete"]
 leave_broot = false
 execution = "gomi {file}"
 # execution = "trash-put {file}"
@@ -174,22 +192,27 @@ execution = "cp -r {file} {other-panel-directory}"
 leave_broot = false
 # internal = ":cpp" can't be overrited 
 [[verbs]]
+name = "move"
 key = "F6"
 invocation = "move_to_panel"
 execution = "mv {file} {other-panel-directory}"
 leave_broot = false
 # internal = ":move_to_panel" can't be overrited 
 [[verbs]]
+name = "mkdir"
 key = "F7"
 invocation = "mkdir {new_dir}"
 execution = "/bin/mkdir -p {directory}/{new_dir}"
 leave_broot = false
+auto_exec = false
 # execution = "mkdir -p {subpath:path-from-directory}"
 [[verbs]]
+name = "touch"
 key = "F8"
 invocation = "touch {new_file}"
 execution = "touch {directory}/{new_file}"
 leave_broot = false
+auto_exec = false
 
 # BOOKMARKS
 [[verbs]]

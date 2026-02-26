@@ -124,15 +124,30 @@ set statusline="  %T%= %A %10u:%-7g %15E %20d  "
 autocmd DirEnter * !fasder -A %d %i
 
 " Use ripgrep instead of grep wiht smart case
+" grep -v cache - remove cache dir
 set grepprg=rg\ --color=never\ -SHn\ %i\ %a\ %s
-" Use fd instead of find
 set findprg=fd\ --color=never\ %p\ %s
 " set grepprg="grep\ -n\ -H\ -I\ -r\ -i\ %i\ %a %s"
 " set findprg="find %s %a -print -prune"
-
-nmap <C-A-f> :find <space> 
 nmap <C-s> :grep <space>
+nmap <C-A-f> :find <space>
 " finder
+" I can change to goto and provide also files
+nmap <A-j> :fzfFasd <cr>
+command! fzfFasd : set noquickview
+                \| let $PICK = term('fasder -Rld | fzf 2>/dev/tty')
+                \| if $PICK != ''
+                \|     execute 'cd ' fnameescape($PICK)
+                \| endif
+
+nmap <A-p> :br <cr>
+command! br : set noquickview
+                \| let $PICK = term('broot 2>/dev/tty')
+                \| if $PICK != ''
+                \|     execute 'goto ' fnameescape($PICK)
+                \| endif
+
+" I don't need to use FZF
 " sometimes doesn't work with I param
 " command! fzf :execute '!fzf 2>&0 %%IU' | normal! gf
                 " \| let $FZF_PICK = term('fd | fzf --preview-window 40% --preview "bat --style=numbers --color=always --line-range :500 {}" 2>/dev/tty')
@@ -145,21 +160,6 @@ command! fzfFind : set noquickview
 " find hidden
 nmap <A-f> :fzfCdh <cr>
 command! fzfCdh :execute 'cd' fnameescape(term('fd --hidden --type d | fzf 2> /dev/tty'))
-" grep -v cache - remove cache dir
-" I can change to goto and provide also files
-nmap <C-j> :fzfFasd <cr> 
-command! fzfFasd : set noquickview
-                \| let $PICK = term('fasder -Rld | fzf 2>/dev/tty')
-                \| if $PICK != ''
-                \|     execute 'cd ' fnameescape($PICK)
-                \| endif
-
-nmap <C-b> :br <cr>
-command! br : set noquickview
-                \| let $PICK = term('broot 2>/dev/tty')
-                \| if $PICK != ''
-                \|     execute 'goto ' fnameescape($PICK)
-                \| endif
 
 " read bookmarks from custom list 
 " command! fzfBookmarks :exe "normal! :bmarks\r:write ~/.local/share/vifm/fzf-read/bookmarks\rq"
@@ -485,6 +485,7 @@ filextype {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.webp,*.webm,*.svg,*avif},<imag
 " viewers                                        "
 """"""""""""""""""""""""""""""""""""""""""""""""""
 fileviewer {*.[1-8]},<text/troff> man ./%c | col -b
+" atool
 fileviewer *.7z,*.bz2,*.cab,*.cpio,*.deb,*.gz,
         \*.msi,*.pkg,*.rar,*.tar,*.tgz,*.xz,*.zip
         \ als %f | less
