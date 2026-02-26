@@ -344,14 +344,14 @@
                     "on-scroll-down": "shift_down"
                     }
     },
-    "custom/web-cal": { 
+    "custom/web-cal": {
         "format": " ",
 		"on-click": "brave-browser --class=cal --password-store=basic --args --profile-directory='profile-cal'",
 	  "tooltip": true,
 	  "tooltip-format": "web-cal"
 	},
 
-    "custom/khorshididate": { 
+    "custom/khorshididate": {
         "tooltip" : true,
         "format": " {}",
         "format-alt": " {alt}",
