@@ -1,10 +1,6 @@
 README.adoc
 old/
 system/
-.config/ytfzf
-.config/ncmpcpp
-.config/broot
-.config/stylua
 # hyprland doesn't read from zprofile but greetd loads envs from .profile
 .zprofile
 .gitignore
