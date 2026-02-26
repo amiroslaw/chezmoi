@@ -46,13 +46,8 @@ internal = ":open_stay_filter"
 
 [[verbs]]
 key = "ctrl-s"
-invocation = "stage"
-# with toggle_stage it loops
-cmd = ":stage;:line_down"
-[[verbs]]
-key = "alt-s"
-invocation = "toggle_stage"
-internal= ":toggle_stage"
+invocation = "stage_line"
+cmd = ":toggle_stage;:line_down"
 [[verbs]]
 key = "ctrl-z"
 invocation = "stage_all"

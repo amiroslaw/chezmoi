@@ -59,6 +59,7 @@ __brsel() {
 		[[ -z "$item" ]] && continue
 		echo -n "${(q)item} "
 	done
+  OPTS=''
 }
 
 path-widget() {
@@ -76,6 +77,7 @@ file-widget() {
   LBUFFER="${LBUFFER}$(__brsel)"
   local ret=$?
   zle reset-prompt
+	OPTS=""
   return $ret
 }
 zle     -N   file-widget
