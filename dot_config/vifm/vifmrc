@@ -146,11 +146,19 @@ command! fzfFind : set noquickview
 nmap <A-f> :fzfCdh <cr>
 command! fzfCdh :execute 'cd' fnameescape(term('fd --hidden --type d | fzf 2> /dev/tty'))
 " grep -v cache - remove cache dir
+" I can change to goto and provide also files
 nmap <C-j> :fzfFasd <cr> 
 command! fzfFasd : set noquickview
                 \| let $PICK = term('fasder -Rld | fzf 2>/dev/tty')
                 \| if $PICK != ''
                 \|     execute 'cd ' fnameescape($PICK)
+                \| endif
+
+nmap <C-b> :br <cr>
+command! br : set noquickview
+                \| let $PICK = term('broot 2>/dev/tty')
+                \| if $PICK != ''
+                \|     execute 'goto ' fnameescape($PICK)
                 \| endif
 
 " read bookmarks from custom list 

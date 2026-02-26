@@ -107,6 +107,7 @@ fzf-file-widget() {
   zle reset-prompt
   return $ret
 }
+
 zle     -N   fzf-file-widget
 bindkey '\ef' fzf-file-widget
 # alias f='fzf-file-widget'

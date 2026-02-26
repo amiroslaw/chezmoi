@@ -111,7 +111,7 @@ export SDKMAN_DIR="/home/miro/.local/share/sdkman"
 export MVND_HOME="/opt/mvnd" 
 [[ -s '$MVND_HOME/bin/mvnd-bash-completion.bash' ]] && 'source $MVND_HOME/bin/mvnd-bash-completion.bash'
 
-source ~/.config/fzf/fzf.zsh
+source ~/.config/zsh/keybindings.zsh
 source ~/.config/zgenom/sources/lincheney/fzf-tab-completion/___/zsh/fzf-zsh-completion.sh
 bindkey '^I' fzf_completion
 

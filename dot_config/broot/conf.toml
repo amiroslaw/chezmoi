@@ -1,19 +1,42 @@
 # Configuration documentation is available at https://dystroy.org/broot
 # internal - overrite shortcut
-# test 2
+# todo more preview_transformers
 
+[[preview_transformers]]
+input_extensions = [ "pdf" ]
+output_extension = "png"
+mode = "image"
+command = [ "mutool", "draw", "-w", "1000", "-o", "{output-path}", "{input-path}" ]
+
+[[preview_transformers]]
+input_extensions = [ "xls", "xlsx", "doc", "docx", "ppt", "pptx", "ods", "odt", "odp" ]
+output_extension = "png"
+mode = "image"
+command = [ "libreoffice", "--headless", "--convert-to", "png", "--outdir", "{output-dir}", "{input-path}" ]
+
+# enable_kitty_keyboard = false
 #####################
 icon_theme = "nerdfont"
+# Skin
+imports = [
+  { luma = "dark", file = "skins/catppuccin-macchiato.hjson" },
+  { luma = "light", file = "skins/white.hjson" }
+]
+
 # modal = true
 
+####################
+# verbs
 # files aren't open in $EDITOR 
+
 [[verbs]]
-key = "ctrl-o"
 invocation = "edit"
 shortcut = "e"
+key = "ctrl-e"
+apply_to = "text_file"
+# execution = "$EDITOR {file}"
 execution = "/usr/bin/nvim {file}"
 leave_broot = false
-# execution = "$EDITOR {file}"
 
 [[verbs]]
 key = "ctrl-o"
@@ -23,6 +46,11 @@ internal = ":open_stay_filter"
 
 [[verbs]]
 key = "ctrl-s"
+invocation = "stage"
+# with toggle_stage it loops
+cmd = ":stage;:line_down"
+[[verbs]]
+key = "alt-s"
 invocation = "toggle_stage"
 internal= ":toggle_stage"
 [[verbs]]
@@ -31,9 +59,16 @@ invocation = "stage_all"
 internal = ":stage_all_files"
 [[verbs]]
 key = "ctrl-x"
-invocation = "stage_print"
+invocation = "print_relative"
+cmd = ":panel_right;:print_relative_path"
+[[verbs]]
+key = "alt-x"
+invocation = "print_absolute"
 cmd = ":panel_right;:pp"
-# internal = ":stage_all_files"
+# [[verbs]]
+# key = "ctrl-x"
+# invocation = "clear_stage"
+# internal = ":clear_stage"
 
 ## VIMLIKE
 [[verbs]]
@@ -87,10 +122,6 @@ internal = ":panel_left"
 key = "ctrl-n"
 invocation = "panel_right"
 internal = ":panel_right"
-[[verbs]]
-key = "ctrl-x"
-invocation = "clear_stage"
-internal = ":clear_stage"
 
 # toggles
 [[verbs]]
@@ -177,59 +208,5 @@ internal = ":focus ~/"
 # Example:
 #  execution = "less {file}"
 # execution = "$PAGER {file}"
-#####################
-# Skin
 
-# If you want to change the colors of broot,
-# uncomment the following bloc and start messing
-# with the various values
-# Note that some of those colors might not correcly
-# render on terminals with low capabilities
-#
-# [skin]
-# default = "gray(20) gray(1)"
-# tree = "rgb(89, 73, 101) none"
-# file = "gray(21) none"
-# directory = "rgb(255, 152, 0) none bold"
-# exe = "rgb(17, 164, 181) none"
-# link = "Magenta none"
-# pruning = "rgb(89, 73, 101) none Italic"
-# perm__ = "gray(5) None"
-# perm_r = "ansi(94) None"
-# perm_w = "ansi(132) None"
-# perm_x = "ansi(65) None"
-# owner = "gray(12) none"
-# group = "gray(12) none"
-# selected_line = "none gray(3)"
-# char_match = "yellow none"
-# file_error = "Red none"
-# flag_label = "gray(16) none"
-# flag_value = "rgb(255, 152, 0) none bold"
-# input = "White none"
-# status_error = "Red gray(2)"
-# status_job = "ansi(220) gray(5)"
-# status_normal = "gray(20) gray(3)"
-# status_italic = "rgb(255, 152, 0) None"
-# status_bold = "rgb(255, 152, 0) None bold"
-# status_code = "ansi(229) gray(5)"
-# status_ellipsis = "gray(19) gray(1)"
-# scrollbar_track = "rgb(80, 50, 0) none"
-# scrollbar_thumb = "rgb(255, 187, 0) none"
-# help_paragraph = "gray(20) none"
-# help_bold = "rgb(255, 187, 0) none bold"
-# help_italic = "Magenta rgb(30, 30, 40) italic"
-# help_code = "gray(21) gray(3)"
-# help_headers = "rgb(255, 187, 0) none"
-
-# You may find other skins on
-#  https://dystroy.org/broot/documentation/configuration/#colors
-# for example a skin suitable for white backgrounds
-
-
-
-# [[verbs]]
-# invocation = "open file"
-# key = "ctrl-o"
-# execution = "xdg-open {file}"
-# apply_to = "file"
 
