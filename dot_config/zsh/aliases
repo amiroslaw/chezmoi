@@ -483,7 +483,7 @@ alias -g SN='| sort -n'
 alias -g L='| less'
 alias -g W='| wc'
 alias -g Jq='| jq .'
-alias -g Fx='| fx'
+alias -g X='| fx'
 alias -g N=' | nvim - +"file /tmp/nvim-pipe$(date +%s)"'
 
 # copy terminal output into clipboard
