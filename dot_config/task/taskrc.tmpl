@@ -8,8 +8,6 @@
 
 # Files
 editor=nvim
-data.location=~/.local/share/task
-hooks.location=~/.config/task/hooks
 
 weekstart=monday
 calendar.holidays=full
@@ -131,10 +129,15 @@ include ./themes/solarized-dark-256.theme
 #include ./themes/dark-256.theme
 #include ./themes/no-color.theme
 
+hooks.location=~/.config/task/hooks
+
+#sync
 sync.local.server_dir={{- env "PRIVATE" -}}/task/
 {{ if eq .chezmoi.hostname "pc" }}
+data.location={{- env "PRIVATE" -}}/task/pc
 recurrence=1
 {{ else }}
+data.location={{- env "PRIVATE" -}}/task/lap
 recurrence=0
 {{ end }}
 
