@@ -38,8 +38,13 @@ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.f
 # pavucontrol can be replaced by waylant native: opi pwvucontrol or flatpak (gtk takes a lot of space)
 sudo zypper install -y --no-recommends pavucontrol mpd rmpc mpDris2
 sudo zypper install -y gnucash libreoffice vorta
- # new version is called krokiet and is not gtk based
+# new version is called krokiet and is not gtk based
 sudo zypper install -y --no-recommends czkawka-gui
+
+# Python
+sudo zypper install python313-uv
+uv tool install sqlit-tui
+
 {{ else if eq .chezmoi.hostname "laptop" }}
 sudo zypper install -y --no-recommends blueman bluez
 # Optimizes power usage on laptops by applying advanced power management settings.      
