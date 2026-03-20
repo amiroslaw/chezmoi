@@ -8,8 +8,8 @@ $ pixelation: echo -e "kitty\nsixel\nhalf"
 # start gemini
 npx https://github.com/google-gemini/gemini-cli
 
-# qr code - provide content or select clipboard
-echo "<content>" | qrencode -t UTF8
+# qr code -provide content or select clipboard
+eval "<clip>" | qrencode -t UTF8
 $ clip-op: echo -e "clip\nselect"
 $ clip:  bb -o '(case "<clip-op>" "clip" "clipcat.clj clip" "select" "clipcat.clj primary" "echo <clip-op>")'
 # $ clip:  bb -o '(case "<clip-op>" "clip" "clipster -oc" "select" "clipster -op" "echo <clip-op>")'

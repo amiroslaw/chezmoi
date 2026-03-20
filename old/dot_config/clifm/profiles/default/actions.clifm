@@ -47,5 +47,3 @@ vid=vid_viewer.sh
 vt=virtualize.sh
 wall=wallpaper_setter.sh
 plugin1=xclip.sh
-plugin2=test.sh
-tt=test.sh
