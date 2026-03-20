@@ -2,6 +2,12 @@
 # hyprctl monitors all
 
 {{ if eq .chezmoi.hostname "pc" }}
+
+bindd = , PRINT,Screenshot the active window, exec, screenshot.clj save --target window
+bindd = $sup, PRINT, Screenshot ocr, exec, screenshot.clj ocr --target region
+bindd = $sup CTRL, PRINT,Edit screenshot, exec, screenshot.clj edit --target output -o /tmp/
+bindd = $sup SHIFT, PRINT,Screenshot a region, exec, screenshot.clj menu
+
 monitor=desc:Hewlett Packard HP ZR24w CNT0341213,1920x1200@59.95,0x0,1.0
 monitor=desc:Hewlett Packard HP LA2206 3CQ149PK69,1920x1080@60.0,1920x0,1.0,transform,1
 
@@ -29,6 +35,10 @@ workspace=10,monitor:DVI-I-1
 {{ else if eq .chezmoi.hostname "laptop" }}
 # monitor=,preferred,auto,auto
 
+bindd = , Scroll_Lock,Screenshot the active window, exec, screenshot.clj save --target window
+bindd = $sup, Scroll_Lock, Screenshot ocr, exec, screenshot.clj ocr --target region
+bindd = $sup CTRL, Scroll_Lock,Edit screenshot, exec, screenshot.clj edit --target output -o /tmp/
+bindd = $sup SHIFT, Scroll_Lock,Screenshot a region, exec, screenshot.clj menu
 {{ end }}
 
 
