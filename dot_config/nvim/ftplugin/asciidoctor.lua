@@ -15,7 +15,6 @@ end
 
 nmap('<localleader>l', ':lua AdocPasteFileLink()<esc>')
 vmap('<localleader>t', '<cmd>Tab /|<CR>') -- format table by `|`
-nmap('<F7>', ':!preview-ascii.sh % <CR>')
 
 -- todolist
 nmap('<localleader><', '<cmd> s/^.//g <cr> <cmd>nohlsearch<cr>') -- decrease list

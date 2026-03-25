@@ -1247,3 +1247,4 @@ vim.o.background = getBackground()
 -- vim: foldmethod=marker
 -- set complete+=kspell spellcheck complete
 
+nmap('<F7>', ':!preview-ascii.sh % <CR>', 'adoc preview')
