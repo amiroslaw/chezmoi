@@ -397,7 +397,8 @@ c.url.searchengines = {
     'x': 'https://www.perplexity.ai/search?q={}', # ddos 
     'p': 'https://www.phind.com/search?q={}', # unavailable
     'h': 'https://felo.ai/search?q={}',
-    'i': 'https://iask.ai/?options[detail_level]=concise&q={}',
+    'i': 'https://search.brave.com/images?q={}',
+    'ia': 'https://iask.ai/?options[detail_level]=concise&q={}',
     'ie': 'https://iask.ai/?options[detail_level]=comprehensive&q={}',
     'u': 'https://you.com/search?fromSearchBar=true&tbm=youchat&q={}'
 }
@@ -448,10 +449,13 @@ config.bind('sp', 'spawn -u engine.clj -s p', 'caret')
 config.bind('sd', 'open -b d {primary} ')
 config.bind('sD', 'open -b d {clipboard} ')
 config.bind('sd', 'spawn -u engine.clj -s d', 'caret')
-# AI 
 config.bind('si', 'open -b i {primary} ')
 config.bind('sI', 'open -b i {clipboard} ')
 config.bind('si', 'spawn -u engine.clj -s i', 'caret')
+# AI 
+config.bind('sz', 'open -b ia {primary} ')
+config.bind('sZ', 'open -b ia {clipboard} ')
+config.bind('sz', 'spawn -u engine.clj -s ia', 'caret')
 config.bind('sp', 'open -b p {primary} ')
 config.bind('sP', 'open -b p {clipboard} ')
 config.bind('sp', 'spawn -u engine.clj -s p', 'caret')
