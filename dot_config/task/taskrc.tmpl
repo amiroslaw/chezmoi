@@ -132,13 +132,15 @@ include ./themes/solarized-dark-256.theme
 hooks.location=~/.config/task/hooks
 
 #sync
+# problem with modifing files in mega 
+data.location=~/.local/share/task
 sync.local.server_dir={{- env "PRIVATE" -}}/task/
 {{ if eq .chezmoi.hostname "pc" }}
-data.location={{- env "PRIVATE" -}}/task/pc
 recurrence=1
+# data.location={{- env "PRIVATE" -}}/task/pc
 {{ else }}
-data.location={{- env "PRIVATE" -}}/task/lap
 recurrence=0
+# data.location={{- env "PRIVATE" -}}/task/lap
 {{ end }}
 
 # it needs to be update
