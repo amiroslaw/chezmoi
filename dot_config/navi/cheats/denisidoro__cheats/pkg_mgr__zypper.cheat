@@ -25,7 +25,7 @@ sudo zypper --no-refresh remove <deps> <confirm> <installed-fzf-user>
 # Search packages ::zyser
 zypper --no-refresh search <installed> <type> <query>
 # dependencis list all packages depended on the package
-zypper --no-refresh search --requires --installed-only <package-name>
+zypper --no-refresh search --requires --recommends --installed-only <package-name>
 # there is also --requires-pkg
 
 # Show full information for specified packages ::zyifs
