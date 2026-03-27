@@ -3,6 +3,19 @@
 # todo more preview_transformers
 # f keys don't work
 
+default_flags = "--git-ignored --show-git-info"
+# default_flags = "--git-ignored --show-git-info"
+# enable_kitty_keyboard = false
+
+#####################
+icon_theme = "nerdfont"
+# Skin
+imports = [
+  { luma = "dark", file = "skins/catppuccin-macchiato.hjson" },
+  { luma = "light", file = "skins/white.hjson" }
+]
+# modal = true
+
 # mode = "image" or "tty"
 [[preview_transformers]]
 input_extensions = [ "pdf" ]
@@ -31,17 +44,6 @@ output_extension = "png"
 mode = "image"
 command = [ "libreoffice", "--headless", "--convert-to", "png", "--outdir", "{output-dir}", "{input-path}" ]
 
-# enable_kitty_keyboard = false
-#####################
-icon_theme = "nerdfont"
-# Skin
-imports = [
-  { luma = "dark", file = "skins/catppuccin-macchiato.hjson" },
-  { luma = "light", file = "skins/white.hjson" }
-]
-
-# modal = true
-
 ####################
 # verbs
 # files aren't open in $EDITOR 
@@ -61,22 +63,51 @@ shortcut = "f"
 invocation = "open_stay_filter"
 internal = ":open_stay_filter"
 
+# ZSH
+# [[verbs]]
+# key = "enter"
+# internal = "print_path"
+# apply_to = "directory"
+#
+# [[verbs]]
+# key = "enter"
+# cmd = ":parent;:print_path"
+# apply_to = "file"
+
+# [[verbs]]
+# key = "alt-enter"
+# invocation = "cd"
+# internal = "print_path"
+# apply_to = "directory"
+# [[verbs]]
+# key = "alt-enter"
+# invocation = "cd"
+# cmd = ":parent;:print_path"
+# apply_to = "file"
+
 [[verbs]]
 key = "ctrl-s"
 invocation = "stage_line"
-cmd = ":toggle_stage;:line_down"
+cmd = ":toggle_stage;:next_match"
+# [[verbs]]
+# key = "ctrl-s"
+# invocation = "stage_line"
+# cmd = ":toggle_stage;:line_down"
 [[verbs]]
-key = "ctrl-z"
+key = "alt-s"
 invocation = "stage_all"
 internal = ":stage_all_files"
 [[verbs]]
+invocation= "pright"
+internal= "panel_right_no_open"
+[[verbs]]
 key = "ctrl-x"
 invocation = "print_relative"
-cmd = ":panel_right;:print_relative_path"
+cmd = ":pright;:print_relative_path"
 [[verbs]]
 key = "alt-x"
 invocation = "print_absolute"
-cmd = ":panel_right;:pp"
+cmd = ":pright;:pp"
 # [[verbs]]
 # key = "ctrl-x"
 # invocation = "clear_stage"

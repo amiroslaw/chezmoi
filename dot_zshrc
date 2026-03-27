@@ -115,7 +115,6 @@ source ~/.config/zsh/keybindings.zsh
 source ~/.config/zgenom/sources/lincheney/fzf-tab-completion/___/zsh/fzf-zsh-completion.sh
 bindkey '^I' fzf_completion
 
-source ~/.config/broot/launcher/bash/br
 # eval $(thefuck --alias)
 
 # fasder
@@ -130,8 +129,9 @@ add-zsh-hook preexec _fasder_preexec
 fpath=($XDG_CONFIG_HOME/zsh/completions $fpath)
 source <("yt.clj" completions)
 source <("clipcat.clj" completions)
-source <(broot --print-shell-function zsh)
 source <(navi widget zsh) # ctrl-g
+# source ~/.config/broot/launcher/bash/br
+source ~/.config/broot/broot.zsh
 
 command_not_found_handle() {
 # don't run if not in a container

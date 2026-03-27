@@ -49,40 +49,6 @@ fi
 
 [[ -o interactive ]] || return 0
 
-# ------------
-# broot selection
-# broot -f, --only-folders Only show folders
-__brsel() {
-  setopt localoptions pipefail no_aliases 2> /dev/null
-  local item
-	eval "br ${OPTS}" | while IFS= read -r item; do
-		[[ -z "$item" ]] && continue
-		echo -n "${(q)item} "
-	done
-  OPTS=''
-}
-
-path-widget() {
-  LBUFFER="${LBUFFER}$(__brsel)"
-  local ret=$?
-  zle reset-prompt
-  return $ret
-}
-zle     -N   path-widget
-bindkey '\ep' path-widget
-
-# files/dirs only in current dir
-file-widget() {
-	OPTS="--cmd=':toggle_tree'"
-  LBUFFER="${LBUFFER}$(__brsel)"
-  local ret=$?
-  zle reset-prompt
-	OPTS=""
-  return $ret
-}
-zle     -N   file-widget
-bindkey '\ef' file-widget
-
 # ALT-H - Paste the selected command from history into the command line
 fzf-history-widget() {
   local selected num
