@@ -238,7 +238,7 @@ alias in='$EDITOR "$NOTE"/tasks/inbox.adoc'
 # curl cheat.sh/java/compute+map
 alias pul='pueue status columns=id,status,label'
 alias pue='pueue status columns=status,command'
-alias pull='pueue log'
+alias pull='pueue log -a'
 alias rmsl='find . -xtype l -delete' # remove broken symlinks form the directory
 alias cht='curl cheat.sh/'
 alias chtj='curl cheat.sh/java/'

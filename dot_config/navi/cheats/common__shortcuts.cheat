@@ -5,6 +5,17 @@
 timg -U --grid=<int> --title --center --clear -p <pixelation> <files>
 $ pixelation: echo -e "kitty\nsixel\nhalf"
 
+# hard remove/prune files
+gomi --prune <duration>
+$ duration: echo -e "1d\n1w\n1m"
+
+# pueue log failed jobs
+pueue log -afj | fx 'Object.values(this).filter(x => x.task?.status?.Done?.result?.Failed).map(x => `${x.task.id}: ${x.task.label}\n${x.task.command}\n${x.output}`).join("\n")'
+
+# pueue log a group
+pueue log -g <groups>
+$ groups: pueue group -j | fx 'Object.keys(this).join("\n")'
+
 # start gemini
 npx https://github.com/google-gemini/gemini-cli
 
