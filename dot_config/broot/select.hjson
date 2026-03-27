@@ -1,0 +1,12 @@
+verbs:
+[
+  {
+    invocation: pright
+    internal: panel_right_no_open
+  }
+  {
+    key: enter
+    cmd: ":pright;:print_path"
+  }
+]
+

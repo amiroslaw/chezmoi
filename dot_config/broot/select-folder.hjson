@@ -1,0 +1,14 @@
+# Used by: https://github.com/AndydeCleyre/dotfiles-zsh/blob/main/broot.zsh
+verbs:
+[
+  {
+    key: enter
+    internal: print_path
+    apply_to: directory
+  }
+  {
+    key: enter
+    cmd: ":parent;:print_path"
+    apply_to: file
+  }
+]

@@ -142,7 +142,7 @@ command! fzfFasd : set noquickview
 
 nmap <A-p> :br <cr>
 command! br : set noquickview
-                \| let $PICK = term('broot 2>/dev/tty')
+                \| let $PICK = term('broot --conf "${XDG_CONFIG_HOME:-${HOME}/.config}/broot/select-vifm.hjson;${XDG_CONFIG_HOME:-${HOME}/.config}/broot/conf.toml" 2>/dev/tty')
                 \| if $PICK != ''
                 \|     execute 'goto ' fnameescape($PICK)
                 \| endif

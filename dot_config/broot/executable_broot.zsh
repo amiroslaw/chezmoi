@@ -8,7 +8,6 @@ if (( $+commands[broot] )) {  # Without broot, skip this file
 
 zmodload zsh/mapfile
 
-
 # -- Refresh prompt, rerunning any hooks --
 # Credit: Roman Perepelitsa
 # Original: https://github.com/romkatv/zsh4humans/blob/v2/fn/-z4h-redraw-prompt
@@ -42,7 +41,7 @@ br () {  # [<broot-opt>...]
 }
 
 # -- Clear line, run broot, restore line --
-# Key: alt+b
+# Key: alt+f
 # Depends: br
 .zle_broot () {
   zle .push-input
@@ -50,8 +49,7 @@ br () {  # [<broot-opt>...]
   zle .accept-line
 }
 zle -N       .zle_broot
-bindkey '\eb' .zle_broot  # alt+b
-# TODO change shortcut
+bindkey '\ef' .zle_broot  # alt+f
 
 # ----------------
 # Fancy Selections
@@ -60,12 +58,10 @@ CMD=''
 
 # -- Select files with broot and print each on a line --
 # Depends: ~/.config/broot/select.hjson ( https://github.com/AndydeCleyre/dotfiles-broot )
-    # --conf "${XDG_CONFIG_HOME:-${HOME}/.config}/broot/select.hjson;${XDG_CONFIG_HOME:-${HOME}/.config}/broot/conf.hjson" \
 broot-print-files () {  # [broot-arg...]
   emulate -L zsh
-
   broot \
-    --conf "${XDG_CONFIG_HOME:-${HOME}/.config}/broot/conf.toml" \
+    --conf "${XDG_CONFIG_HOME:-${HOME}/.config}/broot/select.hjson;${XDG_CONFIG_HOME:-${HOME}/.config}/broot/conf.toml" \
 	--cmd="${CMD}" \
     --color yes \
     --git-ignored \
@@ -76,11 +72,11 @@ broot-print-files () {  # [broot-arg...]
 
 # -- Select a single folder with broot and print it --
 # Depends: ~/.config/broot/select-folder.hjson ( https://github.com/AndydeCleyre/dotfiles-broot )
-    # --conf "${XDG_CONFIG_HOME:-${HOME}/.config}/broot/select-folder.hjson;${XDG_CONFIG_HOME:-${HOME}/.config}/broot/conf.hjson" \
 broot-print-folder () {  # [broot-arg...]
   emulate -L zsh
   broot \
-    --conf "${XDG_CONFIG_HOME:-${HOME}/.config}/broot/conf.toml" \
+    --conf "${XDG_CONFIG_HOME:-${HOME}/.config}/broot/select-folder.hjson;${XDG_CONFIG_HOME:-${HOME}/.config}/broot/conf.toml" \
+	--cmd="${CMD}" \
     --color yes \
     --git-ignored \
     --show-git-info \
@@ -100,6 +96,15 @@ broot-print-folder () {  # [broot-arg...]
 }
 zle -N            .zle_cd-broot
 bindkey '\ed' .zle_cd-broot  # alt-d
+
+# disable tree view
+.zle_cd-shallow() {
+	CMD=':toggle_tree'
+	.zle_cd-broot
+	CMD=''
+}
+zle -N       .zle_cd-shallow
+bindkey '\eD' .zle_cd-shallow  # alt-shift-D
 
 # -- Start writing a for loop over broot-selected paths (each is $f) --
 # Key: alt-l
@@ -194,12 +199,13 @@ zle -N       .zle_for-broot
 zle -N       .zle_insert-path-broot
 bindkey '\ep' .zle_insert-path-broot  # alt-p
 
-.zle_insert-tree-broot() {
+# disable tree view
+.zle_insert-shallow() {
 	CMD=':toggle_tree'
 	.zle_insert-path-broot
 	CMD=''
 }
-zle -N       .zle_insert-tree-broot
-bindkey '\ef' .zle_insert-tree-broot  # alt-f
+zle -N       .zle_insert-shallow
+bindkey '\eP' .zle_insert-shallow  # alt-shift-p
 
 }

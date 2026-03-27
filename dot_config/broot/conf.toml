@@ -64,25 +64,28 @@ invocation = "open_stay_filter"
 internal = ":open_stay_filter"
 
 # ZSH
-# [[verbs]]
-# key = "enter"
-# internal = "print_path"
-# apply_to = "directory"
-#
-# [[verbs]]
-# key = "enter"
-# cmd = ":parent;:print_path"
-# apply_to = "file"
+[[verbs]]
+key = "enter"
+invocation = "open"
+cmd = ":write_output {directory};:quit"
+apply_to = "directory"
 
+[[verbs]]
+key = "enter"
+invocation = "open"
+cmd = ":parent;:write_output {directory};:quit"
+apply_to = "file"
+
+  #   # https://github.com/Canop/broot/issues/530
+[[verbs]]
+key = "alt-enter"
+external = "xdg-open {file}"
+leave_broot = false
+# apply_to = "file"
 # [[verbs]]
 # key = "alt-enter"
-# invocation = "cd"
-# internal = "print_path"
-# apply_to = "directory"
-# [[verbs]]
-# key = "alt-enter"
-# invocation = "cd"
-# cmd = ":parent;:print_path"
+# invocation = "open"
+# internal = ":open_stay"
 # apply_to = "file"
 
 [[verbs]]
@@ -98,20 +101,9 @@ key = "alt-s"
 invocation = "stage_all"
 internal = ":stage_all_files"
 [[verbs]]
-invocation= "pright"
-internal= "panel_right_no_open"
-[[verbs]]
 key = "ctrl-x"
-invocation = "print_relative"
-cmd = ":pright;:print_relative_path"
-[[verbs]]
-key = "alt-x"
-invocation = "print_absolute"
-cmd = ":pright;:pp"
-# [[verbs]]
-# key = "ctrl-x"
-# invocation = "clear_stage"
-# internal = ":clear_stage"
+invocation = "clear_stage"
+internal = ":clear_stage"
 
 ## VIMLIKE
 [[verbs]]
@@ -172,6 +164,10 @@ key = "ctrl-t"
 invocation = "toggle_dates"
 internal = ":toggle_dates"
 [[verbs]]
+key = "alt-t"
+invocation = "toggle_tree"
+internal = ":toggle_tree"
+[[verbs]]
 key = "ctrl-a"
 invocation = "toggle_hidden"
 internal = ":toggle_hidden"
@@ -189,6 +185,9 @@ key = "F9"
 invocation="toggle_perm"
 internal = ":toggle_perm"
 ##### SORT
+[[verbs]]
+key = "alt-g"
+internal = "toggle_sizes"
 [[verbs]]
 key = "F10"
 invocation="sort_by_size"
@@ -244,6 +243,12 @@ invocation = "touch {new_file}"
 execution = "touch {directory}/{new_file}"
 leave_broot = false
 auto_exec = false
+
+# todo - probably I have different difftool than meld
+[[verbs]]
+invocation = "diff"
+external = "git difftool -y {file}"
+leave_broot = false
 
 # BOOKMARKS
 [[verbs]]
