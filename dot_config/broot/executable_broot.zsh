@@ -5,6 +5,8 @@ if (( $+commands[broot] )) {  # Without broot, skip this file
 # ------
 # source from 
 # https://github.com/AndydeCleyre/dotfiles-zsh/tree/main
+# TODO 
+# add alt-shift-F for toggle_tree
 
 zmodload zsh/mapfile
 
@@ -115,8 +117,7 @@ bindkey '\eD' .zle_cd-shallow  # alt-shift-D
   RBUFFER=' $f'$'\n''}'
 }
 zle -N       .zle_for-broot
-# bindkey '\el' .zle_for-broot
-# TODO find shortcut
+bindkey '\eL' .zle_for-broot
 
 # -- Complete current word as path using broot --
 # Key: alt-p
