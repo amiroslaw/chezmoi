@@ -70,6 +70,9 @@ sudo zypper addrepo <repo>
 # Start a shell to enter multiple commands in one session
 sudo zypper shell
 
+# logs of today
+sudo rg "^$(date +%Y-%m-%d)" /var/log/zypper.log | bat -l log
+
 $ recommends: echo ' \n--no-recommends'
 $ deps: echo '--clean-deps\n '
 $ confirm: echo ' \n--no-confirm'

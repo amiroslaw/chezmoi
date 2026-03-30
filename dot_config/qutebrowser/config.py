@@ -34,7 +34,6 @@ config.set('content.local_content_can_access_remote_urls', True)
 
 # ======================= CONFIG ============= {{{
 # ======================= Theme ============= {{{
-qt.force_platform = "wayland"
 config.source('themes/base16/default/base16-seti.config.py')
 # config.source('themes/onedark/onedark.py')
 c.url.start_pages = "~/.config/qutebrowser/themes/startpage/index.html"
