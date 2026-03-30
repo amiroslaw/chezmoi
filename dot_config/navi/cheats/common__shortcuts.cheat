@@ -1,6 +1,9 @@
 % shortcuts
 @ util
 
+# gnucash
+WEBKIT_DISABLE_COMPOSITING_MODE=1 gnucash
+
 # image preview 
 timg -U --grid=<int> --title --center --clear -p <pixelation> <files>
 $ pixelation: echo -e "kitty\nsixel\nhalf"
