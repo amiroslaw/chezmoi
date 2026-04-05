@@ -33,6 +33,8 @@ config.set('content.local_content_can_access_remote_urls', True)
 # }}}
 
 # ======================= CONFIG ============= {{{
+c.qt.workarounds.disable_hangouts_extension = True
+c.qt.workarounds.disable_accessibility = "always"
 # ======================= Theme ============= {{{
 config.source('themes/base16/default/base16-seti.config.py')
 # config.source('themes/onedark/onedark.py')
