@@ -469,7 +469,7 @@ filextype */
 
 " Images
 filextype {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.webp,*.webm,*.svg,*avif},<image/*>
-        \ swayimg -f %f %i,
+        \ swayimg %f %i,
         "\ pqiv -f %f %i,
 " in terminal with timg
 "filextype *.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
