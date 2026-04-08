@@ -37,7 +37,7 @@ look if some programs need to be execute with shell
   XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    XX    @trash
   XX    @quake    XX    @news    XX    @tw    @yt    XX    @qb    XX    @fm    XX    XX    XX
   XX    @audio @off @rofi @vifm    XX    @clip    @chat @kee     @qu   XX    XX    XX
-  XX    @todo  @pom  @idea    @video    XX    @note    XX    XX    XX    XX    XX
+  XX    @pom  @todo  @idea    @video    XX    @note    XX    XX    XX    XX    XX
   XX    XX    ret              XX              XX    XX    XX
 )
 
@@ -66,6 +66,7 @@ look if some programs need to be execute with shell
   XX    XX    XX    XX    XX    XX    home	pgdn pgup	end	  ins   XX
   XX    XX    XX              XX              XX    XX    XX 
 )
+;; TODO down up doesn't work for long hold
 ;; S-ins; C-z: pase select, undo
 
 (defalias ;; layers
@@ -141,7 +142,7 @@ look if some programs need to be execute with shell
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defalias ;; common apps scripts
-  tab (tap-dance 200 (tab M-tab  A-tab C-tab)) ;; too many available actions
+  ;;tab (tap-dance 200 (tab M-tab  A-tab C-tab)) ;; 3x tab super + tab 3x tab = alt tab; it is too common to execute it
   trash (cmd sh -c r#"eval $(printf "$TERM_LT $TERM_LT_RUN" "trash" "gomi --restore")"#r)
   ;; without setsid or sh -c, apps will be terminated when kanata is killed
   rofi (cmd rofi -modi drun,keys,run -show drun -show-icons -sidebar-mode -monitor -4 -matching fuzzy)
