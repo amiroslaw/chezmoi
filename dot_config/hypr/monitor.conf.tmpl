@@ -16,6 +16,11 @@ monitor=desc:Hewlett Packard HP LA2206 3CQ149PK69,1920x1080@60.0,1920x0,1.0,tran
 # description: Hewlett Packard HP LA2206 3CQ149PK69
 # monitor=DVI-I-1,1920x1080,auto-right,1, transform, 1
 
+scrolling {
+	column_width = 1
+	follow_min_visible = 1
+}
+
 # fix offset 
 cursor { 
 	no_hardware_cursors = 1
@@ -30,10 +35,11 @@ workspace=6,monitor:DVI-D-1
 workspace=7,monitor:DVI-I-1,default:true
 workspace=8,monitor:DVI-I-1
 workspace=9,monitor:DVI-I-1
-workspace=10,monitor:DVI-I-1
+workspace=10,monitor:DVI-I-1, layout:scrolling
 
 {{ else if eq .chezmoi.hostname "laptop" }}
 # monitor=,preferred,auto,auto
+workspace=1, layout:scrolling
 
 bindd = , Scroll_Lock,Screenshot the active window, exec, screenshot.clj save --target window
 bindd = $sup, Scroll_Lock, Screenshot ocr, exec, screenshot.clj ocr --target region
