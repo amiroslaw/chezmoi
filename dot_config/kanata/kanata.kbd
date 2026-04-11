@@ -27,7 +27,7 @@ look if some programs need to be execute with shell
 
 (deflayer base
   @grv  @1    @2    @3    @4    @5    @6    @7    @8    @9    @0    @-    @=    bspc
-  @tab  q    w     e    r    t    y    @u    @i    @o    p    [    ]    \
+  tab  q    w     e    r    t    y    @u    @i    @o    p    [    ]    \
   @cap  @alt_a   @met_s	@ctl_d @sft_f g	h @sft_j  @ctl_k @met_l @alt_; '    ret
   @lsft @z    x    @c    v    b    n    @m    ,    .    /    @rsft
   lctl lmet @lalt           @spc            ralt cmp lmet
