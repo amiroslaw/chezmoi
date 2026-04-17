@@ -643,22 +643,26 @@ browse.setup({
   provider = "brave", -- duckduckgo, bing
   bookmarks = bookmarks
 })
-nmap('gs', ':execute "normal viw" | lua require"browse".input_search()<cr>', 'Search word')
-vmap('gs', '<cmd>lua require"browse".input_search()<cr>', 'Search selection')
-nmap('go', ':execute "normal viw" | lua require"browse".open_bookmarks()<cr>', 'Open bookmark for word')
-vmap('go', '<cmd>lua require"browse".open_bookmarks()<cr>', 'Open bookmark for selection')
+
+vmap('gs', ':Browse input<cr>', 'Search selected text')
+nmap('gs', ':Browse input<cr>', 'Search word', {silent = ture})
+-- nmap('gs', '[[:execute "normal viw" | :Browse input<cr>]]', 'Search word', {silent = ture}) -- it Execute plugins and after that selects text
+nmap('go', ':Browse bookmarks_manual<cr>', 'Open bookmark')
+vmap('go', ':Browse bookmarks<cr>', 'Open bookmark for selected text') -- selection doesn't work  with bookmarks_manual
+
 -- maybe chnage order to gbs; gbo; gwd
-nmap('<Leader>ga', '<cmd>lua require"browse".browse()<cr>', 'Browse all') -- all options
-nmap('<Leader>gss', ':execute "normal vis" | lua require"browse".input_search()<cr>', 'Search sentence') -- sentence
-nmap('<Leader>gsb', ':execute "normal vib" | lua require"browse".input_search()<cr>', 'Search bracket') -- bracket
-nmap('<Leader>gs"', [[:execute 'normal vi"' | lua require"browse".input_search()<cr>]], 'Search double quotes')
-nmap("<Leader>gs'", [[:execute "normal vi'" | lua require"browse".input_search()<cr>]], 'Search single quotes')
-nmap('<Leader>gos', ':execute "normal vis" | lua require"browse".open_bookmarks()<cr>', 'Open bookmark for sentence')
-nmap('<Leader>gob', ':execute "normal vib" | lua require"browse".open_bookmarks()<cr>', 'Open bookmark for bracket')
-nmap('<Leader>go"', [[:execute 'normal vi"' | lua require"browse".open_bookmarks()<cr>]], 'Open bookmark for double quotes')
-nmap("<Leader>go'", [[:execute "normal vi'" | lua require"browse".open_bookmarks()<cr>]], 'Open bookmark for single quotes')
-nmap('<Leader>gd', ':execute "normal viw" | lua require"browse.devdocs".search_with_filetype()<cr>', 'Search devdocs for word') -- search devdocs with context of filetype
-vmap('<Leader>gd', '<cmd>lua require"browse.devdocs".search_with_filetype()<cr>', 'Search devdocs for selection') -- selection doesn't work
+-- nmap('<Leader>ga', '<cmd>lua require"browse".browse()<cr>', 'Browse all') -- all options
+-- nmap('<Leader>gss', ':execute "normal vis" | lua require"browse".input_search()<cr>', 'Search sentence') -- sentence
+-- nmap('<Leader>gsb', ':execute "normal vib" | lua require"browse".input_search()<cr>', 'Search bracket') -- bracket
+-- nmap('<Leader>gs"', [[:execute 'normal vi"' | lua require"browse".input_search()<cr>]], 'Search double quotes')
+-- nmap("<Leader>gs'", [[:execute "normal vi'" | lua require"browse".input_search()<cr>]], 'Search single quotes')
+-- nmap('<Leader>gos', ':execute "normal vis" | lua require"browse".open_bookmarks()<cr>', 'Open bookmark for sentence')
+-- nmap('<Leader>gob', ':execute "normal vib" | lua require"browse".open_bookmarks()<cr>', 'Open bookmark for bracket')
+-- nmap('<Leader>go"', [[:execute 'normal vi"' | lua require"browse".open_bookmarks()<cr>]], 'Open bookmark for double quotes')
+-- nmap("<Leader>go'", [[:execute "normal vi'" | lua require"browse".open_bookmarks()<cr>]], 'Open bookmark for single quotes')
+-- nmap('<Leader>gd', ':execute "normal viw" | lua require"browse.devdocs".search_with_filetype()<cr>', 'Search devdocs for word') -- search devdocs with context of filetype
+-- vmap('<Leader>gd', '<cmd>lua require"browse.devdocs".search_with_filetype()<cr>', 'Search devdocs for selection') -- selection doesn't work
+
 -- }}} 
 
 -- Telescope {{{
