@@ -610,6 +610,7 @@ nmap('<leader>rp', '<Plug>RestNvimPreview<cr>', 'Preview HTTP request', { norema
 -- https://github.com/lalitmee/browse.nvim 
 local bookmarks = {
     ['youtube'] = 'https://www.youtube.com/results?search_query=%s',
+    ['map'] = 'https://www.google.com/maps?q=%s',
 	['diki']= 'https://www.diki.pl/slownik-angielskiego?q=%s',
 	['deepl'] ='https://www.deepl.com/en/translator#en/pl/%s',
     ['translator'] = 'https://translate.google.pl/?hl=pl#pl/en/%s',
