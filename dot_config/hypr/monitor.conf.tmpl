@@ -7,6 +7,12 @@ scrolling {
 }
 
 {{ if eq .chezmoi.hostname "pc" }}
+# NVIDIA
+env = GBM_BACKEND,nvidia-drm
+env = __GLX_VENDOR_LIBRARY_NAME,nvidia
+env = LIBVA_DRIVER_NAME,nvidia
+# It fixs nvidia error, the issue could be with the new kernel 7.0 or nvidia-drm drivers. Try turn off with hypr 0.55
+env = AQ_NO_ATOMIC,1
 
 bindd = , PRINT,Screenshot the active window, exec, screenshot.clj save --target window
 bindd = $sup, PRINT, Screenshot ocr, exec, screenshot.clj ocr --target region
