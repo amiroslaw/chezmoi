@@ -3,20 +3,26 @@
 -- TODO move commands from pqivrc
 -- escape "
 -- jak funkcja nie ma argumentu to można bez () wysłać 
+--swayimg.gallery.mark_image(state?: boolean)
+--swayimg.gallery.get_image() -> swayimg.entry
 
 local gallery = swayimg.gallery
-local imagelist = swayimg.imagelist
 local slideshow = swayimg.slideshow
 local viewer = swayimg.viewer
+local imagelist = swayimg.imagelist
 
 ----------------------------------
 -- Helper functions
 ----------------------------------
 
-local switch = function(action)
-	return function()
-		swayimg.viewer.switch_image(action)
-	end
+local function bind(modes, key, method_name, arg)
+	-- local list
+	-- if type(modes) ~= "table" then table.insert(list, modes) else list = modes end
+    for _, m in ipairs(modes) do
+        m.on_key(key, function()
+            return m[method_name](arg)
+        end)
+    end
 end
 
 local mv = function(x, y)
@@ -47,13 +53,15 @@ local toggle_info = function()
 	info_shown = not info_shown
 end
 
-local animation = false
-local toggle_animation = function()
-	if animation then
-		swayimg.viewer.set_animation(false)
-	else
-		swayimg.viewer.set_animation(true)
-	end
+local is_viewer_animation_running = true
+local function toggle_animation()
+    if is_viewer_animation_running then
+        swayimg.viewer.animation_stop()
+        is_viewer_animation_running = false
+    else
+        swayimg.viewer.animation_resume()
+        is_viewer_animation_running = true
+    end
 end
 
 local function shell_quote(value)
@@ -70,15 +78,24 @@ end
 -- swayimg.viewer.on_key("F1", function()
 --   swayimg.viewer.help()
 -- end)
+--
 
-swayimg.viewer.on_key("g", switch("first"))
-swayimg.viewer.on_key("Shift+g", switch("last"))
-swayimg.viewer.on_key("p", switch("prev"))
-swayimg.viewer.on_key("n", switch("next"))
-swayimg.viewer.on_key("Space", switch("next"))
-swayimg.viewer.on_key("Shift+p", switch("prev_dir"))
-swayimg.viewer.on_key("Shift+n", switch("next_dir"))
-swayimg.viewer.on_key("Ctrl+r", switch("random"))
+local all_modes = { gallery, viewer, slideshow }
+bind(all_modes, "g", "switch_image", "first")
+bind(all_modes, "Shift+g", "switch_image", "first")
+bind({viewer, slideshow}, "p", "switch_image", "prev")
+bind({viewer, slideshow}, "n", "switch_image", "next")
+bind({viewer, slideshow}, "Space", "switch_image", "next")
+bind({viewer, slideshow}, "Shift+p", "switch_image", "prev_dir")
+bind({viewer, slideshow}, "Shift+n", "switch_image", "next_dir")
+bind({viewer, slideshow}, "Ctrl+r", "switch_image", "random")
+bind({gallery}, "h", "switch_image", "left")
+bind({gallery}, "j", "switch_image", "down")
+bind({gallery}, "k", "switch_image", "up")
+bind({gallery}, "l", "switch_image", "right")
+bind({gallery}, "u", "switch_image", "pgdown")
+bind({gallery}, "d", "switch_image", "pgup")
+bind({gallery}, "m", "mark_image", true)
 
 swayimg.viewer.on_key("l", mv(-0.05, 0))
 swayimg.viewer.on_key("h", mv(0.05, 0))
@@ -94,6 +111,12 @@ swayimg.viewer.on_key("Escape", swayimg.exit)
 swayimg.viewer.on_key("q", swayimg.exit)
 swayimg.viewer.on_key("m", function()
 	swayimg.set_mode("gallery")
+end)
+swayimg.viewer.on_key("comma", function()
+    swayimg.viewer.prev_frame()
+end)
+swayimg.viewer.on_key("period", function()
+    swayimg.viewer.next_frame()
 end)
 swayimg.viewer.on_key("s", function()
 	swayimg.set_mode("slideshow")
@@ -186,14 +209,23 @@ swayimg.viewer.on_key("r", function()
 end)
 
 for i = 1, 9 do
-	swayimg.viewer.on_key(i, function()
-		with_current_image(function(path)
-			print(('mkdir -p %d && mv %s %d'):format(i, shell_quote(path), i))
-			os.execute(('mkdir -p %d && mv "%s" %d'):format(i, path, i))
+    for _, m in ipairs(all_modes) do
+		m.on_key(i, function()
+			local image = m.get_image()
+			os.execute(('mkdir -p %d && mv "%s" %d'):format(i, image.path, i))
 			os.execute('notify-send "Moved to folder: ' .. i .. '"')
+			m.reload()
 		end)
-	end)
+    end
 end
+
+-- bind Enter key to open image in viewer
+swayimg.gallery.on_key("Return", function()
+  swayimg.set_mode("viewer")
+end)
+swayimg.slideshow.on_key("Return", function()
+  swayimg.set_mode("viewer")
+end)
 
 -- bind mouse vertical scroll button with pressed Ctrl to zoom in the image at mouse pointer coordinates
 swayimg.viewer.on_mouse("Ctrl-ScrollUp", function()
@@ -302,14 +334,6 @@ swayimg.gallery.set_text("topright", {              -- top right text block sche
 
 -- Key and mouse bindings in gallery mode (example only, not all):
 
--- bind Enter key to open image in viewer
-swayimg.gallery.on_key("Return", function()
-  swayimg.set_mode("viewer")
-end)
--- bind the left arrow key to select thumbnail on the left side
-swayimg.gallery.on_key("Left", function()
-  swayimg.gallery.switch_image("left")
-end)
 
 --
 -- Other configuration examples
@@ -320,18 +344,19 @@ swayimg.on_window_resize(function()
   swayimg.viewer.set_fix_scale("optimal")
 end)
 
--- bind the Delete key in slide show mode to delete the current file and display a status message
-swayimg.slideshow.on_key("Delete", function()
-  local image = swayimg.slideshow.get_image()
-  os.remove(image.path)
-  swayimg.text.set_status("File "..image.path.." removed")
-end)
-
 -- set a custom window title in gallery mode
 swayimg.gallery.on_image_change(function()
   local image = swayimg.gallery.get_image()
   swayimg.set_title("Gallery: "..image.path)
 end)
+
+-- -- bind the Delete key in slide show mode to delete the current file and display a status message
+-- swayimg.slideshow.on_key("Delete", function()
+--   local image = swayimg.slideshow.get_image()
+--   os.remove(image.path)
+--   swayimg.text.set_status("File "..image.path.." removed")
+-- end)
+
 
 -- -- print paths to all marked files by pressing Ctrl-p in gallery mode
 -- swayimg.gallery.on_key("Ctrl-p", function()
@@ -352,12 +377,13 @@ end)
 --   end
 -- end)
 
-swayimg.viewer.on_key("Space", function()
-  swayimg.viewer.switch_image("next")
-end)
-swayimg.gallery.on_key("Space", function()
-  swayimg.gallery.switch_image("next")
-end)
+-- local modes = { "viewer", "gallery", "slideshow" }
+-- for _, mode in ipairs(modes) do
+--     local m = swayimg[mode]
+--     m.on_key("Space", function()
+--         m.switch_image("last")
+--     end)
+-- end
 
 -- swayimg.viewer.on_key("e", function()
 -- 	with_current_image(function(path)
