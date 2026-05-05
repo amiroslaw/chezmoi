@@ -88,6 +88,17 @@ local function with_current_image(fn)
 	fn(image.path)
 end
 
+local function get_marked()
+  local entries = swayimg.imagelist.get()
+  local marked = {}
+  for _, entry in ipairs(entries) do
+    if entry.mark then
+		table.insert(marked, entry.path)
+    end
+  end
+  return marked
+end
+
 -- swayimg.viewer.on_key("F1", function()
 --   swayimg.viewer.help()
 -- end)
@@ -100,7 +111,7 @@ bind2(all_modes, "q", swayimg.exit)
 bind(all_modes, "g", "switch_image", "first")
 bind(all_modes, "Shift+g", "switch_image", "first")
 bind(all_modes, "Shift+r", "reload")
-bind(all_modes, "m", "mark_image", true)
+bind(all_modes, "m", "mark_image")
 bind({viewer, slideshow}, "p", "switch_image", "prev")
 bind({viewer, slideshow}, "n", "switch_image", "next")
 bind({viewer, slideshow}, "Space", "switch_image", "next")
@@ -213,14 +224,14 @@ swayimg.viewer.on_key("Ctrl+g", function()
 end)
 
 -- Ctrl+e: Opens the current image file in sttty.
-swayimg.viewer.on_key("Ctrl+e", function()
+swayimg.viewer.on_key("e", function()
 	with_current_image(function(path)
 		os.execute(('satty --filename=%s'):format(shell_quote(path)))
 	end)
 end)
 
 -- ;ocr image
-swayimg.viewer.on_key("e", function()
+swayimg.viewer.on_key("o", function()
 	with_current_image(function(path)
 		os.execute(('tesseract "%s" "%s"'):format(path, path))
 		os.execute('notify-send "OCR finished"')
@@ -233,6 +244,7 @@ swayimg.viewer.on_key("r", function()
 	end)
 end)
 
+-- move to foldr 1-9 with ctrl move all marked images
 for i = 1, 9 do
     for _, m in ipairs(all_modes) do
 		m.on_key(i, function()
@@ -241,6 +253,17 @@ for i = 1, 9 do
 			os.execute('notify-send "Moved to folder: ' .. i .. '"')
 			-- m.reload()
 			swayimg.imagelist.remove(image.path)
+		end)
+		m.on_key("Ctrl+"..i, function()
+			for k, v in pairs(get_marked()) do
+				print(k, v)
+			end
+			for _,path in ipairs(get_marked()) do
+				os.execute(('mkdir -p %d && mv "%s" %d'):format(i, path, i))
+				swayimg.imagelist.remove(path)
+			end
+			os.execute('notify-send "Moved to folder: ' .. i .. '"')
+			-- m.reload()
 		end)
     end
 end
