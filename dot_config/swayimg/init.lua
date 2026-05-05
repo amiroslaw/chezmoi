@@ -1,10 +1,12 @@
 -- Any of these options can be overridden using the --config argument
 -- $ swayimg --config="general.mode=gallery"
--- TODO move commands from pqivrc
+-- TODO
+-- add my functions to other views
 -- escape "
 -- jak funkcja nie ma argumentu to można bez () wysłać 
---swayimg.gallery.mark_image(state?: boolean)
+-- toggle mark - how to get selected img?
 --swayimg.gallery.get_image() -> swayimg.entry
+-- try swayimg.text.set_status("File "..image.path.." removed")
 
 local gallery = swayimg.gallery
 local slideshow = swayimg.slideshow
@@ -21,6 +23,16 @@ local function bind(modes, key, method_name, arg)
     for _, m in ipairs(modes) do
         m.on_key(key, function()
             return m[method_name](arg)
+        end)
+    end
+end
+
+local function bind2(modes, key, method_name, arg)
+	-- local list
+	-- if type(modes) ~= "table" then table.insert(list, modes) else list = modes end
+    for _, m in ipairs(modes) do
+        m.on_key(key, function()
+            return method_name(arg)
         end)
     end
 end
@@ -67,6 +79,7 @@ end
 local function shell_quote(value)
 	return "'" .. tostring(value):gsub("'", "'\\''") .. "'"
 end
+
 local function with_current_image(fn)
 	local image = swayimg.viewer.get_image()
 	if not image or not image.path then
@@ -81,22 +94,34 @@ end
 --
 
 local all_modes = { gallery, viewer, slideshow }
+bind2(all_modes, "i", swayimg.text.show)
+bind2(all_modes, "Shift+i", toggle_info)
+bind2(all_modes, "q", swayimg.exit)
 bind(all_modes, "g", "switch_image", "first")
 bind(all_modes, "Shift+g", "switch_image", "first")
+bind(all_modes, "Shift+r", "reload")
+bind(all_modes, "m", "mark_image", true)
 bind({viewer, slideshow}, "p", "switch_image", "prev")
 bind({viewer, slideshow}, "n", "switch_image", "next")
 bind({viewer, slideshow}, "Space", "switch_image", "next")
 bind({viewer, slideshow}, "Shift+p", "switch_image", "prev_dir")
 bind({viewer, slideshow}, "Shift+n", "switch_image", "next_dir")
 bind({viewer, slideshow}, "Ctrl+r", "switch_image", "random")
+bind({viewer, slideshow}, "comma", "prev_frame")
+bind({viewer, slideshow}, "period", "next_frame")
+bind2({gallery, slideshow}, "Return", swayimg.set_mode, "viewer")
+
+swayimg.viewer.on_key("a", toggle_animation)
+
 bind({gallery}, "h", "switch_image", "left")
 bind({gallery}, "j", "switch_image", "down")
 bind({gallery}, "k", "switch_image", "up")
 bind({gallery}, "l", "switch_image", "right")
 bind({gallery}, "u", "switch_image", "pgdown")
 bind({gallery}, "d", "switch_image", "pgup")
-bind({gallery}, "m", "mark_image", true)
-
+swayimg.gallery.on_key("0", function()
+	swayimg.gallery.set_thumb_size(200)
+end)
 swayimg.viewer.on_key("l", mv(-0.05, 0))
 swayimg.viewer.on_key("h", mv(0.05, 0))
 swayimg.viewer.on_key("j", mv(0, -0.05))
@@ -105,23 +130,13 @@ swayimg.viewer.on_key("Shift+l", mv(-0.15, 0))
 swayimg.viewer.on_key("Shift+h", mv(0.15, 0))
 swayimg.viewer.on_key("Shift+j", mv(0, -0.15))
 swayimg.viewer.on_key("Shift+k", mv(0, 0.15))
-swayimg.viewer.on_key("i", swayimg.text.show)
-swayimg.viewer.on_key("Shift+i", toggle_info)
 swayimg.viewer.on_key("Escape", swayimg.exit)
-swayimg.viewer.on_key("q", swayimg.exit)
-swayimg.viewer.on_key("m", function()
+swayimg.viewer.on_key("t", function()
 	swayimg.set_mode("gallery")
-end)
-swayimg.viewer.on_key("comma", function()
-    swayimg.viewer.prev_frame()
-end)
-swayimg.viewer.on_key("period", function()
-    swayimg.viewer.next_frame()
 end)
 swayimg.viewer.on_key("s", function()
 	swayimg.set_mode("slideshow")
 end)
-swayimg.viewer.on_key("a", toggle_animation)
 swayimg.viewer.on_key("0", function()
 	swayimg.viewer.set_fix_scale("fit")
 end)
@@ -154,6 +169,8 @@ end)
 swayimg.viewer.on_key("Delete", function()
 	with_current_image(function(path)
 		os.remove(path)
+		os.execute(('notify-send "File removed: %s"'):format(shell_quote(path)))
+	  -- swayimg.text.set_status("File "..path.." removed")
 	end)
 end)
 
@@ -172,7 +189,15 @@ swayimg.viewer.on_key("y", function()
 	end)
 end)
 
+swayimg.viewer.on_key("c", function()
+	with_current_image(function(path)
+		os.execute(('basename %s | wl-copy'):format(path))
+		os.execute('notify-send "Copied file name "')
+	end)
+end)
+
 -- Ctrl+c: Copies the current image file to the clipboard.
+-- TODO idk if it works
 swayimg.viewer.on_key("Ctrl+c", function()
 	with_current_image(function(path)
 		os.execute("cat " .. shell_quote(path) .. " | wl-copy")
@@ -214,17 +239,31 @@ for i = 1, 9 do
 			local image = m.get_image()
 			os.execute(('mkdir -p %d && mv "%s" %d'):format(i, image.path, i))
 			os.execute('notify-send "Moved to folder: ' .. i .. '"')
-			m.reload()
+			-- m.reload()
+			swayimg.imagelist.remove(image.path)
 		end)
     end
 end
 
--- bind Enter key to open image in viewer
-swayimg.gallery.on_key("Return", function()
-  swayimg.set_mode("viewer")
+-- print paths to all marked files by pressing Ctrl-p in gallery mode
+swayimg.gallery.on_key("Ctrl+p", function()
+  local entries = swayimg.imagelist.get()
+  for _, entry in ipairs(entries) do
+    if entry.mark then
+        print(entry.path)
+    end
+  end
 end)
-swayimg.slideshow.on_key("Return", function()
-  swayimg.set_mode("viewer")
+
+-- force set scale mode on window resize (useful for tiling compositors)
+swayimg.on_window_resize(function()
+  swayimg.viewer.set_fix_scale("optimal")
+end)
+
+-- set a custom window title in gallery mode
+swayimg.gallery.on_image_change(function()
+  local image = swayimg.gallery.get_image()
+  swayimg.set_title("Gallery: "..image.path)
 end)
 
 -- bind mouse vertical scroll button with pressed Ctrl to zoom in the image at mouse pointer coordinates
@@ -234,7 +273,6 @@ swayimg.viewer.on_mouse("Ctrl-ScrollUp", function()
   scale = scale + scale / 10
   swayimg.viewer.set_abs_scale(scale, pos.x, pos.y);
 end)
-
 
 --------------------------------------------------
 --               General config                 --
@@ -332,59 +370,7 @@ swayimg.gallery.set_text("topright", {              -- top right text block sche
   "{list.index} of {list.total}"
 })
 
--- Key and mouse bindings in gallery mode (example only, not all):
-
-
---
--- Other configuration examples
---
-
--- force set scale mode on window resize (useful for tiling compositors)
-swayimg.on_window_resize(function()
-  swayimg.viewer.set_fix_scale("optimal")
-end)
-
--- set a custom window title in gallery mode
-swayimg.gallery.on_image_change(function()
-  local image = swayimg.gallery.get_image()
-  swayimg.set_title("Gallery: "..image.path)
-end)
-
--- -- bind the Delete key in slide show mode to delete the current file and display a status message
--- swayimg.slideshow.on_key("Delete", function()
---   local image = swayimg.slideshow.get_image()
---   os.remove(image.path)
---   swayimg.text.set_status("File "..image.path.." removed")
--- end)
-
-
--- -- print paths to all marked files by pressing Ctrl-p in gallery mode
--- swayimg.gallery.on_key("Ctrl-p", function()
---   local entries = swayimg.imagelist.get()
---   for _, entry in ipairs(entries) do
---     if entry.mark then
---         print(entry.path)
---     end
---   end
--- end)
--- -- print paths to all marked files by pressing Ctrl-p in gallery mode
--- swayimg.gallery.on_key("Ctrl+p", function()
---   local entries = swayimg.imagelist.get()
---   for _, entry in ipairs(entries) do
---     if entry.mark then
---         print(entry.path)
---     end
---   end
--- end)
-
--- local modes = { "viewer", "gallery", "slideshow" }
--- for _, mode in ipairs(modes) do
---     local m = swayimg[mode]
---     m.on_key("Space", function()
---         m.switch_image("last")
---     end)
--- end
-
+-- template
 -- swayimg.viewer.on_key("e", function()
 -- 	with_current_image(function(path)
 -- 		os.execute(('%s'):format(shell_quote(path)))
