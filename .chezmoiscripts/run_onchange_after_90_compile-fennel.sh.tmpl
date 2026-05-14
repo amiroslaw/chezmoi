@@ -1,0 +1,6 @@
+{{ if lookPath "fennel" -}}
+#!/bin/bash
+# hash: {{ include "dot_config/swayimg/init.fnl" | sha256sum }}
+LUA=luajit fennel --compile {{ .chezmoi.sourceDir }}/dot_config/swayimg/init.fnl > ~/.config/swayimg/init.lua
+{{ end -}}
+

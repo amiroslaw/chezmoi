@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-sudo zypper install -y go rust luajit luajit-devel podman
+sudo zypper install -y go rust luajit luajit-devel lua54 lua-fennel podman
 sudo zypper install -y nvim rofi wezterm curl gawk ImageMagick wget btop xdg-user-dirs xdg-utils mpv mpv-mpris vifm 7zip qutebrowser vifm fzf fd ripgrep timewarrior taskwarrior lazygit git-delta tealdeer bat libnotify-tools timg zathura-plugin-pdf-poppler distrobox eza broot watchexec asciidoc
 # zathura-plugin-pdf-mupdf - mupdf backend faster and support epub but it could not work
 sudo zypper install -y meld qalculate-gtk fx
