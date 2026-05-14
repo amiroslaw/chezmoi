@@ -1,0 +1,24 @@
+% log
+
+alias log='journalctl -b'
+alias logerr="journalctl -p 3 -xb"
+
+# journalctl log boot 0 = current
+journalctl <boot> <level> <desc>
+
+# journalctl watch
+journalctl -b -n 200 -f
+
+$ boot: echo ' \n-b -0\n-b -1\n-b -2\n-b -3'
+$ desc: echo ' \n-x'
+$ level: echo ' \n-p err \n-p warning \n-p notice \n-p debug'
+
+# hyprland log
+<view> <hypr_log>
+
+# hyprland cache
+nvim <hypr_cache>
+
+$ view: echo 'nvim\ntail -f'
+$ hypr_cache: find "$HOME/.cache/hyprland" -type f -printf '%T@ %p\n' | sort -nr | cut -d' ' -f2-
+$ hypr_log: find "$XDG_RUNTIME_DIR/hypr" -type f -name '*.log'
