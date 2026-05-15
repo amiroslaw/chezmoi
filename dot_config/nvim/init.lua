@@ -644,25 +644,22 @@ browse.setup({
   bookmarks = bookmarks
 })
 
-vmap('gs', ':Browse input<cr>', 'Search selected text')
-nmap('gs', ':Browse input<cr>', 'Search word', {silent = ture})
--- nmap('gs', '[[:execute "normal viw" | :Browse input<cr>]]', 'Search word', {silent = ture}) -- it Execute plugins and after that selects text
-nmap('go', ':Browse bookmarks_manual<cr>', 'Open bookmark')
-vmap('go', ':Browse bookmarks<cr>', 'Open bookmark for selected text') -- selection doesn't work  with bookmarks_manual
-
+nmap('gs', ':execute "normal viw" | lua require"browse".input_search()<cr>', 'Search word')
+vmap('gs', '<cmd>lua require"browse".input_search()<cr>', 'Search selection')
+nmap('go', ':execute "normal viw" | lua require"browse".open_bookmarks()<cr>', 'Open bookmark for word')
+vmap('go', '<cmd>lua require"browse".open_bookmarks()<cr>', 'Open bookmark for selection')
 -- maybe chnage order to gbs; gbo; gwd
--- nmap('<Leader>ga', '<cmd>lua require"browse".browse()<cr>', 'Browse all') -- all options
--- nmap('<Leader>gss', ':execute "normal vis" | lua require"browse".input_search()<cr>', 'Search sentence') -- sentence
--- nmap('<Leader>gsb', ':execute "normal vib" | lua require"browse".input_search()<cr>', 'Search bracket') -- bracket
--- nmap('<Leader>gs"', [[:execute 'normal vi"' | lua require"browse".input_search()<cr>]], 'Search double quotes')
--- nmap("<Leader>gs'", [[:execute "normal vi'" | lua require"browse".input_search()<cr>]], 'Search single quotes')
--- nmap('<Leader>gos', ':execute "normal vis" | lua require"browse".open_bookmarks()<cr>', 'Open bookmark for sentence')
--- nmap('<Leader>gob', ':execute "normal vib" | lua require"browse".open_bookmarks()<cr>', 'Open bookmark for bracket')
--- nmap('<Leader>go"', [[:execute 'normal vi"' | lua require"browse".open_bookmarks()<cr>]], 'Open bookmark for double quotes')
--- nmap("<Leader>go'", [[:execute "normal vi'" | lua require"browse".open_bookmarks()<cr>]], 'Open bookmark for single quotes')
--- nmap('<Leader>gd', ':execute "normal viw" | lua require"browse.devdocs".search_with_filetype()<cr>', 'Search devdocs for word') -- search devdocs with context of filetype
--- vmap('<Leader>gd', '<cmd>lua require"browse.devdocs".search_with_filetype()<cr>', 'Search devdocs for selection') -- selection doesn't work
-
+nmap('<Leader>ga', '<cmd>lua require"browse".browse()<cr>', 'Browse all') -- all options
+nmap('<Leader>gss', ':execute "normal vis" | lua require"browse".input_search()<cr>', 'Search sentence') -- sentence
+nmap('<Leader>gsb', ':execute "normal vib" | lua require"browse".input_search()<cr>', 'Search bracket') -- bracket
+nmap('<Leader>gs"', [[:execute 'normal vi"' | lua require"browse".input_search()<cr>]], 'Search double quotes')
+nmap("<Leader>gs'", [[:execute "normal vi'" | lua require"browse".input_search()<cr>]], 'Search single quotes')
+nmap('<Leader>gos', ':execute "normal vis" | lua require"browse".open_bookmarks()<cr>', 'Open bookmark for sentence')
+nmap('<Leader>gob', ':execute "normal vib" | lua require"browse".open_bookmarks()<cr>', 'Open bookmark for bracket')
+nmap('<Leader>go"', [[:execute 'normal vi"' | lua require"browse".open_bookmarks()<cr>]], 'Open bookmark for double quotes')
+nmap("<Leader>go'", [[:execute "normal vi'" | lua require"browse".open_bookmarks()<cr>]], 'Open bookmark for single quotes')
+nmap('<Leader>gd', ':execute "normal viw" | lua require"browse.devdocs".search_with_filetype()<cr>', 'Search devdocs for word') -- search devdocs with context of filetype
+vmap('<Leader>gd', '<cmd>lua require"browse.devdocs".search_with_filetype()<cr>', 'Search devdocs for selection') -- selection doesn't work
 -- }}} 
 
 -- Telescope {{{
@@ -955,14 +952,14 @@ local neogit = require('neogit')
 nmap(",g", neogit.open, "Open Neogit UI")
 nmap(",hp", "<cmd>Neogit pull<CR>", "Neogit pull")
 nmap(",hP", "<cmd>Neogit push<CR>", "Neogit push")
-nmap(",c", "<cmd>Neogit commit<CR>", "Neogit commit")
 nmap(",b", ":Telescope git_branches<CR>", "Neogit push", { silent = true })
-nmap(",al", function()
+nmap(",cn", "<cmd>Neogit commit<CR>", "Neogit commit")
+nmap(",ca", function()
   neogit.actions.stage.stage_all()
   neogit.open({ "commit" })
 end, "Stage all and commit")
 
-nmap(",au", function()
+nmap(",cc", function()
   local msg = vim.fn.input("Commit message: ")
   if msg ~= "" then
     vim.fn.system("git add -u")
@@ -973,7 +970,7 @@ nmap(",au", function()
   end
 end, { desc = "Stage all untracked and commit with prompt" })
 
-nmap(",as", function()
+nmap(",s", function()
   local msg = vim.fn.input("Stash message: ")
   if msg ~= "" then
     vim.fn.system("git stash push -m " .. vim.fn.shellescape(msg))
@@ -983,7 +980,7 @@ nmap(",as", function()
   end
 end, "Stash with prompt")
 
-nmap(",aa", function()
+nmap(",ca", function()
 	vim.fn.system("git add -u")
 	vim.fn.system("git commit --amend --no-edit")
 	print("Amended last commit with staged changes (message unchanged)")

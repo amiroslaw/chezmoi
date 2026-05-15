@@ -20,7 +20,7 @@ return {
 			-- refer to the configuration section below
 		-- }
 	},
-	{ 'lalitmee/browse.nvim',event = 'VeryLazy', dependencies = { 'nvim-telescope/telescope.nvim' } },
+	{ 'lalitmee/browse.nvim',event = 'VeryLazy', commit = "1ccf870", dependencies = { 'nvim-telescope/telescope.nvim' } }, -- the new version brakes my keybindings
 	{ 'amiroslaw/fm-nvim', cmd = { 'Vifm', 'Broot', 'Fzf', 'Ranger', 'Lazygit', 'TaskWarriorTUI' },
 		opts = { app = 'taskwarrior', -- {'taskwarrior', 'todo.txt'}
 				feedback = true,
@@ -156,7 +156,7 @@ return {
 			path = { "./snippets" } -- doesn't work
 		})
 		require('luasnip.loaders.from_lua').lazy_load({ })
-		-- custom envs
+		-- custom envs, header for adoc doesn't work when I move it to init.lua
 		local function select() return vim.fn.getreg('*', 1, true) end
 		local function clipboard() return vim.fn.getreg('+', 1, true) end
 		require('luasnip').env_namespace("CLIP", { vars = { CLIP = clipboard, SELECT = select } })
