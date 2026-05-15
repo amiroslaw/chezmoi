@@ -11,7 +11,6 @@ return {
 	'chentoast/marks.nvim',
 	'wyne/fasder.nvim', -- adds file to fasder index
 	'mhinz/vim-startify', -- start screen
-	{ 'mbbill/undotree', cmd = { 'UndotreeToggle' } },
 	{ 'gbprod/yanky.nvim', config = true },
 	{ "gbprod/substitute.nvim",
 		-- opts = {
@@ -196,66 +195,10 @@ return {
 	{ 'godlygeek/tabular', cmd = { 'Tab' } }, -- do wyrównywania np w tabelach http://vimcasts.org/episodes/aligning-text-with-tabular-vim/ :Tab /| ft = { 'markdown', 'asciidoctor' }
 	{ 'majutsushi/tagbar', cmd = 'TagbarToggle' },
 	--}}}
-	--{{{ LSP
+	--{{{ LSP and treesitter
       { 'williamboman/mason.nvim', opts = {} },
         -- "williamboman/mason-lspconfig.nvim",
         -- "WhoIsSethDaniel/mason-tool-installer.nvim",
-	--}}}
-
-	--{{{ Code
-	{ 'sbdchd/neoformat', cmd = { 'Neoformat' } },
-  {
-    "Olical/conjure",
-    ft = { "clojure", "fennel", "lua"},
-    lazy = true,
-    dependencies = { "PaterJason/cmp-conjure" },
-  },
-  {
-    "PaterJason/cmp-conjure",
-    lazy = true,
-    config = function()
-      local cmp = require("cmp")
-      local config = cmp.get_config()
-      table.insert(config.sources, { name = "conjure" })
-      return cmp.setup(config)
-    end,
-  },
-	{ 'stevearc/conform.nvim',
-	  opts = {
-		formatters_by_ft = {
-		  css = { "prettier" },
-		  scss = { "prettier" },
-		  html = { "prettier" },
-		  javascript = { "prettier" },
-		  json = { "prettier" },
-		  lua = { "stylua" },
-		  markdown = { "prettier" },
-		  clojure = { "zprint" },
-		  asciidoctor = { "zprint" },
-		  shfmt = { "bash" },
-		  ktfmt = { "kotlin" },
-		  -- asciidoctor = { "zprint", "clang-format" },
-		  java = { "clang-format" },
-		},
-	  },
-	},
-	{ 'lewis6991/gitsigns.nvim', event = { 'BufReadPre', 'BufNewFile' } },
-	{ "NeogitOrg/neogit", lazy = true, cmd = "Neogit", },
-	{ 'sindrets/diffview.nvim', event = 'VeryLazy', },
-	'kylechui/nvim-surround',
-	{ "roobert/surround-ui.nvim",
-		dependencies = { "kylechui/nvim-surround", "folke/which-key.nvim", },
-		opts = { root_key = "S" }, -- leader S
-	},
-	{ "sustech-data/wildfire.nvim",
-		event = "VeryLazy",
-		dependencies = { "nvim-treesitter/nvim-treesitter" },
-		opts =  { filetype_exclude = { "qf" }, } -- exclude unil treesitter will support asciidoc
-	},
-	{ 'gennaro-tedesco/nvim-jqx', ft = { 'json', 'yaml' } },
-	{ 'windwp/nvim-autopairs', event = 'InsertEnter', config = true },
-	-- { 'jose-elias-alvarez/null-ls.nvim', branch = 'main', dependencies = { 'nvim-lua/plenary.nvim' } },
-	{ 'NTBBloodbath/rest.nvim', branch = 'main', ft = { 'http' }, dependencies = { 'nvim-lua/plenary.nvim' } }, -- maybe delete
 	{'nvim-treesitter/nvim-treesitter-context'},
 	{ 'nvim-treesitter/nvim-treesitter', 
 	branch = 'master',  -- it is a locket version, new one changes config
@@ -293,6 +236,62 @@ return {
 			}
 		end,
 	},
+	--}}}
+
+	--{{{ Code
+  {
+    "Olical/conjure",
+    ft = { "clojure", "fennel", "lua"},
+    lazy = true,
+    dependencies = { "PaterJason/cmp-conjure" },
+  },
+  {
+    "PaterJason/cmp-conjure",
+    lazy = true,
+    config = function()
+      local cmp = require("cmp")
+      local config = cmp.get_config()
+      table.insert(config.sources, { name = "conjure" })
+      return cmp.setup(config)
+    end,
+  },
+	{ 'sbdchd/neoformat', cmd = { 'Neoformat' } },
+	{ 'stevearc/conform.nvim',
+	  opts = {
+		formatters_by_ft = {
+		  css = { "prettier" },
+		  scss = { "prettier" },
+		  html = { "prettier" },
+		  javascript = { "prettier" },
+		  json = { "prettier" },
+		  lua = { "stylua" },
+		  markdown = { "prettier" },
+		  clojure = { "zprint" },
+		  asciidoctor = { "zprint" },
+		  shfmt = { "bash" },
+		  ktfmt = { "kotlin" },
+		  -- asciidoctor = { "zprint", "clang-format" },
+		  java = { "clang-format" },
+		},
+	  },
+	},
+	{ 'lewis6991/gitsigns.nvim', event = { 'BufReadPre', 'BufNewFile' } },
+	{ "NeogitOrg/neogit", lazy = true, cmd = "Neogit", },
+	{ 'sindrets/diffview.nvim', event = 'VeryLazy', },
+	'kylechui/nvim-surround',
+	{ "roobert/surround-ui.nvim",
+		dependencies = { "kylechui/nvim-surround", "folke/which-key.nvim", },
+		opts = { root_key = "S" }, -- leader S
+	},
+	{ "sustech-data/wildfire.nvim",
+		event = "VeryLazy",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		opts =  { filetype_exclude = { "qf" }, } -- exclude unil treesitter will support asciidoc
+	},
+	{ 'gennaro-tedesco/nvim-jqx', ft = { 'json', 'yaml' } },
+	{ 'windwp/nvim-autopairs', event = 'InsertEnter', config = true },
+	-- { 'jose-elias-alvarez/null-ls.nvim', branch = 'main', dependencies = { 'nvim-lua/plenary.nvim' } },
+	{ 'NTBBloodbath/rest.nvim', branch = 'main', ft = { 'http' }, dependencies = { 'nvim-lua/plenary.nvim' } }, -- maybe delete
 	--}}}
 
 	--{{{ UI

@@ -103,6 +103,10 @@ end
 -- SETTINGS {{{
 -- vim.o.ch = 0 -- hide command, from v8
 
+-- New UI opt-in
+require('vim._core.ui2').enable({})
+vim.cmd("packadd nvim.undotree")
+-- vim.cmd("packadd nvim.difftool")
 
 vim.o.termguicolors = true
 vim.b.buftype = '' -- fix Cannot write buftype option is set
@@ -399,6 +403,7 @@ vim.fn.setreg('f', 'f)a kb  ')
 require("lazy").setup("plugins")
 nmap('<F11>', ':Lazy<CR>', 'Open Lazy')
 
+
 -- nmap('<leader>f', '<cmd> lua vim.lsp.buf.format() <cr>')
 -- vmap('<leader>f', '<cmd> lua vim.lsp.buf.format() <cr>')
 
@@ -458,6 +463,17 @@ vim.g.startify_change_to_dir = 0
 -- repeat
 vim.cmd 'silent! call repeat#set("\\<Plug>MyWonderfulMap", v:count)'
 
+-- https://github.com/folke/which-key.nvim
+require("which-key").setup {
+  preset = "helix",
+  plugins = { spelling = { enabled = true, sugesstions = 20, ignore_missing = true }, },
+}
+
+-- {{{ nvim-autopairs https://github.com/windwp/nvim-autopairs?tab=readme-ov-file#fastwrap
+require('nvim-autopairs').setup({
+    fast_wrap = { map = '<M-t>', },
+})
+--}}}
 -- taskmaker {{{
 vlocLeader('w', '<cmd>TaskmakerAddTasks <CR>', 'Add tasks from selection')
 nlocLeader('x', '<cmd>TaskmakerToggle <CR>', 'Toggle taskmaker') -- }}} 
@@ -503,8 +519,8 @@ nmap('mA', ':MarksListAll<cr>', 'List all marks')
 nmap('mL', ':BookmarksListAll<cr>', 'List all bookmarks') -- groupmarks
 -- }}} 
 
--- undo tree {{{
-nmap('<A-u>', ':UndotreeToggle<cr>', 'Toggle undo tree')
+-- undo tree  native {{{
+nmap('<A-u>', ':Undotree<cr>', 'Toggle undo tree')
 if vim.fn.has 'persistent_undo' == 1 then
 	vim.o.undodir = HOME .. '/.local/share/nvim/undo'
 	vim.o.undofile = true
@@ -1092,13 +1108,9 @@ nmap('<S-A-r>', require('substitute.range').word, 'Substitute - range under a wo
 -- nmap('<A-r>', function() require('substitute.range').word({range = { motion = '%' }}) end, { noremap = true, desc ='Substitute - word in file'}) -- it doesn't work for whole file 
 --}}}
 
--- {{{ nvim-autopairs https://github.com/windwp/nvim-autopairs?tab=readme-ov-file#fastwrap
-require('nvim-autopairs').setup({
-    fast_wrap = { map = '<M-t>', },
-})
 --}}}
 
--- LSP {{{
+-- LSP Tree-sitter Diagnostics {{{
 require("mason").setup()
 
 vim.lsp.enable({
@@ -1170,6 +1182,12 @@ group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 		lsp_map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
   end,
 })
+-- można nadpisać z folderu lsp
+-- vim.lsp.config('luals', {
+--   on_attach = function()
+--     print('luals is now active in this file')
+--   end,
+-- })
 
 -- -- Diagnostic Config See :help vim.diagnostic.Opts
 vim.diagnostic.config({
@@ -1216,19 +1234,7 @@ require'nvim-treesitter.configs'.setup {
     },
   },
 }
-
--- https://github.com/folke/which-key.nvim
-require("which-key").setup {
-  preset = "helix",
-  plugins = { spelling = { enabled = true, sugesstions = 20, ignore_missing = true }, },
-}
-
--- można nadpisać z folderu lsp
--- vim.lsp.config('luals', {
---   on_attach = function()
---     print('luals is now active in this file')
---   end,
--- })
+	
 -- }}} 
 
 -- COLORSCHEMES {{{
