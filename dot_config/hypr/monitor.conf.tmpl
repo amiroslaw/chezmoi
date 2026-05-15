@@ -12,7 +12,7 @@ env = GBM_BACKEND,nvidia-drm
 env = __GLX_VENDOR_LIBRARY_NAME,nvidia
 env = LIBVA_DRIVER_NAME,nvidia
 # It fixs nvidia error, the issue could be with the new kernel 7.0 or nvidia-drm drivers. Try turn off with hypr 0.55
-env = AQ_NO_ATOMIC,1
+# env = AQ_NO_ATOMIC,1
 
 bindd = , PRINT,Screenshot the active window, exec, screenshot.clj save --target window
 bindd = $sup, PRINT, Screenshot ocr, exec, screenshot.clj ocr --target region
@@ -30,6 +30,8 @@ monitor=desc:Hewlett Packard HP LA2206 3CQ149PK69,1920x1080@60.0,1920x0,1.0,tran
 # fix offset 
 cursor { 
 	no_hardware_cursors = 1
+	inactive_timeout = 9
+	hide_on_key_press = 1
 }
 
 workspace=1,monitor:DVI-D-1,default:true
