@@ -1,6 +1,14 @@
 % shortcuts
 @ util
 
+# wormhole receive
+wormhole receive
+
+# wormhole send 
+wormhole send <text> <file>
+
+$ text: echo " \n--text"
+
 # gnucash
 WEBKIT_DISABLE_COMPOSITING_MODE=1 gnucash
 

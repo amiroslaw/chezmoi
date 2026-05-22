@@ -18,6 +18,7 @@ sudo opi -n neovim-qt
 sudo opi -n codecs
 sudo opi -n dua-cli
 
+
 # maybe
 # sudo zypper install -y --no-recommends pdfunite fastfetch 
 
@@ -41,9 +42,10 @@ sudo zypper install -y gnucash libreoffice vorta
 # new version is called krokiet and is not gtk based
 sudo zypper install -y --no-recommends czkawka-gui
 
-# Python
+# Python, some of them are version specific
 sudo zypper install python313-uv
 uv tool install sqlit-tui
+sudo zypper install -y --no-recommends python314-magic-wormhole python-magic-wormhole-zsh-completion
 
 {{ else if eq .chezmoi.hostname "laptop" }}
 sudo zypper install -y --no-recommends blueman bluez
