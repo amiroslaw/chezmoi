@@ -197,48 +197,22 @@ return {
 	--}}}
 	--{{{ LSP and treesitter
       { 'williamboman/mason.nvim', opts = {} },
-        -- "williamboman/mason-lspconfig.nvim",
-        -- "WhoIsSethDaniel/mason-tool-installer.nvim",
-	{'nvim-treesitter/nvim-treesitter-context'},
-	{ 'nvim-treesitter/nvim-treesitter', 
-	branch = 'master',  -- it is a locket version, new one changes config
-	lazy = false, build = ':TSUpdate',
-		config = function()
-			require('nvim-treesitter.configs').setup {
-				ensure_installed = {
-					'java',
-					'scala',
-					'kotlin',
-					'clojure',
-					'javascript',
-					'typescript',
-					'lua',
-					'markdown',
-					'http',
-					'json',
-					'css',
-					'html',
-					'scss',
-					'toml',
-					'yaml',
-					'bash',
-					'http',
-					'python',
-					'vim',
-					'dockerfile',
-				}, -- TSInstall css html; "asciidoc" doesn't support yet
-					-- 'asciidoc',
-				auto_install = true,
-				highlight = {
-					enable = true,
-					additional_vim_regex_highlighting = false,
-				},
-			}
-		end,
-	},
-	--}}}
+	  {
+  "romus204/tree-sitter-manager.nvim",
+  dependencies = {}, -- tree-sitter CLI must be installed system-wide
+  config = function()
+    require("tree-sitter-manager").setup({
+      ensure_installed = {'asciidoc', 'asciidoc_inline', 'angular', 'bash', 'css', 'html', 'csv', 'git_config', 'groovy', 'json', 'hjson',  'java', 'javadoc', 'javascript', 'kotlin', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'toml', 'typescript', 'yaml', 'zsh', "vim", "vimdoc", "fennel", "clojure", 'scala', 'scss', 'http', 'python', 'dockerfile'},
+-- 'hyprland',
+      -- border = nil, -- border style for the window (e.g. "rounded", "single"), if nil, use the default border style defined by 'vim.o.winborder'. See :h 'winborder' for more info.
+      -- auto_install = false, -- if enabled, install missing parsers when editing a new file
+      -- highlight = true, -- treesitter highlighting is enabled by default
 
-	--{{{ Code
+    })
+  end
+},
+
+--{{{ Code
   {
     "Olical/conjure",
     ft = { "clojure", "fennel", "lua"},
@@ -282,11 +256,6 @@ return {
 	{ "roobert/surround-ui.nvim",
 		dependencies = { "kylechui/nvim-surround", "folke/which-key.nvim", },
 		opts = { root_key = "S" }, -- leader S
-	},
-	{ "sustech-data/wildfire.nvim",
-		event = "VeryLazy",
-		dependencies = { "nvim-treesitter/nvim-treesitter" },
-		opts =  { filetype_exclude = { "qf" }, } -- exclude unil treesitter will support asciidoc
 	},
 	{ 'gennaro-tedesco/nvim-jqx', ft = { 'json', 'yaml' } },
 	{ 'windwp/nvim-autopairs', event = 'InsertEnter', config = true },

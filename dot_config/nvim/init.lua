@@ -238,6 +238,8 @@ nmap('t', '<Nop>', 'Disable t key')
 
 vim.g.mapleader = ';'
 vim.g.maplocalleader=" " --space
+nmap('<F5>', '<cmd>restart<cr>', 'Reload')
+
 -- nmap('x', '"_x') -- doesn't add to register from `x`, will brake xp
 nmap('<C-/>', ':nohlsearch<cr>', 'Clear search highlights')
 nmap('<F1>', ':term taskwarrior-tui<CR>', 'Open taskwarrior TUI')
@@ -1053,7 +1055,7 @@ nmap('<F6>', ':ZenMode <CR>', 'Toggle Zen mode')
 -- }}} 
 
 -- LuaSnip {{{
-nmap('<F5>', '<cmd>lua require("luasnip.loaders.from_lua").load({paths = "~/.config/nvim/luasnippets/"})<cr>', 'Reload LuaSnippets')
+nmap('<F16>', '<cmd>lua require("luasnip.loaders.from_lua").load({paths = "~/.config/nvim/luasnippets/"})<cr>', 'Reload LuaSnippets')
 nmap('<F17>', '<cmd>lua require("luasnip.loaders").edit_snippet_files()<CR>', 'Edit snippet files') -- S-F5
 local ls = require("luasnip")
 -- tab stopped work
@@ -1223,18 +1225,22 @@ vim.diagnostic.config({
 -- nvim-treesitter
 -- this option is avialiable only in the old "master" version of this plugin in the new one you need to use an additional plugin 
 --https://github.com/daliusd/incr.nvim
-require'nvim-treesitter.configs'.setup {
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = "<C-CR>",       -- Start selection
-      node_incremental = "<C-CR>",     -- Expand to next node
-      scope_incremental = "<A-CR>",    -- Expand to next scope
-      node_decremental = "<C-BS>",     -- Shrink selection (c - backspace)
-    },
-  },
-}
+
+-- require'nvim-treesitter.configs'.setup {
+--   incremental_selection = {
+--     enable = true,
+--     keymaps = {
+--       init_selection = "<C-CR>",       -- Start selection
+--       node_incremental = "<C-CR>",     -- Expand to next node
+--       scope_incremental = "<A-CR>",    -- Expand to next scope
+--       node_decremental = "<C-BS>",     -- Shrink selection (c - backspace)
+--     },
+--   },
+-- }
 	
+
+
+
 -- }}} 
 
 -- COLORSCHEMES {{{
