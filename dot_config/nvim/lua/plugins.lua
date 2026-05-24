@@ -188,9 +188,9 @@ return {
 	},
 
 	-- asciidoctor
-	{ 'habamax/vim-asciidoctor' }, -- ft = { 'asciidoctor' } }, -- doesn't work with lazy
+	-- { 'habamax/vim-asciidoctor' }, -- ft = { 'asciidoctor' } }, -- doesn't work with lazy
 	-- markdown
-	{ 'plasticboy/vim-markdown', ft = { 'markdown' } },
+	-- { 'plasticboy/vim-markdown', ft = { 'markdown' } },
 	{ 'previm/previm', ft = { 'markdown' } },
 	{ 'godlygeek/tabular', cmd = { 'Tab' } }, -- do wyrównywania np w tabelach http://vimcasts.org/episodes/aligning-text-with-tabular-vim/ :Tab /| ft = { 'markdown', 'asciidoctor' }
 	{ 'majutsushi/tagbar', cmd = 'TagbarToggle' },
@@ -318,12 +318,21 @@ return {
 	end },
 	--}}}
 	--{{{ COLORSCHEMES and Syntax
-	'baskerville/vim-sxhkdrc',
+	-- 'baskerville/vim-sxhkdrc',
 	'kmonad/kmonad-vim',
 	'rafi/awesome-vim-colorschemes', -- https://vimcolorschemes.com/rafi/awesome-vim-colorschemes
+	{
+	  "folke/tokyonight.nvim",
+	  lazy = false,
+	  priority = 1000,
+	  opts = {},
+	},
+	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 	-- not used
 	{ 'dracula/vim', lazy = false, priority = 1000, name = 'dracula', enabled = false },
 	{ 'bluz71/vim-moonfly-colors', lazy = false, priority = 1000, enabled = false },
 	--}}}
+-- The plugin should be loaded after your colorscheme to ensure the correct highlight groups are used. 
+	{'OXY2DEV/markview.nvim', lazy = false, dependencies = {'hrsh7th/nvim-cmp'}},
 }
 -- vim: foldmethod=marker

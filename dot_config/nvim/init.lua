@@ -1253,9 +1253,11 @@ local function getBackground(hour)
 			return 'dark'
 		end
 end
-vim.cmd 'colorscheme solarized8_high'
+-- vim.cmd 'colorscheme solarized8_high'
+vim.cmd 'colorscheme tokyonight'
+-- vim.cmd 'colorscheme catppuccin-nvim'
 -- vim.cmd 'colorscheme flattened_light'
-vim.o.background = getBackground()
+-- vim.o.background = getBackground()
 -- vim.cmd [[let ayucolor="light" ]]
 -- }}} 
 -- vim: foldmethod=marker
