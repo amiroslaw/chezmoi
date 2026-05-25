@@ -720,9 +720,11 @@ local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 					},
 				},
 			},
-			pickers = {
-				buffers = { mappings = { i = { ["<CR>"] = actions.select_tab_drop } } },-- go to tab if open
-					}
+		pickers = {
+			buffers = { mappings = { i = { ["<CR>"] = actions.select_tab_drop } } },-- go to tab if open
+				},
+		  extensions = { heading = { treesitter = true, 
+		  picker_opts = { max_level = 6, }}, },
 		}
 
 	nmap('<c-s>', '<cmd>Telescope live_grep<cr>', 'Live grep')
@@ -757,7 +759,16 @@ local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 	-- nmap('tt', ':silent !ctags -R . <CR>:redraw!<cr>:Telescope current_buffer_tags<CR>')
 	-- nmap('T', ':silent !ctags -R . <CR>:redraw!<cr>:Telescope tags<CR>') -- jjjj
 	telescope.load_extension 'heading' -- doesn't work with many entities 
-	nmap('tt', '<cmd>Telescope heading <cr>', 'Heading search')
+	-- nmap('tt', '<cmd>Telescope heading sorting_strategy=ascending, <cr>', 'Heading search')
+-- Reverses the list so the order is flipped inside the picker window
+	nmap('tt', function()
+	  require('telescope').extensions.heading.heading({
+		sorting_strategy = "ascending",
+		layout_config = {
+		  prompt_position = "top", -- Moves the input prompt to the top for natural reading
+		},
+	  })
+	end, 'Heading search')
 	telescope.load_extension 'jumps'
 	nmap('tu', '<cmd>Telescope jumps changes <cr>', 'Jump changes')
 	nmap('tj', '<cmd>Telescope jumps jumpbuff <cr>', 'Jump buffer')
@@ -1222,24 +1233,38 @@ vim.diagnostic.config({
 -- 	},
 })
 
--- nvim-treesitter
--- this option is avialiable only in the old "master" version of this plugin in the new one you need to use an additional plugin 
---https://github.com/daliusd/incr.nvim
 
--- require'nvim-treesitter.configs'.setup {
---   incremental_selection = {
---     enable = true,
---     keymaps = {
---       init_selection = "<C-CR>",       -- Start selection
---       node_incremental = "<C-CR>",     -- Expand to next node
---       scope_incremental = "<A-CR>",    -- Expand to next scope
---       node_decremental = "<C-BS>",     -- Shrink selection (c - backspace)
---     },
---   },
--- }
-	
+require("markview").setup({
+	enable = true,
+    preview = {
+		map_gx = true, 
+		enable_hybrid_mode = true,
+		},
+    yaml = {
+		enable = true, 
+		},
+    asciidoc_inline = {
+		enable = true, 
+		},
+    asciidoc = {
+		enable = true, 
+		section_titles = {
+			shift_width = 1,
+		},
+    }, 
+	markdown = {
+        headings = {
+            heading_1 = { icon_hl = "@markup.link", icon = "[%d] " },
+            heading_2 = { icon_hl = "@markup.link", icon = "[%d.%d] " },
+            heading_3 = { icon_hl = "@markup.link", icon = "[%d.%d.%d] " }
+        },
+        },
+})
 
-
+-- doesn't work for adoc
+require("markview.extras.editor").setup();
+require("markview.extras.headings").setup();
+require("markview.extras.checkboxes").setup();
 
 -- }}} 
 

@@ -1,5 +1,20 @@
 -- https://github.com/folke/lazy.nvim
 return {
+	--{{{ COLORSCHEMES and Syntax
+	-- 'baskerville/vim-sxhkdrc',
+	'kmonad/kmonad-vim',
+	'rafi/awesome-vim-colorschemes', -- https://vimcolorschemes.com/rafi/awesome-vim-colorschemes
+	{
+	  "folke/tokyonight.nvim",
+	  lazy = false,
+	  priority = 1000,
+	  opts = {},
+	},
+	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+	-- not used
+	{ 'dracula/vim', lazy = false, priority = 1000, name = 'dracula', enabled = false },
+	{ 'bluz71/vim-moonfly-colors', lazy = false, priority = 1000, enabled = false },
+	--}}}
 	--{{{ Productive
 	{ 'anuvyklack/windows.nvim', -- Automatically resizes your windows
 		dependencies = 'anuvyklack/middleclass',
@@ -190,7 +205,8 @@ return {
 	-- asciidoctor
 	-- { 'habamax/vim-asciidoctor' }, -- ft = { 'asciidoctor' } }, -- doesn't work with lazy
 	-- markdown
-	-- { 'plasticboy/vim-markdown', ft = { 'markdown' } },
+	-- The plugin should be loaded after your colorscheme to ensure the correct highlight groups are used. 
+	{'OXY2DEV/markview.nvim', lazy = false, dependencies = {'hrsh7th/nvim-cmp'}},
 	{ 'previm/previm', ft = { 'markdown' } },
 	{ 'godlygeek/tabular', cmd = { 'Tab' } }, -- do wyrównywania np w tabelach http://vimcasts.org/episodes/aligning-text-with-tabular-vim/ :Tab /| ft = { 'markdown', 'asciidoctor' }
 	{ 'majutsushi/tagbar', cmd = 'TagbarToggle' },
@@ -202,8 +218,8 @@ return {
   dependencies = {}, -- tree-sitter CLI must be installed system-wide
   config = function()
     require("tree-sitter-manager").setup({
-      ensure_installed = {'asciidoc', 'asciidoc_inline', 'angular', 'bash', 'css', 'html', 'csv', 'git_config', 'groovy', 'json', 'hjson',  'java', 'javadoc', 'javascript', 'kotlin', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'toml', 'typescript', 'yaml', 'zsh', "vim", "vimdoc", "fennel", "clojure", 'scala', 'scss', 'http', 'python', 'dockerfile'},
--- 'hyprland',
+      ensure_installed = {'angular', 'bash', 'css', 'html', 'csv', 'git_config', 'groovy', 'json', 'hjson',  'java', 'javadoc', 'javascript', 'kotlin', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'toml', 'typescript', 'yaml', 'zsh', "vim", "vimdoc", "fennel", "clojure", 'scala', 'scss', 'http', 'python', 'dockerfile'},
+-- 'hyprland','asciidoc', 'asciidoc_inline', 
       -- border = nil, -- border style for the window (e.g. "rounded", "single"), if nil, use the default border style defined by 'vim.o.winborder'. See :h 'winborder' for more info.
       -- auto_install = false, -- if enabled, install missing parsers when editing a new file
       -- highlight = true, -- treesitter highlighting is enabled by default
@@ -317,22 +333,5 @@ return {
 	-- }
 	end },
 	--}}}
-	--{{{ COLORSCHEMES and Syntax
-	-- 'baskerville/vim-sxhkdrc',
-	'kmonad/kmonad-vim',
-	'rafi/awesome-vim-colorschemes', -- https://vimcolorschemes.com/rafi/awesome-vim-colorschemes
-	{
-	  "folke/tokyonight.nvim",
-	  lazy = false,
-	  priority = 1000,
-	  opts = {},
-	},
-	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-	-- not used
-	{ 'dracula/vim', lazy = false, priority = 1000, name = 'dracula', enabled = false },
-	{ 'bluz71/vim-moonfly-colors', lazy = false, priority = 1000, enabled = false },
-	--}}}
--- The plugin should be loaded after your colorscheme to ensure the correct highlight groups are used. 
-	{'OXY2DEV/markview.nvim', lazy = false, dependencies = {'hrsh7th/nvim-cmp'}},
 }
 -- vim: foldmethod=marker
