@@ -59,6 +59,20 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- add a file to fasder index
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+  callback = function(args)
+    local file = args.file
+    if file == "" then return end
+    if vim.bo.buftype ~= "" then return end
+    if vim.fn.filereadable(file) == 0 then return end
+	local path = vim.fn.fnamemodify(file, ":p")
+    if vim.fn.filereadable(path) == 0 then return end
+	  vim.notify(" added " .. path)
+    vim.system({ "fasder", "-A", path })
+  end,
+})
+
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 	pattern = { '/tmp/*' },
 	command = [[set filetype=text]],
