@@ -1,7 +1,6 @@
 -- https://github.com/folke/lazy.nvim
 return {
 	--{{{ COLORSCHEMES and Syntax
-	-- 'baskerville/vim-sxhkdrc',
 	'kmonad/kmonad-vim',
 	'rafi/awesome-vim-colorschemes', -- https://vimcolorschemes.com/rafi/awesome-vim-colorschemes
 	{
@@ -203,7 +202,7 @@ return {
 	},
 
 	-- asciidoctor
-	-- { 'habamax/vim-asciidoctor' }, -- ft = { 'asciidoctor' } }, -- doesn't work with lazy
+	{ 'habamax/vim-asciidoctor' }, -- ft = { 'asciidoctor' } }, -- doesn't work with lazy
 	-- markdown
 	-- The plugin should be loaded after your colorscheme to ensure the correct highlight groups are used. 
 	{'OXY2DEV/markview.nvim', lazy = false, dependencies = {'hrsh7th/nvim-cmp'}},
@@ -213,21 +212,32 @@ return {
 	--}}}
 	--{{{ LSP and treesitter
       { 'williamboman/mason.nvim', opts = {} },
-	  {
-  "romus204/tree-sitter-manager.nvim",
+	  { "romus204/tree-sitter-manager.nvim",
   dependencies = {}, -- tree-sitter CLI must be installed system-wide
   config = function()
     require("tree-sitter-manager").setup({
-      ensure_installed = {'angular', 'bash', 'css', 'html', 'csv', 'git_config', 'groovy', 'json', 'hjson',  'java', 'javadoc', 'javascript', 'kotlin', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'toml', 'typescript', 'yaml', 'zsh', "vim", "vimdoc", "fennel", "clojure", 'scala', 'scss', 'http', 'python', 'dockerfile'},
--- 'hyprland','asciidoc', 'asciidoc_inline', 
+      ensure_installed = {'asciidoc', 'asciidoc_inline', 'angular', 'bash', 'css', 'html', 'csv', 'git_config', 'groovy', 'json', 'hjson',  'java', 'javadoc', 'javascript', 'kotlin', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'toml', 'typescript', 'yaml', 'zsh', "vim", "vimdoc", "fennel", "clojure", 'scala', 'scss', 'http', 'python', 'dockerfile'},
+-- 'hyprland'
       -- border = nil, -- border style for the window (e.g. "rounded", "single"), if nil, use the default border style defined by 'vim.o.winborder'. See :h 'winborder' for more info.
       -- auto_install = false, -- if enabled, install missing parsers when editing a new file
       -- highlight = true, -- treesitter highlighting is enabled by default
-
-    })
-  end
-},
-
+	languages = {-- override or add new parser sources
+		asciidoc = {
+				install_info = {
+					branch = "master",
+					location = "tree-sitter-asciidoc",
+					queries = "queries/asciidoc/",
+					requires = { "asciidoc_inline" },
+					url = "https://github.com/cathaysia/tree-sitter-asciidoc" }, },
+		asciidoc_inline = {
+				install_info = {
+					branch = "master",
+					location = "tree-sitter-asciidoc_inline",
+					queries = "queries/asciidoc_inline",
+					url = "https://github.com/cathaysia/tree-sitter-asciidoc" } }, },
+		})
+	  end
+	},
 --{{{ Code
   {
     "Olical/conjure",

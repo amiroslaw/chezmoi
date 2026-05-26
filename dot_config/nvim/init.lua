@@ -49,6 +49,16 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 -- 	pattern = { '*.edn' },
 -- 	command = [[set filetype=clojure]],
 -- })
+
+-- TODO doesn't work
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "asciidoc", "asciidoctor" },
+  callback = function()
+    vim.opt_local.foldmethod = "expr"
+    vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+  end,
+})
+
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 	pattern = { '/tmp/*' },
 	command = [[set filetype=text]],
@@ -581,7 +591,7 @@ nmap('<F19>', ':Asciidoctor2DOCX<CR>', 'Convert asciidoctor to DOCX') -- S-F7
 vim.g.asciidoctor_syntax_conceal = 1
 vim.g.asciidoctor_folding = 2
 vim.g.asciidoctor_folding_level = 6
-vim.g.asciidoctor_fenced_languages = { 'java', 'typescript', 'javascript', 'bash', 'html', 'xml', 'lua', 'css', 'sql', 'clojure' } -- 'kotlin' add syntax TODO
+vim.g.asciidoctor_fenced_languages = { 'java', 'typescript', 'javascript', 'bash', 'html', 'xml', 'lua', 'css', 'sql', 'clojure', } -- 'fennel' 'kotlin' add syntax TODO
 -- vim.g.asciidoctor_syntax_indented = 0
 -- vim.g.asciidoctor_fold_options = 0
 vim.g.asciidoctor_img_paste_command = 'xclip -selection clipboard -t image/png -o > %s%s'
@@ -1124,6 +1134,10 @@ nmap('<S-A-r>', require('substitute.range').word, 'Substitute - range under a wo
 --}}}
 
 -- LSP Tree-sitter Diagnostics {{{
+	--
+-- use asciidoc treesitter parser for asciidoctor 
+vim.treesitter.language.register("asciidoc", "asciidoctor")
+
 require("mason").setup()
 
 vim.lsp.enable({
@@ -1233,7 +1247,7 @@ vim.diagnostic.config({
 -- 	},
 })
 
-
+--{{{ markview https://github.com/OXY2DEV/markview.nvim
 require("markview").setup({
 	enable = true,
     preview = {
@@ -1244,10 +1258,10 @@ require("markview").setup({
 		enable = true, 
 		},
     asciidoc_inline = {
-		enable = true, 
+		enable = false, 
 		},
     asciidoc = {
-		enable = true, 
+		enable = false, 
 		section_titles = {
 			shift_width = 1,
 		},
@@ -1260,13 +1274,14 @@ require("markview").setup({
         },
         },
 })
-
 -- doesn't work for adoc
 require("markview.extras.editor").setup();
 require("markview.extras.headings").setup();
 require("markview.extras.checkboxes").setup();
-
+--}}} 
+--
 -- }}} 
+
 
 -- COLORSCHEMES {{{
 local function getBackground(hour)
