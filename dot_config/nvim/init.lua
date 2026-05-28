@@ -50,15 +50,6 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 -- 	command = [[set filetype=clojure]],
 -- })
 
--- TODO doesn't work
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "asciidoc", "asciidoctor" },
-  callback = function()
-    vim.opt_local.foldmethod = "expr"
-    vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-  end,
-})
-
 -- add a file to fasder index
 vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
   callback = function(args)
@@ -68,7 +59,6 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
     if vim.fn.filereadable(file) == 0 then return end
 	local path = vim.fn.fnamemodify(file, ":p")
     if vim.fn.filereadable(path) == 0 then return end
-	  vim.notify(" added " .. path)
     vim.system({ "fasder", "-A", path })
   end,
 })
@@ -1151,6 +1141,7 @@ nmap('<S-A-r>', require('substitute.range').word, 'Substitute - range under a wo
 	--
 -- use asciidoc treesitter parser for asciidoctor 
 vim.treesitter.language.register("asciidoc", "asciidoctor")
+-- vim.treesitter.language.register("asciidoc", "asciidoc")
 
 require("mason").setup()
 
@@ -1261,41 +1252,42 @@ vim.diagnostic.config({
 -- 	},
 })
 
---{{{ markview https://github.com/OXY2DEV/markview.nvim
-require("markview").setup({
-	enable = true,
-    preview = {
-		map_gx = true, 
-		enable_hybrid_mode = true,
-		},
-    yaml = {
-		enable = true, 
-		},
-    asciidoc_inline = {
-		enable = false, 
-		},
-    asciidoc = {
-		enable = false, 
-		section_titles = {
-			shift_width = 1,
-		},
-    }, 
-	markdown = {
-        headings = {
-            heading_1 = { icon_hl = "@markup.link", icon = "[%d] " },
-            heading_2 = { icon_hl = "@markup.link", icon = "[%d.%d] " },
-            heading_3 = { icon_hl = "@markup.link", icon = "[%d.%d.%d] " }
-        },
-        },
-})
--- doesn't work for adoc
-require("markview.extras.editor").setup();
-require("markview.extras.headings").setup();
-require("markview.extras.checkboxes").setup();
---}}} 
+-- --{{{ markview https://github.com/OXY2DEV/markview.nvim
+-- require("markview").setup({
+-- 	enable = true,
+--     preview = {
+-- 		map_gx = true, 
+-- 		enable_hybrid_mode = true,
+-- 		},
+--     yaml = {
+-- 		enable = true, 
+-- 		},
+--     asciidoc_inline = {
+-- 		enable = false, 
+-- 		},
+--     asciidoc = {
+-- 		enable = false, 
+-- 		section_titles = {
+-- 			shift_width = 1,
+-- 		},
+--     }, 
+-- 	markdown = {
+--         headings = {
+--             heading_1 = { icon_hl = "@markup.link", icon = "[%d] " },
+--             heading_2 = { icon_hl = "@markup.link", icon = "[%d.%d] " },
+--             heading_3 = { icon_hl = "@markup.link", icon = "[%d.%d.%d] " }
+--         },
+--         },
+-- })
+-- -- doesn't work for adoc
+-- require("markview.extras.editor").setup();
+-- require("markview.extras.headings").setup();
+-- require("markview.extras.checkboxes").setup();
+-- --}}} 
 --
 -- }}} 
 
+nmap('t;', ':AerialToggle<CR>', 'AerialToggle')
 
 -- COLORSCHEMES {{{
 local function getBackground(hour)
@@ -1308,11 +1300,28 @@ local function getBackground(hour)
 		end
 end
 -- vim.cmd 'colorscheme solarized8_high'
-vim.cmd 'colorscheme tokyonight'
+-- vim.cmd 'colorscheme tokyonight'
 -- vim.cmd 'colorscheme catppuccin-nvim'
 -- vim.cmd 'colorscheme flattened_light'
--- vim.o.background = getBackground()
 -- vim.cmd [[let ayucolor="light" ]]
+
+local default_colorscheme = "tokyonight-storm"
+vim.cmd("colorscheme " .. default_colorscheme)
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "asciidoc",
+  callback = function()
+    vim.cmd("colorscheme solarized8_high")
+	vim.o.background = getBackground()
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufLeave", {
+  pattern = "*.adoc",
+  callback = function()
+    vim.cmd("colorscheme " .. default_colorscheme)
+  end,
+})
 -- }}} 
 -- vim: foldmethod=marker
 -- set complete+=kspell spellcheck complete

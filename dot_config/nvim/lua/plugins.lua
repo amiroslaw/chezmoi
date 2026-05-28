@@ -1,19 +1,5 @@
 -- https://github.com/folke/lazy.nvim
 return {
-	--{{{ COLORSCHEMES and Syntax
-	'kmonad/kmonad-vim',
-	'rafi/awesome-vim-colorschemes', -- https://vimcolorschemes.com/rafi/awesome-vim-colorschemes
-	{
-	  "folke/tokyonight.nvim",
-	  lazy = false,
-	  priority = 1000,
-	  opts = {},
-	},
-	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-	-- not used
-	{ 'dracula/vim', lazy = false, priority = 1000, name = 'dracula', enabled = false },
-	{ 'bluz71/vim-moonfly-colors', lazy = false, priority = 1000, enabled = false },
-	--}}}
 	--{{{ Productive
 	{ 'anuvyklack/windows.nvim', -- Automatically resizes your windows
 		dependencies = 'anuvyklack/middleclass',
@@ -205,10 +191,14 @@ return {
 	{ 'habamax/vim-asciidoctor' }, -- ft = { 'asciidoctor' } }, -- doesn't work with lazy
 	-- markdown
 	-- The plugin should be loaded after your colorscheme to ensure the correct highlight groups are used. 
-	{'OXY2DEV/markview.nvim', lazy = false, dependencies = {'hrsh7th/nvim-cmp'}},
+	-- {'OXY2DEV/markview.nvim', lazy = false, dependencies = {'hrsh7th/nvim-cmp'}},
 	{ 'previm/previm', ft = { 'markdown' } },
 	{ 'godlygeek/tabular', cmd = { 'Tab' } }, -- do wyrównywania np w tabelach http://vimcasts.org/episodes/aligning-text-with-tabular-vim/ :Tab /| ft = { 'markdown', 'asciidoctor' }
 	{ 'majutsushi/tagbar', cmd = 'TagbarToggle' },
+	{ 'stevearc/aerial.nvim',
+	  opts = {},
+	  dependencies = { "nvim-tree/nvim-web-devicons" },
+	},
 	--}}}
 	--{{{ LSP and treesitter
       { 'williamboman/mason.nvim', opts = {} },
@@ -226,16 +216,16 @@ return {
 				install_info = {
 					branch = "master",
 					location = "tree-sitter-asciidoc",
-					queries = "queries/asciidoc/",
+					queries = "queries",  -- nie pobiera
 					requires = { "asciidoc_inline" },
 					url = "https://github.com/cathaysia/tree-sitter-asciidoc" }, },
 		asciidoc_inline = {
 				install_info = {
 					branch = "master",
 					location = "tree-sitter-asciidoc_inline",
-					queries = "queries/asciidoc_inline",
-					url = "https://github.com/cathaysia/tree-sitter-asciidoc" } }, },
-		})
+					-- queries = "queries/asciidoc_inline",
+					url = "https://github.com/cathaysia/tree-sitter-asciidoc" } }, 
+				},})
 	  end
 	},
 --{{{ Code
@@ -342,6 +332,20 @@ return {
 		-- opts = { options = { theme = 'dracula', component_separators = '|', globalstatus = true }, -- sections = {lualine_a = {'buffers'}} - takes too much space
 	-- }
 	end },
+	--}}}
+	--{{{ COLORSCHEMES and Syntax
+	'kmonad/kmonad-vim',
+	'rafi/awesome-vim-colorschemes', -- https://vimcolorschemes.com/rafi/awesome-vim-colorschemes
+	{
+	  "folke/tokyonight.nvim",
+	  lazy = false,
+	  priority = 1000,
+	  opts = {},
+	},
+	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+	-- not used
+	{ 'dracula/vim', lazy = false, priority = 1000, name = 'dracula', enabled = false },
+	{ 'bluz71/vim-moonfly-colors', lazy = false, priority = 1000, enabled = false },
 	--}}}
 }
 -- vim: foldmethod=marker
