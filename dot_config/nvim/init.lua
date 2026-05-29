@@ -1252,39 +1252,37 @@ vim.diagnostic.config({
 -- 	},
 })
 
--- --{{{ markview https://github.com/OXY2DEV/markview.nvim
--- require("markview").setup({
--- 	enable = true,
---     preview = {
--- 		map_gx = true, 
--- 		enable_hybrid_mode = true,
--- 		},
---     yaml = {
--- 		enable = true, 
--- 		},
---     asciidoc_inline = {
--- 		enable = false, 
--- 		},
---     asciidoc = {
--- 		enable = false, 
--- 		section_titles = {
--- 			shift_width = 1,
--- 		},
---     }, 
--- 	markdown = {
---         headings = {
---             heading_1 = { icon_hl = "@markup.link", icon = "[%d] " },
---             heading_2 = { icon_hl = "@markup.link", icon = "[%d.%d] " },
---             heading_3 = { icon_hl = "@markup.link", icon = "[%d.%d.%d] " }
---         },
---         },
--- })
--- -- doesn't work for adoc
--- require("markview.extras.editor").setup();
--- require("markview.extras.headings").setup();
--- require("markview.extras.checkboxes").setup();
--- --}}} 
---
+--{{{ markview https://github.com/OXY2DEV/markview.nvim
+require("markview").setup({
+	enable = false,
+    preview = {
+		map_gx = true, 
+		enable_hybrid_mode = true,
+		},
+    yaml = {
+		enable = true, 
+		},
+    asciidoc_inline = {
+		enable = false, -- this plugin does't work good with adoc
+		},
+    asciidoc = {
+		enable = false, 
+		section_titles = {
+			shift_width = 1,
+		},
+    },
+	markdown = {
+        headings = {
+            heading_1 = { icon_hl = "@markup.link", icon = "[%d] " },
+            heading_2 = { icon_hl = "@markup.link", icon = "[%d.%d] " },
+            heading_3 = { icon_hl = "@markup.link", icon = "[%d.%d.%d] " }
+        }, },
+})
+require("markview.extras.editor").setup();
+require("markview.extras.headings").setup();
+require("markview.extras.checkboxes").setup();
+--}}} 
+
 -- }}} 
 
 -- COLORSCHEMES {{{
@@ -1301,10 +1299,10 @@ end
 -- vim.cmd 'colorscheme flattened_light'
 -- vim.cmd [[let ayucolor="light" ]]
 local colorscheme_default = "solarized8_high"
-local colorscheme_treesiiter = "tokyonight-storm"
+local colorscheme_treesitter = "tokyonight-storm"
 vim.g.tokyonight_style = "moon"
 
-vim.cmd("colorscheme " .. colorscheme_treesiiter)
+vim.cmd("colorscheme " .. colorscheme_treesitter)
 local adoc_theme_group = vim.api.nvim_create_augroup("AdocThemeToggler", { clear = true })
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
     group = adoc_theme_group,
@@ -1322,8 +1320,8 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
                     vim.opt.background = getBackground()
                 end
             else
-                if vim.g.colors_name ~= colorscheme_treesiiter then
-                    vim.cmd("colorscheme " .. colorscheme_treesiiter)
+                if vim.g.colors_name ~= colorscheme_treesitter then
+                    vim.cmd("colorscheme " .. colorscheme_treesitter)
                 end
             end
         end)
@@ -1332,5 +1330,5 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 
 -- }}} 
 
--- vim: foldmethod=marker
 -- set complete+=kspell spellcheck complete
+-- vim: foldmethod=marker

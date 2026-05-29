@@ -7,8 +7,8 @@ return {
 	  lazy = false,
 	  priority = 1000,
 	},
-	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 	-- not used
+	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 	{ 'dracula/vim', lazy = false, priority = 1000, name = 'dracula', enabled = false },
 	{ 'bluz71/vim-moonfly-colors', lazy = false, priority = 1000, enabled = false },
 	--}}}
@@ -202,9 +202,7 @@ return {
 	-- asciidoctor
 	{ 'habamax/vim-asciidoctor' }, -- ft = { 'asciidoctor' } }, -- doesn't work with lazy
 	-- markdown
-	-- The plugin should be loaded after your colorscheme to ensure the correct highlight groups are used. 
-	-- {'OXY2DEV/markview.nvim', lazy = false, dependencies = {'hrsh7th/nvim-cmp'}},
-	{ 'previm/previm', ft = { 'markdown' } },
+	{ 'OXY2DEV/markview.nvim', lazy = false, ft = {'markdown'}, dependencies = {'hrsh7th/nvim-cmp'}},
 	{ 'godlygeek/tabular', cmd = { 'Tab' } }, -- do wyrównywania np w tabelach http://vimcasts.org/episodes/aligning-text-with-tabular-vim/ :Tab /| ft = { 'markdown', 'asciidoctor' }
 	{ 'majutsushi/tagbar', cmd = 'TagbarToggle' },
 	{ 'stevearc/aerial.nvim',
