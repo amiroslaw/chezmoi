@@ -214,6 +214,7 @@ return {
 	--}}}
 	--{{{ LSP and treesitter
       { 'williamboman/mason.nvim', opts = {} },
+	  { 'https://github.com/neovim/nvim-lspconfig' },
 	  { "romus204/tree-sitter-manager.nvim",
 		  dependencies = {}, -- tree-sitter CLI must be installed system-wide
 		  config = function()

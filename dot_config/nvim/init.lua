@@ -1141,19 +1141,16 @@ nmap('<S-A-r>', require('substitute.range').word, 'Substitute - range under a wo
 --}}}
 
 -- LSP Tree-sitter Diagnostics {{{
-	--
--- use asciidoc treesitter parser for asciidoctor 
-vim.treesitter.language.register("asciidoc", "asciidoctor")
--- vim.treesitter.language.register("asciidoc", "asciidoc")
 
 require("mason").setup()
 
 vim.lsp.enable({
-	"lua_ls",
-	"clojure_lsp",
 	'marksman',
-	"bash-language-server",
-	"docker-language-server",
+	"bashls",
+	"docker_language_server",
+	"fennel_ls",
+	"clojure_lsp",
+	"lua_ls",
 -- 'java_language_server'
   -- "css_ls",
   -- "html_ls",
