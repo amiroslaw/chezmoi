@@ -253,6 +253,7 @@ nmap('t', '<Nop>', 'Disable t key')
 vim.g.mapleader = ';'
 vim.g.maplocalleader=" " --space
 nmap('<F5>', '<cmd>restart<cr>', 'Reload')
+nmap('<F7>', ':!preview-ascii.sh % <CR>', 'adoc preview')
 
 -- nmap('x', '"_x') -- doesn't add to register from `x`, will brake xp
 nmap('<C-/>', ':nohlsearch<cr>', 'Clear search highlights')
@@ -418,6 +419,8 @@ vim.fn.setreg('f', 'f)a kb  ')
 	-- Move small configuration to plugins.lua, left only shortcuts
 require("lazy").setup("plugins")
 nmap('<F11>', ':Lazy<CR>', 'Open Lazy')
+
+nmap('t;', ':AerialToggle<CR>', 'AerialToggle')
 
 
 -- nmap('<leader>f', '<cmd> lua vim.lsp.buf.format() <cr>')
@@ -1287,8 +1290,6 @@ vim.diagnostic.config({
 --
 -- }}} 
 
-nmap('t;', ':AerialToggle<CR>', 'AerialToggle')
-
 -- COLORSCHEMES {{{
 local function getBackground(hour)
 		local hour = hour and hour or 20
@@ -1299,31 +1300,40 @@ local function getBackground(hour)
 			return 'dark'
 		end
 end
--- vim.cmd 'colorscheme solarized8_high'
--- vim.cmd 'colorscheme tokyonight'
 -- vim.cmd 'colorscheme catppuccin-nvim'
 -- vim.cmd 'colorscheme flattened_light'
 -- vim.cmd [[let ayucolor="light" ]]
+local colorscheme_default = "solarized8_high"
+local colorscheme_treesiiter = "tokyonight-storm"
+vim.g.tokyonight_style = "moon"
 
-local default_colorscheme = "tokyonight-storm"
-vim.cmd("colorscheme " .. default_colorscheme)
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "asciidoc",
-  callback = function()
-    vim.cmd("colorscheme solarized8_high")
-	vim.o.background = getBackground()
-  end,
+vim.cmd("colorscheme " .. colorscheme_treesiiter)
+local adoc_theme_group = vim.api.nvim_create_augroup("AdocThemeToggler", { clear = true })
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+    group = adoc_theme_group,
+    -- Nasłuchujemy wejścia do KAŻDEGO pliku, aby precyzyjnie kontrolować globalny motyw
+    pattern = "*",
+    callback = function()
+        vim.schedule(function()
+            if not vim.api.nvim_buf_is_valid(0) then return end
+            
+            local ft = vim.bo.filetype
+            
+            if ft == "asciidoc" or ft == "asciidoctor" then
+                if vim.g.colors_name ~= colorscheme_default then
+                    vim.cmd("colorscheme " .. colorscheme_default)
+                    vim.opt.background = getBackground()
+                end
+            else
+                if vim.g.colors_name ~= colorscheme_treesiiter then
+                    vim.cmd("colorscheme " .. colorscheme_treesiiter)
+                end
+            end
+        end)
+    end,
 })
 
-vim.api.nvim_create_autocmd("BufLeave", {
-  pattern = "*.adoc",
-  callback = function()
-    vim.cmd("colorscheme " .. default_colorscheme)
-  end,
-})
 -- }}} 
+
 -- vim: foldmethod=marker
 -- set complete+=kspell spellcheck complete
-
-nmap('<F7>', ':!preview-ascii.sh % <CR>', 'adoc preview')

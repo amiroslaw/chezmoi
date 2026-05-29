@@ -1,5 +1,17 @@
 -- https://github.com/folke/lazy.nvim
 return {
+	--{{{ COLORSCHEMES and Syntax
+	'kmonad/kmonad-vim',
+	'rafi/awesome-vim-colorschemes', -- https://vimcolorschemes.com/rafi/awesome-vim-colorschemes
+	{ "folke/tokyonight.nvim",
+	  lazy = false,
+	  priority = 1000,
+	},
+	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+	-- not used
+	{ 'dracula/vim', lazy = false, priority = 1000, name = 'dracula', enabled = false },
+	{ 'bluz71/vim-moonfly-colors', lazy = false, priority = 1000, enabled = false },
+	--}}}
 	--{{{ Productive
 	{ 'anuvyklack/windows.nvim', -- Automatically resizes your windows
 		dependencies = 'anuvyklack/middleclass',
@@ -9,7 +21,7 @@ return {
 	{ 'mg979/vim-visual-multi', branch = 'master' },
 	{ "tpope/vim-repeat", event = "VeryLazy" },
 	'chentoast/marks.nvim',
-	'wyne/fasder.nvim', -- adds file to fasder index
+	-- 'wyne/fasder.nvim', -- adds file to fasder index, stopped working, I adde my autocmd
 	'mhinz/vim-startify', -- start screen
 	{ 'gbprod/yanky.nvim', config = true },
 	{ "gbprod/substitute.nvim",
@@ -203,29 +215,27 @@ return {
 	--{{{ LSP and treesitter
       { 'williamboman/mason.nvim', opts = {} },
 	  { "romus204/tree-sitter-manager.nvim",
-  dependencies = {}, -- tree-sitter CLI must be installed system-wide
-  config = function()
-    require("tree-sitter-manager").setup({
-      ensure_installed = {'asciidoc', 'asciidoc_inline', 'angular', 'bash', 'css', 'html', 'csv', 'git_config', 'groovy', 'json', 'hjson',  'java', 'javadoc', 'javascript', 'kotlin', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'toml', 'typescript', 'yaml', 'zsh', "vim", "vimdoc", "fennel", "clojure", 'scala', 'scss', 'http', 'python', 'dockerfile'},
--- 'hyprland'
-      -- border = nil, -- border style for the window (e.g. "rounded", "single"), if nil, use the default border style defined by 'vim.o.winborder'. See :h 'winborder' for more info.
-      -- auto_install = false, -- if enabled, install missing parsers when editing a new file
-      -- highlight = true, -- treesitter highlighting is enabled by default
-	languages = {-- override or add new parser sources
-		asciidoc = {
-				install_info = {
-					branch = "master",
-					location = "tree-sitter-asciidoc",
-					queries = "queries",  -- nie pobiera
-					requires = { "asciidoc_inline" },
-					url = "https://github.com/cathaysia/tree-sitter-asciidoc" }, },
-		asciidoc_inline = {
-				install_info = {
-					branch = "master",
-					location = "tree-sitter-asciidoc_inline",
-					-- queries = "queries/asciidoc_inline",
-					url = "https://github.com/cathaysia/tree-sitter-asciidoc" } }, 
-				},})
+		  dependencies = {}, -- tree-sitter CLI must be installed system-wide
+		  config = function()
+			require("tree-sitter-manager").setup({
+			  ensure_installed = {'angular', 'bash', 'css', 'html', 'csv', 'git_config', 'groovy', 'json', 'hjson',  'java', 'javadoc', 'javascript', 'kotlin', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'toml', 'typescript', 'yaml', 'zsh', "vim", "vimdoc", "fennel", "clojure", 'scala', 'scss', 'http', 'python', 'dockerfile'},
+-- 'hyprland', 'asciidoc', 'asciidoc_inline', 
+	-- languages = {-- override or add new parser sources
+	-- 	asciidoc = {
+	-- 			install_info = {
+	-- 				branch = "master",
+	-- 				location = "tree-sitter-asciidoc",
+	-- 				queries = "queries",  -- nie pobiera
+	-- 				requires = { "asciidoc_inline" },
+	-- 				url = "https://github.com/cathaysia/tree-sitter-asciidoc" }, },
+	-- 	asciidoc_inline = {
+	-- 			install_info = {
+	-- 				branch = "master",
+	-- 				location = "tree-sitter-asciidoc_inline",
+	-- 				-- queries = "queries/asciidoc_inline",
+	-- 				url = "https://github.com/cathaysia/tree-sitter-asciidoc" } }, 
+	-- 			},
+			})
 	  end
 	},
 --{{{ Code
@@ -332,20 +342,6 @@ return {
 		-- opts = { options = { theme = 'dracula', component_separators = '|', globalstatus = true }, -- sections = {lualine_a = {'buffers'}} - takes too much space
 	-- }
 	end },
-	--}}}
-	--{{{ COLORSCHEMES and Syntax
-	'kmonad/kmonad-vim',
-	'rafi/awesome-vim-colorschemes', -- https://vimcolorschemes.com/rafi/awesome-vim-colorschemes
-	{
-	  "folke/tokyonight.nvim",
-	  lazy = false,
-	  priority = 1000,
-	  opts = {},
-	},
-	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-	-- not used
-	{ 'dracula/vim', lazy = false, priority = 1000, name = 'dracula', enabled = false },
-	{ 'bluz71/vim-moonfly-colors', lazy = false, priority = 1000, enabled = false },
 	--}}}
 }
 -- vim: foldmethod=marker
