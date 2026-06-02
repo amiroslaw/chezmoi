@@ -49,6 +49,20 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 -- 	pattern = { '*.edn' },
 -- 	command = [[set filetype=clojure]],
 -- })
+
+-- add a file to fasder index
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+  callback = function(args)
+    local file = args.file
+    if file == "" then return end
+    if vim.bo.buftype ~= "" then return end
+    if vim.fn.filereadable(file) == 0 then return end
+	local path = vim.fn.fnamemodify(file, ":p")
+    if vim.fn.filereadable(path) == 0 then return end
+    vim.system({ "fasder", "-A", path })
+  end,
+})
+
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 	pattern = { '/tmp/*' },
 	command = [[set filetype=text]],
@@ -103,6 +117,10 @@ end
 -- SETTINGS {{{
 -- vim.o.ch = 0 -- hide command, from v8
 
+-- New UI opt-in
+require('vim._core.ui2').enable({})
+vim.cmd("packadd nvim.undotree")
+-- vim.cmd("packadd nvim.difftool")
 
 vim.o.termguicolors = true
 vim.b.buftype = '' -- fix Cannot write buftype option is set
@@ -234,6 +252,9 @@ nmap('t', '<Nop>', 'Disable t key')
 
 vim.g.mapleader = ';'
 vim.g.maplocalleader=" " --space
+nmap('<F5>', '<cmd>restart<cr>', 'Reload')
+nmap('<F7>', ':!preview-ascii.sh % <CR>', 'adoc preview')
+
 -- nmap('x', '"_x') -- doesn't add to register from `x`, will brake xp
 nmap('<C-/>', ':nohlsearch<cr>', 'Clear search highlights')
 nmap('<F1>', ':term taskwarrior-tui<CR>', 'Open taskwarrior TUI')
@@ -399,6 +420,9 @@ vim.fn.setreg('f', 'f)a kb  ')
 require("lazy").setup("plugins")
 nmap('<F11>', ':Lazy<CR>', 'Open Lazy')
 
+nmap('t;', ':AerialToggle<CR>', 'AerialToggle')
+
+
 -- nmap('<leader>f', '<cmd> lua vim.lsp.buf.format() <cr>')
 -- vmap('<leader>f', '<cmd> lua vim.lsp.buf.format() <cr>')
 
@@ -458,6 +482,17 @@ vim.g.startify_change_to_dir = 0
 -- repeat
 vim.cmd 'silent! call repeat#set("\\<Plug>MyWonderfulMap", v:count)'
 
+-- https://github.com/folke/which-key.nvim
+require("which-key").setup {
+  preset = "helix",
+  plugins = { spelling = { enabled = true, sugesstions = 20, ignore_missing = true }, },
+}
+
+-- {{{ nvim-autopairs https://github.com/windwp/nvim-autopairs?tab=readme-ov-file#fastwrap
+require('nvim-autopairs').setup({
+    fast_wrap = { map = '<M-t>', },
+})
+--}}}
 -- taskmaker {{{
 vlocLeader('w', '<cmd>TaskmakerAddTasks <CR>', 'Add tasks from selection')
 nlocLeader('x', '<cmd>TaskmakerToggle <CR>', 'Toggle taskmaker') -- }}} 
@@ -503,8 +538,8 @@ nmap('mA', ':MarksListAll<cr>', 'List all marks')
 nmap('mL', ':BookmarksListAll<cr>', 'List all bookmarks') -- groupmarks
 -- }}} 
 
--- undo tree {{{
-nmap('<A-u>', ':UndotreeToggle<cr>', 'Toggle undo tree')
+-- undo tree  native {{{
+nmap('<A-u>', ':Undotree<cr>', 'Toggle undo tree')
 if vim.fn.has 'persistent_undo' == 1 then
 	vim.o.undodir = HOME .. '/.local/share/nvim/undo'
 	vim.o.undofile = true
@@ -563,7 +598,7 @@ nmap('<F19>', ':Asciidoctor2DOCX<CR>', 'Convert asciidoctor to DOCX') -- S-F7
 vim.g.asciidoctor_syntax_conceal = 1
 vim.g.asciidoctor_folding = 2
 vim.g.asciidoctor_folding_level = 6
-vim.g.asciidoctor_fenced_languages = { 'java', 'typescript', 'javascript', 'bash', 'html', 'xml', 'lua', 'css', 'sql', 'clojure' } -- 'kotlin' add syntax TODO
+vim.g.asciidoctor_fenced_languages = { 'java', 'typescript', 'javascript', 'bash', 'html', 'xml', 'lua', 'css', 'sql', 'clojure', } -- 'fennel' 'kotlin' add syntax TODO
 -- vim.g.asciidoctor_syntax_indented = 0
 -- vim.g.asciidoctor_fold_options = 0
 vim.g.asciidoctor_img_paste_command = 'xclip -selection clipboard -t image/png -o > %s%s'
@@ -702,9 +737,11 @@ local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 					},
 				},
 			},
-			pickers = {
-				buffers = { mappings = { i = { ["<CR>"] = actions.select_tab_drop } } },-- go to tab if open
-					}
+		pickers = {
+			buffers = { mappings = { i = { ["<CR>"] = actions.select_tab_drop } } },-- go to tab if open
+				},
+		  extensions = { heading = { treesitter = true, 
+		  picker_opts = { max_level = 6, }}, },
 		}
 
 	nmap('<c-s>', '<cmd>Telescope live_grep<cr>', 'Live grep')
@@ -739,7 +776,16 @@ local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 	-- nmap('tt', ':silent !ctags -R . <CR>:redraw!<cr>:Telescope current_buffer_tags<CR>')
 	-- nmap('T', ':silent !ctags -R . <CR>:redraw!<cr>:Telescope tags<CR>') -- jjjj
 	telescope.load_extension 'heading' -- doesn't work with many entities 
-	nmap('tt', '<cmd>Telescope heading <cr>', 'Heading search')
+	-- nmap('tt', '<cmd>Telescope heading sorting_strategy=ascending, <cr>', 'Heading search')
+-- Reverses the list so the order is flipped inside the picker window
+	nmap('tt', function()
+	  require('telescope').extensions.heading.heading({
+		sorting_strategy = "ascending",
+		layout_config = {
+		  prompt_position = "top", -- Moves the input prompt to the top for natural reading
+		},
+	  })
+	end, 'Heading search')
 	telescope.load_extension 'jumps'
 	nmap('tu', '<cmd>Telescope jumps changes <cr>', 'Jump changes')
 	nmap('tj', '<cmd>Telescope jumps jumpbuff <cr>', 'Jump buffer')
@@ -1037,7 +1083,7 @@ nmap('<F6>', ':ZenMode <CR>', 'Toggle Zen mode')
 -- }}} 
 
 -- LuaSnip {{{
-nmap('<F5>', '<cmd>lua require("luasnip.loaders.from_lua").load({paths = "~/.config/nvim/luasnippets/"})<cr>', 'Reload LuaSnippets')
+nmap('<F16>', '<cmd>lua require("luasnip.loaders.from_lua").load({paths = "~/.config/nvim/luasnippets/"})<cr>', 'Reload LuaSnippets')
 nmap('<F17>', '<cmd>lua require("luasnip.loaders").edit_snippet_files()<CR>', 'Edit snippet files') -- S-F5
 local ls = require("luasnip")
 -- tab stopped work
@@ -1092,21 +1138,19 @@ nmap('<S-A-r>', require('substitute.range').word, 'Substitute - range under a wo
 -- nmap('<A-r>', function() require('substitute.range').word({range = { motion = '%' }}) end, { noremap = true, desc ='Substitute - word in file'}) -- it doesn't work for whole file 
 --}}}
 
--- {{{ nvim-autopairs https://github.com/windwp/nvim-autopairs?tab=readme-ov-file#fastwrap
-require('nvim-autopairs').setup({
-    fast_wrap = { map = '<M-t>', },
-})
 --}}}
 
--- LSP {{{
+-- LSP Tree-sitter Diagnostics {{{
+
 require("mason").setup()
 
 vim.lsp.enable({
-	"lua_ls",
-	"clojure_lsp",
 	'marksman',
-	"bash-language-server",
-	"docker-language-server",
+	"bashls",
+	"docker_language_server",
+	"fennel_ls",
+	"clojure_lsp",
+	"lua_ls",
 -- 'java_language_server'
   -- "css_ls",
   -- "html_ls",
@@ -1170,6 +1214,12 @@ group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 		lsp_map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
   end,
 })
+-- można nadpisać z folderu lsp
+-- vim.lsp.config('luals', {
+--   on_attach = function()
+--     print('luals is now active in this file')
+--   end,
+-- })
 
 -- -- Diagnostic Config See :help vim.diagnostic.Opts
 vim.diagnostic.config({
@@ -1202,33 +1252,37 @@ vim.diagnostic.config({
 -- 	},
 })
 
--- nvim-treesitter
--- this option is avialiable only in the old "master" version of this plugin in the new one you need to use an additional plugin 
---https://github.com/daliusd/incr.nvim
-require'nvim-treesitter.configs'.setup {
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = "<C-CR>",       -- Start selection
-      node_incremental = "<C-CR>",     -- Expand to next node
-      scope_incremental = "<A-CR>",    -- Expand to next scope
-      node_decremental = "<C-BS>",     -- Shrink selection (c - backspace)
+--{{{ markview https://github.com/OXY2DEV/markview.nvim
+require("markview").setup({
+	enable = false,
+    preview = {
+		map_gx = true, 
+		enable_hybrid_mode = true,
+		},
+    yaml = {
+		enable = true, 
+		},
+    asciidoc_inline = {
+		enable = false, -- this plugin does't work good with adoc
+		},
+    asciidoc = {
+		enable = false, 
+		section_titles = {
+			shift_width = 1,
+		},
     },
-  },
-}
+	markdown = {
+        headings = {
+            heading_1 = { icon_hl = "@markup.link", icon = "[%d] " },
+            heading_2 = { icon_hl = "@markup.link", icon = "[%d.%d] " },
+            heading_3 = { icon_hl = "@markup.link", icon = "[%d.%d.%d] " }
+        }, },
+})
+require("markview.extras.editor").setup();
+require("markview.extras.headings").setup();
+require("markview.extras.checkboxes").setup();
+--}}} 
 
--- https://github.com/folke/which-key.nvim
-require("which-key").setup {
-  preset = "helix",
-  plugins = { spelling = { enabled = true, sugesstions = 20, ignore_missing = true }, },
-}
-
--- można nadpisać z folderu lsp
--- vim.lsp.config('luals', {
---   on_attach = function()
---     print('luals is now active in this file')
---   end,
--- })
 -- }}} 
 
 -- COLORSCHEMES {{{
@@ -1241,12 +1295,40 @@ local function getBackground(hour)
 			return 'dark'
 		end
 end
-vim.cmd 'colorscheme solarized8_high'
+-- vim.cmd 'colorscheme catppuccin-nvim'
 -- vim.cmd 'colorscheme flattened_light'
-vim.o.background = getBackground()
 -- vim.cmd [[let ayucolor="light" ]]
--- }}} 
--- vim: foldmethod=marker
--- set complete+=kspell spellcheck complete
+local colorscheme_default = "solarized8_high"
+local colorscheme_treesitter = "tokyonight-storm"
+vim.g.tokyonight_style = "moon"
 
-nmap('<F7>', ':!preview-ascii.sh % <CR>', 'adoc preview')
+vim.cmd("colorscheme " .. colorscheme_treesitter)
+local adoc_theme_group = vim.api.nvim_create_augroup("AdocThemeToggler", { clear = true })
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+    group = adoc_theme_group,
+    -- Nasłuchujemy wejścia do KAŻDEGO pliku, aby precyzyjnie kontrolować globalny motyw
+    pattern = "*",
+    callback = function()
+        vim.schedule(function()
+            if not vim.api.nvim_buf_is_valid(0) then return end
+            
+            local ft = vim.bo.filetype
+            
+            if ft == "asciidoc" or ft == "asciidoctor" then
+                if vim.g.colors_name ~= colorscheme_default then
+                    vim.cmd("colorscheme " .. colorscheme_default)
+                    vim.opt.background = getBackground()
+                end
+            else
+                if vim.g.colors_name ~= colorscheme_treesitter then
+                    vim.cmd("colorscheme " .. colorscheme_treesitter)
+                end
+            end
+        end)
+    end,
+})
+
+-- }}} 
+
+-- set complete+=kspell spellcheck complete
+-- vim: foldmethod=marker

@@ -1,5 +1,17 @@
 -- https://github.com/folke/lazy.nvim
 return {
+	--{{{ COLORSCHEMES and Syntax
+	'kmonad/kmonad-vim',
+	'rafi/awesome-vim-colorschemes', -- https://vimcolorschemes.com/rafi/awesome-vim-colorschemes
+	{ "folke/tokyonight.nvim",
+	  lazy = false,
+	  priority = 1000,
+	},
+	-- not used
+	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+	{ 'dracula/vim', lazy = false, priority = 1000, name = 'dracula', enabled = false },
+	{ 'bluz71/vim-moonfly-colors', lazy = false, priority = 1000, enabled = false },
+	--}}}
 	--{{{ Productive
 	{ 'anuvyklack/windows.nvim', -- Automatically resizes your windows
 		dependencies = 'anuvyklack/middleclass',
@@ -9,9 +21,8 @@ return {
 	{ 'mg979/vim-visual-multi', branch = 'master' },
 	{ "tpope/vim-repeat", event = "VeryLazy" },
 	'chentoast/marks.nvim',
-	'wyne/fasder.nvim', -- adds file to fasder index
+	-- 'wyne/fasder.nvim', -- adds file to fasder index, stopped working, I adde my autocmd
 	'mhinz/vim-startify', -- start screen
-	{ 'mbbill/undotree', cmd = { 'UndotreeToggle' } },
 	{ 'gbprod/yanky.nvim', config = true },
 	{ "gbprod/substitute.nvim",
 		-- opts = {
@@ -191,19 +202,42 @@ return {
 	-- asciidoctor
 	{ 'habamax/vim-asciidoctor' }, -- ft = { 'asciidoctor' } }, -- doesn't work with lazy
 	-- markdown
-	{ 'plasticboy/vim-markdown', ft = { 'markdown' } },
-	{ 'previm/previm', ft = { 'markdown' } },
+	{ 'OXY2DEV/markview.nvim', lazy = false, ft = {'markdown'}, dependencies = {'hrsh7th/nvim-cmp'}},
 	{ 'godlygeek/tabular', cmd = { 'Tab' } }, -- do wyrównywania np w tabelach http://vimcasts.org/episodes/aligning-text-with-tabular-vim/ :Tab /| ft = { 'markdown', 'asciidoctor' }
 	{ 'majutsushi/tagbar', cmd = 'TagbarToggle' },
+	{ 'stevearc/aerial.nvim',
+	  opts = {},
+	  dependencies = { "nvim-tree/nvim-web-devicons" },
+	},
 	--}}}
-	--{{{ LSP
+	--{{{ LSP and treesitter
       { 'williamboman/mason.nvim', opts = {} },
-        -- "williamboman/mason-lspconfig.nvim",
-        -- "WhoIsSethDaniel/mason-tool-installer.nvim",
-	--}}}
-
-	--{{{ Code
-	{ 'sbdchd/neoformat', cmd = { 'Neoformat' } },
+	  { 'https://github.com/neovim/nvim-lspconfig' },
+	  { "romus204/tree-sitter-manager.nvim",
+		  dependencies = {}, -- tree-sitter CLI must be installed system-wide
+		  config = function()
+			require("tree-sitter-manager").setup({
+			  ensure_installed = {'angular', 'bash', 'css', 'html', 'csv', 'git_config', 'groovy', 'json', 'hjson',  'java', 'javadoc', 'javascript', 'kotlin', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'toml', 'typescript', 'yaml', 'zsh', "vim", "vimdoc", "fennel", "clojure", 'scala', 'scss', 'http', 'python', 'dockerfile'},
+-- 'hyprland', 'asciidoc', 'asciidoc_inline', 
+	-- languages = {-- override or add new parser sources
+	-- 	asciidoc = {
+	-- 			install_info = {
+	-- 				branch = "master",
+	-- 				location = "tree-sitter-asciidoc",
+	-- 				queries = "queries",  -- nie pobiera
+	-- 				requires = { "asciidoc_inline" },
+	-- 				url = "https://github.com/cathaysia/tree-sitter-asciidoc" }, },
+	-- 	asciidoc_inline = {
+	-- 			install_info = {
+	-- 				branch = "master",
+	-- 				location = "tree-sitter-asciidoc_inline",
+	-- 				-- queries = "queries/asciidoc_inline",
+	-- 				url = "https://github.com/cathaysia/tree-sitter-asciidoc" } }, 
+	-- 			},
+			})
+	  end
+	},
+--{{{ Code
   {
     "Olical/conjure",
     ft = { "clojure", "fennel", "lua"},
@@ -220,6 +254,7 @@ return {
       return cmp.setup(config)
     end,
   },
+	{ 'sbdchd/neoformat', cmd = { 'Neoformat' } },
 	{ 'stevearc/conform.nvim',
 	  opts = {
 		formatters_by_ft = {
@@ -247,52 +282,10 @@ return {
 		dependencies = { "kylechui/nvim-surround", "folke/which-key.nvim", },
 		opts = { root_key = "S" }, -- leader S
 	},
-	{ "sustech-data/wildfire.nvim",
-		event = "VeryLazy",
-		dependencies = { "nvim-treesitter/nvim-treesitter" },
-		opts =  { filetype_exclude = { "qf" }, } -- exclude unil treesitter will support asciidoc
-	},
 	{ 'gennaro-tedesco/nvim-jqx', ft = { 'json', 'yaml' } },
 	{ 'windwp/nvim-autopairs', event = 'InsertEnter', config = true },
 	-- { 'jose-elias-alvarez/null-ls.nvim', branch = 'main', dependencies = { 'nvim-lua/plenary.nvim' } },
 	{ 'NTBBloodbath/rest.nvim', branch = 'main', ft = { 'http' }, dependencies = { 'nvim-lua/plenary.nvim' } }, -- maybe delete
-	{'nvim-treesitter/nvim-treesitter-context'},
-	{ 'nvim-treesitter/nvim-treesitter', 
-	branch = 'master',  -- it is a locket version, new one changes config
-	lazy = false, build = ':TSUpdate',
-		config = function()
-			require('nvim-treesitter.configs').setup {
-				ensure_installed = {
-					'java',
-					'scala',
-					'kotlin',
-					'clojure',
-					'javascript',
-					'typescript',
-					'lua',
-					'markdown',
-					'http',
-					'json',
-					'css',
-					'html',
-					'scss',
-					'toml',
-					'yaml',
-					'bash',
-					'http',
-					'python',
-					'vim',
-					'dockerfile',
-				}, -- TSInstall css html; "asciidoc" doesn't support yet
-					-- 'asciidoc',
-				auto_install = true,
-				highlight = {
-					enable = true,
-					additional_vim_regex_highlighting = false,
-				},
-			}
-		end,
-	},
 	--}}}
 
 	--{{{ UI
@@ -348,14 +341,6 @@ return {
 		-- opts = { options = { theme = 'dracula', component_separators = '|', globalstatus = true }, -- sections = {lualine_a = {'buffers'}} - takes too much space
 	-- }
 	end },
-	--}}}
-	--{{{ COLORSCHEMES and Syntax
-	'baskerville/vim-sxhkdrc',
-	'kmonad/kmonad-vim',
-	'rafi/awesome-vim-colorschemes', -- https://vimcolorschemes.com/rafi/awesome-vim-colorschemes
-	-- not used
-	{ 'dracula/vim', lazy = false, priority = 1000, name = 'dracula', enabled = false },
-	{ 'bluz71/vim-moonfly-colors', lazy = false, priority = 1000, enabled = false },
 	--}}}
 }
 -- vim: foldmethod=marker
