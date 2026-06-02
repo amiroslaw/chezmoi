@@ -135,6 +135,7 @@ vim.o.encoding = 'utf-8'
 vim.o.fileencoding = 'utf-8'
 vim.o.fileencodings = 'utf-8', 'latin1'
 vim.o.spelloptions  = 'camel' -- Treat camelCase word parts as separate words
+vim.opt.completeopt = { "menu", "menuone", "noselect" } -- it fixes nvim-cmp plugin
 
 -- UI =========================================================================
 vim.o.colorcolumn    = '+1'       -- Draw column on the right of maximum width
@@ -836,8 +837,8 @@ cmp.setup {
 		-- ['<CR>'] = cmp.mapping(cmp.mapping.confirm { select = true }, { 'i', 'c' }),
 		-- https://github.com/hrsh7th/nvim-cmp/issues/1716 matchSuffix
 		['<C-l>'] = cmp.mapping(cmp.mapping.confirm { select = true, behavior = cmp.ConfirmBehavior.Replace }, { 'i', 'c' }),
-		['<C-j>'] = cmp.mapping(cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert }, { 'i', 'c' }),
-		['<C-k>'] = cmp.mapping(cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert }, { 'i', 'c' }),
+		['<C-j>'] = cmp.mapping(cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select }, { 'i', 'c' }),
+		['<C-k>'] = cmp.mapping(cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select }, { 'i', 'c' }),
 		['<C-e>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() }, -- cancel autocomplation
 		['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }), -- start popup menu
 		['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
