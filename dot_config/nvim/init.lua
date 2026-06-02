@@ -149,8 +149,6 @@ vim.o.winborder      = 'single'   -- Use border in floating windows
 -- Folds (see `:h fold-commands`, `:h zM`, `:h zR`, `:h zA`, `:h zj`)
 vim.o.foldnestmax = 10       -- Limit number of fold levels
 vim.o.foldlevelstart = 9 -- unfold at start - don't work after changes
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 
 -- IncSearch
 vim.o.ignorecase = true
@@ -253,12 +251,13 @@ nmap('t', '<Nop>', 'Disable t key')
 
 vim.g.mapleader = ';'
 vim.g.maplocalleader=" " --space
+nmap('<F1>', ':messages<CR>', 'Open taskwarrior TUI')
 nmap('<F5>', '<cmd>restart<cr>', 'Reload')
 nmap('<F7>', ':!preview-ascii.sh % <CR>', 'adoc preview')
 
 -- nmap('x', '"_x') -- doesn't add to register from `x`, will brake xp
 nmap('<C-/>', ':nohlsearch<cr>', 'Clear search highlights')
-nmap('<F1>', ':term taskwarrior-tui<CR>', 'Open taskwarrior TUI')
+nmap('<F4>', ':term taskwarrior-tui<CR>', 'Open taskwarrior TUI')
 nmap(',l', '<cmd>luafile dev/init.lua<cr>', 'Reload dev init.lua', {}) -- for plugin development
 nmap('Zz', ' :q! <cr>', 'Quit without saving')
 imap('<c-z>', '<Esc>:wq<CR>', 'Save and quit')
@@ -1157,6 +1156,32 @@ vim.lsp.enable({
   -- "html_ls",
 })
 
+-- 1. Configure nvim definitions
+local current_file = vim.api.nvim_buf_get_name(0)
+local is_nvim_config = vim.fs.root(current_file, { "init.lua" }) and string.match(current_file, "nvim")
+
+local lua_library = {}
+if is_nvim_config then
+  lua_library = {
+    vim.env.VIMRUNTIME,
+    vim.fs.joinpath(vim.env.VIMRUNTIME, "lua"),
+  }
+end
+
+vim.lsp.config('lua_ls', {
+  settings = {
+    Lua = {
+      runtime = { version = "LuaJIT" },
+      diagnostics = { globals = { "vim" } },
+      workspace = {
+        checkThirdParty = false,
+        library = lua_library,
+      },
+      completion = { callSnippet = "Replace" },
+    },
+  },
+})
+
 vim.api.nvim_create_autocmd('LspAttach', {
   desc = 'LSP actions',
 group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
@@ -1215,12 +1240,43 @@ group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 		lsp_map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
   end,
 })
--- można nadpisać z folderu lsp
--- vim.lsp.config('luals', {
---   on_attach = function()
---     print('luals is now active in this file')
---   end,
--- })
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  desc = "Keep foldmethod=marker from modeline even with the LSP",
+  callback = function(args)
+    local bufnr = args.buf
+    -- Gets the first and last 5 lines of the file (usually the modeling is there)
+    local lines = vim.api.nvim_buf_get_lines(bufnr, 0, 5, false)
+    local last_lines = vim.api.nvim_buf_get_lines(bufnr, -5, -1, false)
+    for _, line in ipairs(last_lines) do table.insert(lines, line) end
+
+    local has_marker_modeline = false
+    for _, line in ipairs(lines) do
+      if line:match("foldmethod=marker") or line:match("fdm=marker") then
+        has_marker_modeline = true
+        break
+      end
+    end
+
+    if has_marker_modeline then
+      vim.schedule(function()
+        vim.wo.foldmethod = "marker"
+      end)
+    end
+  end,
+})
+
+-- Increase alt-enter; decrease alt-backspace selection
+vim.keymap.set({'n', 'x', 'i'}, '<A-CR>', function()
+	if vim.api.nvim_get_mode().mode == 'i' then
+		vim.cmd('normal! <C-O>')
+	end
+	require('vim.treesitter._select').select_parent(vim.v.count1)
+end, {desc = "Increase selection"})
+
+vim.keymap.set('x', '<A-BS>', function()
+	require('vim.treesitter._select').select_child(vim.v.count1)
+end, {desc = "Decrease selection"})
 
 -- -- Diagnostic Config See :help vim.diagnostic.Opts
 vim.diagnostic.config({
@@ -1257,7 +1313,7 @@ vim.diagnostic.config({
 require("markview").setup({
 	enable = false,
     preview = {
-		map_gx = true, 
+		map_gx = true,
 		enable_hybrid_mode = true,
 		},
     yaml = {
