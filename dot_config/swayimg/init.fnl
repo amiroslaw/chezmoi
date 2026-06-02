@@ -194,6 +194,7 @@
 (bind all_modes :x (fn []
   (with_current_image (fn [path]
     (run_cmd "gomi %s" (shell_quote path))
+	(imagelist.remove path)
      (run_cmd "notify-send \"File moved to the trash: %s\"" (shell_quote path))))))
 
 (bind all_modes :y (fn []
@@ -236,6 +237,7 @@
 (bind all_modes :Shift+x (fn []
   (each [_ path (ipairs (get_marked_paths))]
     (run_cmd "gomi %s" (shell_quote path))
+    (imagelist.remove (shell_quote path))
      (run_cmd "notify-send \"File moved to the trash: %s\"" (shell_quote path)))))
 
 (bind all_modes :Shift+y (fn []
@@ -263,11 +265,10 @@
 (for [i 1 9]
   (let [key (tostring i)]
     (bind all_modes key (fn []
-      (let [image (gallery.get_image)]
-        (when (and image image.path)
-          (run_cmd "mkdir -p %d && mv \"%s\" %d" i image.path i)
+  (with_current_image (fn [path]
+          (run_cmd "mkdir -p %d && mv \"%s\" %d" i path i)
           (run_cmd "notify-send \"Moved to folder: %d\"" i)
-          (imagelist.remove image.path)))))
+          (imagelist.remove path)))))
 
     (bind all_modes (.. "Ctrl+" key) (fn []
       (each [_ path (ipairs (get_marked_paths))]
