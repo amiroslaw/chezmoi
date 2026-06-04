@@ -2,13 +2,12 @@
 ;; Override any option via: swayimg --config="general.mode=gallery"
 ;; TODO mark
 ;; invert_marks in gallery
-;; space for mark and go to next img 
+;; space for mark and go to next img
 
 (local gallery swayimg.gallery)
 (local slideshow swayimg.slideshow)
 (local viewer swayimg.viewer)
 (local imagelist swayimg.imagelist)
-
 ;; ----------------------------------
 ;; Helper functions
 ;; ----------------------------------
@@ -180,7 +179,6 @@
 
 ;; Gallery thumbnail size
 (gallery.on_key :0 #(swayimg.gallery.set_thumb_size 200))
-
 ;; --------------------------------------------------
 ;;               custom functions               --
 ;; --------------------------------------------------

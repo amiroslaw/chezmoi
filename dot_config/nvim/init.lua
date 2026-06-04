@@ -40,6 +40,27 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   desc = "Apply chezmoi changes after writing a chezmoi file",
 })
 
+vim.api.nvim_create_autocmd("BufWritePost", {
+	group = vim.api.nvim_create_augroup('Compile-fennel-file-in-chezmoi', { clear = true }),
+  pattern = "*.fnl",
+  callback = function(args)
+    local file = vim.fn.expand("%:p")
+
+    if not file:match("/.local/share/chezmoi/") then
+      return
+    end
+
+    local home = os.getenv("HOME")
+    local rel = file:gsub("^" .. home .. "/.local/share/chezmoi/", "")
+    local out = home .. "/" .. rel:gsub("%.fnl$", ".lua"):gsub("^dot_", ".")
+
+    vim.fn.jobstart({
+      "sh", "-c",
+      "LUA=luajit fennel --compile " .. file .. " > " .. out
+    })
+  end,
+})
+
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 	pattern = { '*.json' },
 	command = [[set filetype=json]],
@@ -1151,6 +1172,7 @@ vim.lsp.enable({
 	"fennel_ls",
 	"clojure_lsp",
 	"lua_ls",
+	"templ",
 -- 'java_language_server'
   -- "css_ls",
   -- "html_ls",

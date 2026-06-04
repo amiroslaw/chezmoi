@@ -209,10 +209,30 @@ return {
 	  opts = {},
 	  dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
-	--}}}
-	--{{{ LSP and treesitter
+--}}}
+--{{{ LSP, treesitter, formatters
       { 'williamboman/mason.nvim', opts = {} },
-	  { 'https://github.com/neovim/nvim-lspconfig' },
+	{ 'sbdchd/neoformat', cmd = { 'Neoformat' } },
+	{ 'stevearc/conform.nvim',
+	  opts = {
+		formatters_by_ft = {
+		  css = { "prettier" },
+		  scss = { "prettier" },
+		  html = { "prettier" },
+		  javascript = { "prettier" },
+		  json = { "prettier" },
+		  lua = { "stylua" },
+		  markdown = { "prettier" },
+		  clojure = { "zprint" },
+		  asciidoctor = { "zprint" },
+		  shfmt = { "bash" },
+		  ktfmt = { "kotlin" },
+		  fennel = { "fnlfmt" },
+		  -- asciidoctor = { "zprint", "clang-format" },
+		  java = { "clang-format" },
+		},
+	  },
+	},  { 'https://github.com/neovim/nvim-lspconfig' },
 	  { "romus204/tree-sitter-manager.nvim",
 		  dependencies = {}, -- tree-sitter CLI must be installed system-wide
 		  config = function()
@@ -237,6 +257,7 @@ return {
 			})
 	  end
 	},
+--}}}
 --{{{ Code
   {
     "Olical/conjure",
@@ -254,26 +275,6 @@ return {
       return cmp.setup(config)
     end,
   },
-	{ 'sbdchd/neoformat', cmd = { 'Neoformat' } },
-	{ 'stevearc/conform.nvim',
-	  opts = {
-		formatters_by_ft = {
-		  css = { "prettier" },
-		  scss = { "prettier" },
-		  html = { "prettier" },
-		  javascript = { "prettier" },
-		  json = { "prettier" },
-		  lua = { "stylua" },
-		  markdown = { "prettier" },
-		  clojure = { "zprint" },
-		  asciidoctor = { "zprint" },
-		  shfmt = { "bash" },
-		  ktfmt = { "kotlin" },
-		  -- asciidoctor = { "zprint", "clang-format" },
-		  java = { "clang-format" },
-		},
-	  },
-	},
 	{ 'lewis6991/gitsigns.nvim', event = { 'BufReadPre', 'BufNewFile' } },
 	{ "NeogitOrg/neogit", lazy = true, cmd = "Neogit", },
 	{ 'sindrets/diffview.nvim', event = 'VeryLazy', },
