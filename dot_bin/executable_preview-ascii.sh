@@ -10,7 +10,7 @@ nohup watchexec --poll 200ms --restart --watch "$1" -- \
     -a source-highlighter=highlight.js \
     -a source-language=java \
     -a highlightjs-languages=java,js,lua,sql,css,html,typescript,kotlin \
-    -a hardbreaks \
+    -a hardbreaks=true \
     -a experimental=true \
     -a toc=left \
     -a toclevels=5 \
