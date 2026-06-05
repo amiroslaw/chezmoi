@@ -184,6 +184,8 @@ vim.o.clipboard = 'unnamedplus'
 --vim.opt.clipboard:append('unnamedplus')
 
 vim.o.smartindent = true
+vim.opt.linebreak = true     -- Don't split words in the middle
+vim.opt.breakindent = true   -- Indent wrapped lines to match the start of the line
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.softtabstop = 4

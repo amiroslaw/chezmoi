@@ -1,0 +1,35 @@
+# Core definitions
+snippet fn "Named function"
+	(fn ${1:name} [${2:args}]
+		${0})
+
+snippet lambda "Anonymous function shorthand"
+	#(${0})
+
+snippet λ "Lambda function"
+	(λ [${1:args}] ${0})
+
+# Bindings & Flow
+snippet let "Lexical let block"
+	(let [${1:var} ${2:val}]
+		${0})
+
+snippet local "Local binding"
+	(local ${1:name} ${2:val})
+
+snippet match "Pattern matching"
+	(match ${1:val}
+		${2:pattern} ${0})
+
+# Iteration & Macros
+snippet each "Each iterator"
+	(each [${1:k} ${2:v} (pairs ${3:table})]
+		${0})
+
+snippet ipairs "Ipairs iterator"
+	(each [${1:i} ${2:v} (ipairs ${3:table})]
+		${0})
+
+snippet doto "Doto macro invocation"
+	(doto ${1:target}
+		(${2:method} ${0}))
