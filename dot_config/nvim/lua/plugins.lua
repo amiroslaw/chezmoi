@@ -2,6 +2,7 @@
 return {
 	--{{{ COLORSCHEMES and Syntax
 	'kmonad/kmonad-vim',
+	'https://git.sr.ht/~m15a/vim-fennel-syntax',
 	'rafi/awesome-vim-colorschemes', -- https://vimcolorschemes.com/rafi/awesome-vim-colorschemes
 	{ "folke/tokyonight.nvim",
 	  lazy = false,
