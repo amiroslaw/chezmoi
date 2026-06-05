@@ -773,11 +773,13 @@ local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 	nmap('tp', '<cmd>Telescope find_files<cr>', 'Find files')
 	-- nmap('tp', '<cmd>Telescope find_files find_command=rg,--hidden,--files<cr>') -- with hidden files
 	nmap('to', '<cmd>Telescope oldfiles<cr>', 'Recent files')
+	nmap('tf', '<cmd>Telescope lsp_document_symbols symbols=function,method,constant<cr>', 'LSP symbols')
+	nmap('td', '<cmd>Telescope diagnostics bufnr=0<cr> ', 'Diagnostics in current buffer')
+
 	nmap('tl', '<cmd>Telescope current_buffer_fuzzy_find skip_empty_lines=true<cr>', 'Search in current buffer') -- lines in file
 	nmap('tJ', '<cmd>Telescope jumplist sort_lastused=true <cr> ', 'Jumplist') -- I changed source code for showing only current file, idk if sort_lastused works
 	nmap('ta', '<cmd>Telescope buffers ignore_current_buffer=true sort_mru=true show_all_buffers=false<cr>', 'Find buffers') -- closed files, and buffers
 	nmap('tq', '<cmd>Telescope quickfix<cr> ', 'Quickfix list') -- quickfix history
-	nmap('td', '<cmd>Telescope diagnostic<cr> ', 'Diagnostics')
 	nmap('tb', '<cmd>Telescope git_branches<cr>', 'Git branches')
 	nmap('tg', '<cmd>Telescope git_status<cr>', 'Git status')
 	nmap('tn', '<cmd>Telescope loclist<cr> ', 'Location list')
@@ -785,7 +787,6 @@ local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 	nmap('th', '<cmd>Telescope help_tags<cr> ', 'Help tags') -- nivm api
 	nmap('tH', '<cmd>Telescope command_history<cr> ', 'Command history')
 	nmap('tK', '<cmd>Telescope keymaps<cr>', 'Keymaps')
-	nmap('tf', '<cmd>Telescope file_browser<cr>', 'File browser') -- can go to the parent dir
 	nmap('tr', '<cmd>Telescope registers<cr>', 'Registers')
 	nmap('tk', '<cmd>Telescope spell_suggest<cr>', 'Spell suggestions')
 	nmap('t/', '<cmd>Telescope search_history<cr> ', 'Search history')
@@ -793,20 +794,6 @@ local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 	nmap('tC', '<cmd>Telescope colorscheme<cr>', 'Colorschemes')
 	nmap('tm', '<cmd>Telescope marks<cr>', 'Marks') -- list of the pickers
 	nmap('ti', '<cmd>Telescope<cr>', 'Telescope picker list') -- list of the pickers
-
-	-- nmap('tt', ':silent !ctags -R . <CR>:redraw!<cr>:Telescope current_buffer_tags<CR>')
-	-- nmap('T', ':silent !ctags -R . <CR>:redraw!<cr>:Telescope tags<CR>') -- jjjj
-	telescope.load_extension 'heading' -- doesn't work with many entities 
-	-- nmap('tt', '<cmd>Telescope heading sorting_strategy=ascending, <cr>', 'Heading search')
--- Reverses the list so the order is flipped inside the picker window
-	nmap('tt', function()
-	  require('telescope').extensions.heading.heading({
-		sorting_strategy = "ascending",
-		layout_config = {
-		  prompt_position = "top", -- Moves the input prompt to the top for natural reading
-		},
-	  })
-	end, 'Heading search')
 	telescope.load_extension 'jumps'
 	nmap('tu', '<cmd>Telescope jumps changes <cr>', 'Jump changes')
 	nmap('tj', '<cmd>Telescope jumps jumpbuff <cr>', 'Jump buffer')
@@ -814,6 +801,19 @@ local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 	nmap('tU', '<cmd>Telescope luasnip <cr>', 'Lua snippets')
 	telescope.load_extension('smart_open')
 	nmap('<c-f>', '<cmd>Telescope smart_open <cr>', 'Smart open')
+	telescope.load_extension "aerial"
+	nmap('tt', '<cmd>Telescope aerial<cr>', 'outline/header picker') -- list of the pickers
+	-- telescope.load_extension 'heading' -- doesn't work with many entities 
+	-- nmap('tt', '<cmd>Telescope heading sorting_strategy=ascending, <cr>', 'Heading search')
+-- Reverses the list so the order is flipped inside the picker window
+	-- nmap('tt', function()
+	--   require('telescope').extensions.heading.heading({
+	-- 	sorting_strategy = "ascending",
+	-- 	layout_config = {
+	-- 	  prompt_position = "top", -- Moves the input prompt to the top for natural reading
+	-- 	},
+	--   })
+	-- end, 'Heading search')
 	-- telescope.load_extension("yank_history") 
 	-- nmap('ty', '<cmd>Telescope yank_history <cr>')
 end -- }}} 
