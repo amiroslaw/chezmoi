@@ -723,8 +723,21 @@ vmap('<Leader>gd', '<cmd>lua require"browse.devdocs".search_with_filetype()<cr>'
 -- excluded files and folders in .ignore
 vim.o.maxmempattern = 3000 -- fix pattern uses more memory than 'maxmempattern', default is 2000
 
+
 local telescope = require 'telescope'
 if telescope then
+-- TODO: it doesn't recognise filetype
+local function aerial_collumn()
+	local ft = vim.bo.filetype
+	-- vim.notify("ft " .. ft, vim.log.levels.INFO)
+	if ft == "asciidoctor" or ft == "asciidoc" then
+	  -- Available modes: symbols, lines, both
+	  return "lines"
+	else
+	  return "lines"
+	  -- return "both"
+	end
+  end
 local actions = require "telescope.actions"
 local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 	telescope.setup {
@@ -761,8 +774,12 @@ local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 		pickers = {
 			buffers = { mappings = { i = { ["<CR>"] = actions.select_tab_drop } } },-- go to tab if open
 				},
-		  extensions = { heading = { treesitter = true, 
-		  picker_opts = { max_level = 6, }}, },
+		  extensions = { 
+			aerial = {
+				show_columns = aerial_collumn()
+			},
+			  -- heading = { treesitter = true, picker_opts = { max_level = 6, }}, 
+		  },
 		}
 
 	nmap('<c-s>', '<cmd>Telescope live_grep<cr>', 'Live grep')
