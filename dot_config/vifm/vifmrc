@@ -606,6 +606,7 @@ mark a /tmp
 mark A /etc/apt
 mark b /home/miro/.bin
 mark c /home/miro/.config
+mark z /home/miro/.local/share/chezmoi/dot_config
 mark C /home/miro/Code
 mark d /home/miro/Downloads
 mark D /home/miro/Documents
