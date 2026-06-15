@@ -1,6 +1,23 @@
 {{ if lookPath "fennel" -}}
 #!/bin/bash
+notify-send 'compile fennel started'
 # hash: {{ include "dot_config/swayimg/init.fnl" | sha256sum }}
 LUA=luajit fennel --compile {{ .chezmoi.sourceDir }}/dot_config/swayimg/init.fnl > ~/.config/swayimg/init.lua
+
+# hash: {{ include "dot_config/hypr/hyprland.fnl" | sha256sum }}
+# hash: {{ include "dot_config/hypr/monitor.fnl.tmpl" | sha256sum }}
+# hash: {{ include "dot_config/hypr/look.fnl" | sha256sum }}
+# hash: {{ include "dot_config/hypr/util.fnl" | sha256sum }}
+# hash: {{ include "dot_config/hypr/rules.fnl" | sha256sum }}
+
+~/.bin/fennel-compile.sh
+
+# LUA=luajit fennel --compile {{ .chezmoi.sourceDir }}/dot_config/hypr/util.fnl > ~/.config/hypr/util.lua
+# LUA=luajit fennel --compile {{ .chezmoi.sourceDir }}/dot_config/hypr/hyprland.fnl > ~/.config/hypr/hyprland.lua
+# LUA=luajit fennel --compile ~/.config/hypr/monitor.fnl > ~/.config/hypr/monitor.lua
+# LUA=luajit fennel --compile {{ .chezmoi.sourceDir }}/dot_config/hypr/look.fnl > ~/.config/hypr/look.lua
+# LUA=luajit fennel --compile {{ .chezmoi.sourceDir }}/dot_config/hypr/rules.fnl > ~/.config/hypr/rules.lua
+
+notify-send 'compile fennel finished'
 {{ end -}}
 

@@ -1,12 +1,16 @@
 % shortcuts
 @ util
 
+# chezmoi apply managed
+chezmoi apply <force> $HOME/<chezmoi-managed>
+
 # chezmoi apply source
-chezmoi apply --source-path <chezmoi-files>
+chezmoi apply <force> --source-path <chezmoi-files>
 
 # chezmoi apply
 chezmoi apply --include <type> <force>
 $ chezmoi-files: fd -t f ~/.local/share/chezmoi/
+$ chezmoi-managed: chezmoi managed
 $ type: echo "files\nall"
 $ force: echo " \n--force"
 

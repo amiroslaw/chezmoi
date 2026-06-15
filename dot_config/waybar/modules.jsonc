@@ -47,7 +47,7 @@
 },
 "custom/quit": {
     "format": "󰿅 ",
-    "on-click": "hyprctl dispatch exit",
+    "on-click": "hyprctl dispatch 'hl.dsp.exit()'",
     // "tooltip": false,
         "tooltip": true,
         "tooltip-format": "Quit",
@@ -101,11 +101,13 @@
 },
     "hyprland/workspaces": {
         "on-click": "activate",
+        // "on-click": "hyprctl dispatch '(hl.dsp.focus({:workspace {id}})'",
+		// "on-click-right": "mode",
         "activate-only": true,
         // "all-outputs": true, // for multimonitors
         "show-special": true,
-		"on-scroll-up": "hyprctl dispatch workspace e-1",
-		"on-scroll-down": "hyprctl dispatch workspace e+1",
+		"on-scroll-up": "hyprctl dispatch '(hl.dsp.focus({:workspace \"e-1\"})'",
+		"on-scroll-down": "hyprctl dispatch '(hl.dsp.focus({:workspace \"e+1\"})'",
 	"format": "{name} {windows}",
 	"format-window-separator": " ",
 	"window-rewrite-default": "󰻀",

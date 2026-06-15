@@ -8,11 +8,6 @@ system/
 .clj-kondo
 *.nrepl-port
 
-# fennel compile
-.config/swayimg/init.fnl
-.config/swayimg/config.old
-.config/swayimg/init.old.lua
-
 {{ if eq .chezmoi.hostname "pc" }}
 {{ else if eq .chezmoi.hostname "laptop" }}
 ~/Code/.megaignore

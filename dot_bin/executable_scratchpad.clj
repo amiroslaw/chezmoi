@@ -55,13 +55,13 @@
   "Focuses a window using its address."
   [win]
   {:pre [(and (map? win) (:address win))]}
-  (ps-error-handler! true (str "hyprctl dispatch focuswindow address:" (:address win))))
+  (ps-error-handler! true (str "hyprctl dispatch 'hl.dsp.focus({window=\"address:" (:address win) "\"})'")))
 
 (defn- kill-window
   "Kills a window using its address."
   [win]
   {:pre [(and (map? win) (:address win))]}
-  (ps-error-handler! true (str "hyprctl dispatch closewindow address:" (:address win))))
+  (ps-error-handler! true (str "hyprctl dispatch 'hl.dsp.window.close({window=\"address:" (:address win) "\"})'")))
 
 (defn- show-menu
   [{:keys [prompt filter-fn]}]
@@ -94,7 +94,7 @@
   [details]
   {:post [(string? %)]}
   (cond (string? details)
-          (ps-error-handler! true "hyprctl dispatch togglespecialworkspace " details)
+          (ps-error-handler! true (format "hyprctl dispatch 'hl.dsp.workspace.toggle_special(\"%s\")'" details))
         (map? details) (toggle (detail->workspace-name (:workspace details)))
         (sequential? details) (toggle (detail->workspace-name (first details)))))
 
@@ -125,9 +125,8 @@
   ([unnamed-scratchpads]
    {:pre [(sequential? unnamed-scratchpads)], :post [(char? %)]}
    (let [scratchpad-name (char (+ (count unnamed-scratchpads) 97))]
-     (ps-error-handler!
-       true
-       (str "hyprctl dispatch movetoworkspacesilent special:" UNNAMED_PREFIX scratchpad-name))
+      (ps-error-handler! true (format "hyprctl dispatch 'hl.dsp.window.move({workspace=\"special:%s%s\"})'" UNNAMED_PREFIX scratchpad-name))
+      (ps-error-handler! true (format "hyprctl dispatch 'hl.dsp.workspace.toggle_special(\"%s%s\")'" UNNAMED_PREFIX scratchpad-name))
      scratchpad-name)))
 
 ;; todo maybe different name

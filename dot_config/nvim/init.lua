@@ -32,16 +32,19 @@ vim.api.nvim_create_autocmd( -- go to last loc when opening a buffe
 	}
 )
 
+local update_config = vim.api.nvim_create_augroup('update-chezmoi-config', { clear = true })
 vim.api.nvim_create_autocmd("BufWritePost", {
+	group = update_config,
   pattern = os.getenv("HOME") .. "/.local/share/chezmoi/*",
   callback = function(args)
-    vim.fn.system({ "chezmoi", "apply", "--source-path", args.file })
+	  -- the --force flag, will override files in ~/.config
+    vim.fn.system({ "chezmoi", "apply", "--force", "--source-path", args.file })
   end,
   desc = "Apply chezmoi changes after writing a chezmoi file",
 })
-
+-- has to be after chezmoi apply, but even that 
 vim.api.nvim_create_autocmd("BufWritePost", {
-	group = vim.api.nvim_create_augroup('Compile-fennel-file-in-chezmoi', { clear = true }),
+	group = update_config,
   pattern = "*.fnl",
   callback = function(args)
     local file = vim.fn.expand("%:p")
@@ -53,11 +56,12 @@ vim.api.nvim_create_autocmd("BufWritePost", {
     local home = os.getenv("HOME")
     local rel = file:gsub("^" .. home .. "/.local/share/chezmoi/", "")
     local out = home .. "/" .. rel:gsub("%.fnl$", ".lua"):gsub("^dot_", ".")
-
-    vim.fn.jobstart({
-      "sh", "-c",
-      "LUA=luajit fennel --compile " .. file .. " > " .. out
-    })
+	vim.schedule(function()
+		vim.fn.jobstart({
+		  "sh", "-c",
+		  "LUA=luajit fennel --compile " .. file .. " > " .. out
+		})
+    end)
   end,
 })
 
@@ -113,6 +117,7 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 local lang_maps = {
 	python = { exec = "python %" },
 	lua = { exec = "lua %" },
+	fennel = { exec = "fennel %" },
 	java = { build = "javac %", exec = "java %:r" },
 	sh = { exec = "./%" },
 	-- TODO
@@ -1358,13 +1363,13 @@ require("markview").setup({
 		enable_hybrid_mode = true,
 		},
     yaml = {
-		enable = true, 
+		enable = true,
 		},
     asciidoc_inline = {
 		enable = false, -- this plugin does't work good with adoc
 		},
     asciidoc = {
-		enable = false, 
+		enable = false,
 		section_titles = {
 			shift_width = 1,
 		},

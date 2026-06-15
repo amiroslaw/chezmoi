@@ -7,12 +7,12 @@
 # https://github.com/Bash-it/bash-it/blob/master/aliases/available/docker.aliases.bash
 
 #{{{ Dependencies
+# TODO update it 
 # devour
 # dragon-drop
 # borg
 # xprop
 # xrandr
-# stow
 # vifm
 # youtube-dl
 # atool
@@ -53,7 +53,6 @@ alias cfvifm='chezmoi edit --apply ~/.config/vifm/vifmrc'
 alias cfmpd='chezmoi edit --apply ~/.config/mpd/mpd.conf'
 alias cfmpv='chezmoi edit --apply ~/.config/mpv/input.conf'
 alias cfzsh='chezmoi edit --apply ~/.zshrc'
-alias cfhyprland='chezmoi edit --apply ~/.config/hypr/hyprland.conf'
 alias cfwaybar='chezmoi edit --apply ~/.config/waybar/config.jsonc'
 alias cfautostart='chezmoi edit --apply ~/.config/hypr/autostart'
 alias cfbroot='chezmoi edit --apply ~/.config/broot/conf.toml'
@@ -61,8 +60,9 @@ alias cfqute='chezmoi edit --apply ~/.config/qutebrowser/config.py'
 alias cfnchat='chezmoi edit --apply ~/.nchat/key.conf'
 alias cfkanata='chezmoi edit --apply ~/.config/kanata/kanata.kbd'
 alias cfnews='chezmoi edit --apply ~/.config/newsboat/config'
-alias cfurl='nvim ~/.config/newsboat/urls'
 alias cfw3m='chezmoi edit --apply ~/.w3m/keymap'
+alias cfurl='nvim ~/.config/newsboat/urls'
+alias cfhyprland='cd ~/.local/share/chezmoi/dot_config/hypr/ && nvim hyprland.fnl'
 # OLD
 # alias cfportfolio='chezmoi edit --apply ~/.config/investing/portfolio.yaml'
 # alias cfpqiv='chezmoi edit --apply ~/.config/pqivrc'
@@ -370,6 +370,7 @@ alias cdD='cd /media/winD'
 alias cdC='cd /media/winC'
 alias cdh='cd ~'
 alias cdc='cd ~/.config'
+alias cdz='cd ~/.local/share/chezmoi'
 alias cdq='cd ~/.config/qutebrowser'
 alias cds='cd ~/Code/SourceCode'
 # back to previous directory
@@ -553,7 +554,7 @@ function c {
     # br -h --only-folders --cmd "$1;:cd"
 }
 # fasder
-jj () {
+z () {
 	if [ "$#" -gt 0 ]; then
 		cd "$(fasder -de 'printf %s' "$@")" || return 1
 	else

@@ -6,7 +6,7 @@
 #    Jason Bradberry (2025)
 # -----------------------------------------------------
 # =====================================================
-# :todo cache 
+# new hyprland version with lua api doesn't show dispatcher, so it won't be able to execute it
 
 binds_file="$HOME/.local/share/hyprland/hyprbinds.json"
 
@@ -55,22 +55,23 @@ fi
 
 # Filter JSON entries based on criteria
 filtered_entries=$(jq -r '.[] | select(.submap == "" and .dispatcher != "submap") | 
-    "\(.modmask)-\(.key) \"\(.description)\": \(.dispatcher) \(.arg)"' "$binds_file")
+    "\(.modmask)-\(.key) \t \"\(.description)\""' "$binds_file")
+    # "\(.modmask)-\(.key) \"\(.description)\": \(.dispatcher) \(.arg)"' "$binds_file")
 
 counter=$(echo "$filtered_entries" | wc -l)
 # Show options in rofi and get user selection
-selected=$(echo "$filtered_entries" | rofi -dmenu -i -case-smart -p "Hypr keybinds: $counter")
+selected=$(echo "$filtered_entries" | rofi -dmenu -i -l 30 -case-smart -p "Hypr keybinds: $counter")
 
 # Extract dispatcher and arg from the selected entry
-dispatcher=$(echo "$selected" | sed -E 's/.*: ([^ ]+) .*/\1/')
-arg=$(echo "$selected" | sed -E 's/.*: [^ ]+ (.*)/\1/')
+# dispatcher=$(echo "$selected" | sed -E 's/.*: ([^ ]+) .*/\1/')
+# arg=$(echo "$selected" | sed -E 's/.*: [^ ]+ (.*)/\1/')
 
 # Debugging output
-echo "debug: dispatcher='$dispatcher', arg='$arg'"
+# echo "debug: dispatcher='$dispatcher', arg='$arg'"
 
 # Execute the selected command
-if [ -n "$dispatcher" ] && [ -n "$arg" ]; then
-  hyprctl dispatch "$dispatcher" "$arg"
-else
-  echo "Invalid selection or missing arguments"
-fi
+# if [ -n "$dispatcher" ] && [ -n "$arg" ]; then
+#   hyprctl dispatch "$dispatcher" "$arg"
+# else
+#   echo "Invalid selection or missing arguments"
+# fi

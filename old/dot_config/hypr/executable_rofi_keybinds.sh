@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# I don't use it, it is based on sed and grep, hyprland has api for showing bindings
+
 HYPR_CONF="$HOME/.config/hypr/hyprland.conf"
 
 # extract the keybinding from hyprland.conf

@@ -1,0 +1,60 @@
+(local hl _G.hl) ;; removes error in diagnostics 
+{{ if eq .chezmoi.hostname "pc" }}
+;; NVIDIA (PC)
+(hl.env "GBM_BACKEND" "nvidia-drm")
+(hl.env "__GLX_VENDOR_LIBRARY_NAME" "nvidia")
+(hl.env "LIBVA_DRIVER_NAME" "nvidia")
+
+;; Screenshots
+(hl.bind "PRINT" (hl.dsp.exec_cmd "screenshot.clj save --target window") { :description "Screenshot the active window" })
+(map :PRINT (hl.dsp.exec_cmd "screenshot.clj ocr --target region") "Screenshot ocr")
+(mapCtl :PRINT (hl.dsp.exec_cmd "screenshot.clj edit --target output -o /tmp/") "Edit screenshot")
+(mapSft :PRINT (hl.dsp.exec_cmd "screenshot.clj menu") "Screenshot menu")
+
+;; MONITORS
+(hl.monitor { :output "desc:Hewlett Packard HP ZR24w CNT0341213"
+              :mode "1920x1200@59.95"
+              :position "0x0"
+              :scale 1.0 })
+(hl.monitor { :output "desc:Hewlett Packard HP LA2206 3CQ149PK69"
+              :mode "1920x1080@60.0"
+              :position "1920x0"
+              :scale 1.0
+              :transform 1 })
+
+; description: Hewlett Packard HP ZR24w CNT0341213
+; monitor=DVI-D-1, 1920x1200,auto-left,1
+; description: Hewlett Packard HP LA2206 3CQ149PK69
+; monitor=DVI-I-1,1920x1080,auto-right,1, transform, 1
+
+; fix offset 
+(hl.config { :cursor { :no_hardware_cursors true
+                       :inactive_timeout 9
+                       :hide_on_key_press true } })
+
+;; WORKSPACE RULES
+(local main "DVI-D-1")
+(local vertical "DVI-I-1")
+(hl.workspace_rule { :workspace 1  :monitor main :default true })
+(hl.workspace_rule { :workspace 2  :monitor main })
+(hl.workspace_rule { :workspace 3  :monitor main })
+(hl.workspace_rule { :workspace 4  :monitor main })
+(hl.workspace_rule { :workspace 5  :monitor main })
+(hl.workspace_rule { :workspace 6  :monitor main })
+(hl.workspace_rule { :workspace 7  :monitor vertical :default true })
+(hl.workspace_rule { :workspace 8  :monitor vertical })
+(hl.workspace_rule { :workspace 9  :monitor vertical })
+(hl.workspace_rule { :workspace 10 :monitor vertical :layout "scrolling" })
+
+{{ else if eq .chezmoi.hostname "laptop" }}
+(hl.workspace_rule { :workspace 1 :layout "scrolling" })
+;; Screenshots
+(hl.bind "Scroll_Lock" (hl.dsp.exec_cmd "screenshot.clj save --target window") { :description "Screenshot the active window" })
+(map :Scroll_Lock (hl.dsp.exec_cmd "screenshot.clj ocr --target region") "Screenshot ocr")
+(mapCtl :Scroll_Lock (hl.dsp.exec_cmd "screenshot.clj edit --target output -o /tmp/") "Edit screenshot")
+(mapSft :Scroll_Lock (hl.dsp.exec_cmd "screenshot.clj menu") "Screenshot menu")
+
+{{ end }}
+
+;; vi: filetype=fennel
+;; vi: foldmethod=marker
