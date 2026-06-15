@@ -1228,6 +1228,24 @@ vim.lsp.config('lua_ls', {
   },
 })
 
+local diag_enabled = true
+-- TODO doesn't turn on, I can use refresh F5
+local function toggle_diagnostics()
+  diag_enabled = not diag_enabled
+
+  vim.diagnostic.config({
+    virtual_text = diag_enabled,
+    underline = diag_enabled,
+	signs = diag_enabled,
+    update_in_insert = diag_enabled,
+  })
+    local bufnr = vim.api.nvim_get_current_buf()
+
+ if not diag_enabled then
+    vim.diagnostic.reset(nil, bufnr)
+  end
+end
+
 vim.api.nvim_create_autocmd('LspAttach', {
   desc = 'LSP actions',
 group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
@@ -1275,6 +1293,7 @@ group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 		lsp_map('gre', require('telescope.builtin').diagnostics, 'Show [E]rrors')
 		lsp_map(',j', function() vim.diagnostic.jump({count= 1,float = true}) end, 'Go to next error')
 		lsp_map(',k', function() vim.diagnostic.jump({count= -1,float = true}) end, 'Go to prev error')
+		lsp_map('grE', toggle_diagnostics, 'Toggle diagnostics')
 
 		-- Execute a code action, usually your cursor needs to be on top of an error
 		-- or a suggestion from your LSP for this to activate.
@@ -1284,6 +1303,8 @@ group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 		--  Useful when you're not sure what type a variable is and you want to see
 		--  the definition of its *type*, not where it was *defined*.
 		lsp_map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+		nmap('grj',':AerialNext<CR>', 'next symbol')
+		nmap('grk',':AerialPrev<CR>', 'previous symbol')
   end,
 })
 
@@ -1414,9 +1435,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
     callback = function()
         vim.schedule(function()
             if not vim.api.nvim_buf_is_valid(0) then return end
-            
             local ft = vim.bo.filetype
-            
             if ft == "asciidoc" or ft == "asciidoctor" then
                 if vim.g.colors_name ~= colorscheme_default then
                     vim.cmd("colorscheme " .. colorscheme_default)
