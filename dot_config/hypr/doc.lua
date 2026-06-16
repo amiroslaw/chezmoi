@@ -1,0 +1,78 @@
+---@class HL.Window
+---@field accepts_input boolean
+---@field active boolean|nil
+---@field address string
+---@field at integer|table
+---@field class string
+---@field content_type string
+---@field floating boolean
+---@field focus_history_id integer
+---@field fullscreen integer
+---@field fullscreen_client integer
+---@field group HL.Group|nil
+---@field hidden boolean
+---@field inhibiting_idle boolean
+---@field initial_class string
+---@field initial_title string
+---@field layout HL.Window|boolean|integer|number|string|table|nil
+---@field mapped boolean
+---@field monitor HL.Monitor|nil
+---@field over_fullscreen boolean
+---@field pid integer
+---@field pinned boolean
+---@field size integer|table
+---@field stable_id integer
+---@field swallowing HL.Window|nil
+---@field tags string|table
+---@field title string
+---@field visible boolean
+---@field workspace HL.Workspace|nil
+---@field xdg_description string|nil
+---@field xdg_tag string|nil
+---@field xwayland boolean
+local __HL_Window = {}
+
+---@class HL.Workspace
+---@field get_groups fun(self: HL.Workspace, ...): any
+---@field get_windows fun(self: HL.Workspace, ...): any
+---@field active boolean
+---@field config_name string
+---@field fullscreen_mode integer
+---@field fullscreen_window HL.Window|nil
+---@field groups integer|nil
+---@field has_fullscreen boolean
+---@field has_urgent boolean
+---@field id integer
+---@field is_empty boolean
+---@field is_persistent boolean
+---@field last_window HL.Window|nil
+---@field monitor HL.Monitor|nil
+---@field name string
+---@field special boolean
+---@field tiled_layout string
+---@field visible boolean
+---@field windows integer
+local __HL_Workspace = {}
+
+---@class HL.Monitor
+---@field active_special_workspace HL.Workspace|nil
+---@field active_workspace HL.Workspace|nil
+---@field description string
+---@field dpms_status boolean
+---@field focused boolean|nil
+---@field height integer
+---@field id integer
+---@field is_mirror boolean
+---@field mirrors HL.Monitor|table
+---@field name string
+---@field position integer|table
+---@field refresh_rate number
+---@field scale number
+---@field size integer|table
+---@field transform integer
+---@field vrr_active boolean
+---@field width integer
+---@field x integer
+---@field y integer
+local __HL_Monitor = {}
+

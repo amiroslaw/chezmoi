@@ -100,6 +100,7 @@
 (mapCtl :up (hl.dsp.window.resize { :x 0 :y -10 :relative true }) { :description "Resize up" :repeating true })
 
 (map :R u.switch-layout "Switch layout")
+(mapCtl :R (hl.dsp.window.center) "Center window")
 ;; Mouse bindings
 ;; bindings with SUPER don't work
 ; right button
@@ -207,6 +208,18 @@
 (mapSft :T (hl.dsp.exec_cmd (.. DIR_ROFI "/tran/trans-launcher.sh")) "Launch translator menu")
 ;}}} 
 
+;{{{ submaps
+(mapSft :R (hl.dsp.submap "resize") "Submap resize")
+(hl.define_submap "resize"
+  (fn []
+    (hl.bind :L (hl.dsp.window.resize {:x 10 :y 0 :relative true}) {:repeating true})
+    (hl.bind :H (hl.dsp.window.resize {:x -10 :y 0 :relative true}) {:repeating true})
+    (hl.bind :J (hl.dsp.window.resize {:x 0 :y 10 :relative true}) {:repeating true})
+    (hl.bind :K (hl.dsp.window.resize {:x 0 :y -10 :relative true}) {:repeating true})
+    ;; Escape returns to the global submap
+    (hl.bind "escape" (hl.dsp.submap "reset"))))
+;}}} 
+
 ;{{{ Input; Devices, LAYOUTS
 
 ; https://wiki.hyprland.org/Configuring/Variables/#input
@@ -224,6 +237,7 @@
                                   :tap_to_click true
                                   :clickfinger_behavior false } } })
 
+;; it doesn't work in my laptop
 (hl.gesture { :fingers 3 :direction "horizontal" :action "workspace" })
 
 ; Example per-device config Per-device config options will overwrite your options set in the input section.

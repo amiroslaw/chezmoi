@@ -196,6 +196,15 @@
                   :float true })
 
 ;; Dialog windows
+(hl.window_rule { :name "Modals"
+                  :match { :modal true }
+                  :center true
+                  :float true })
+(hl.window_rule { :name "Dialogs"
+                  :match { :title "(Open File|Open|Save|Save As|Export|Import |Choose File|Rename)" }
+                  :center true
+                  :float true })
+;; maybe remove
 (hl.window_rule { :name "windowrule-32"
                   :match { :title "^(Open File)(.*)$" }
                   :center true
