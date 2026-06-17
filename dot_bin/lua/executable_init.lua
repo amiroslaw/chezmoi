@@ -650,80 +650,6 @@ function jsonish(s)
 end
 -- >>>
 
--- jsonishout <<<
--- table to json
---jsonishout{{a=1},{1,"b"}} == '[{"a":1},[1,"b"]]'
-local function quote_json_string(str)
-  return '"'
-    .. str:gsub('(["\\%c])',
-      function(c)
-        return string.format('\\x%02X', c:byte())
-      end)
-    .. '"'
-end
-
-local table_to_json
-
-local function table_to_json_rec(result, t)
-
-  if 'number' == type(t) then
-    result[1+#result] = tostring(t)
-    return
-  end
-
-  if 'table' ~= type(t) then
-    result[1+#result] = quote_json_string(tostring(t))
-    return
-  end
-
-  local isarray = false
-  if not getmetatable(t) then
-    local hasindex, haskey = false, false
-    for _ in ipairs(t) do hasindex = true break end
-    for _ in pairs(t) do haskey = true break end
-    isarray = hasindex or not haskey
-  end
-
-  if isarray then
-    result[1+#result] = '['
-    local first = true
-    for _,v in ipairs(t) do
-      if not first then result[1+#result] = ',' end
-      first = false
-      table_to_json_rec(result, v)
-    end
-    result[1+#result] = ']'
-
-  else
-    result[1+#result] = '{'
-    local first = true
-    for k,v in pairs(t) do
-
-      if 'number' ~= type(k) or 0 ~= math.fmod(k) then -- skip integer keys
-        k = tostring(k)
-        if not first then result[1+#result] = ',' end
-        first = false
-
-        -- Key
-        result[1+#result] = quote_json_string(k)
-        result[1+#result] = ':'
-
-        -- Value
-        table_to_json_rec(result, v)
-      end
-    end
-
-    result[1+#result] = '}'
-  end
-end
-
-jsonishout = function(t)
-  local result = {}
-  table_to_json_rec(result, t)
-  return table.concat(result)
-end
--- >>>
-
 -- filenamesplit <<<
 --Split a file path string filepathStr into the following strings: the folder path pathStr, filename nameStr and extension extStr.
 --filenamesplit( filepathStr ) --> pathStr, nameStr, extStr
@@ -823,6 +749,81 @@ function cliparse( args, default_option )
   return result
 end
 -- >>>
+-- >>>
+--
+-- jsonishout <<<
+-- it doesn't work with hyprland
+-- table to json
+--jsonishout{{a=1},{1,"b"}} == '[{"a":1},[1,"b"]]'
+-- local function quote_json_string(str)
+--   return '"'
+--     .. str:gsub('(["\\%c])',
+--       function(c)
+--         return string.format('\\x%02X', c:byte())
+--       end)
+--     .. '"'
+-- end
+--
+-- local table_to_json
+--
+-- local function table_to_json_rec(result, t)
+--
+--   if 'number' == type(t) then
+--     result[1+#result] = tostring(t)
+--     return
+--   end
+--
+--   if 'table' ~= type(t) then
+--     result[1+#result] = quote_json_string(tostring(t))
+--     return
+--   end
+--
+--   local isarray = false
+--   if not getmetatable(t) then
+--     local hasindex, haskey = false, false
+--     for _ in ipairs(t) do hasindex = true break end
+--     for _ in pairs(t) do haskey = true break end
+--     isarray = hasindex or not haskey
+--   end
+--
+--   if isarray then
+--     result[1+#result] = '['
+--     local first = true
+--     for _,v in ipairs(t) do
+--       if not first then result[1+#result] = ',' end
+--       first = false
+--       table_to_json_rec(result, v)
+--     end
+--     result[1+#result] = ']'
+--
+--   else
+--     result[1+#result] = '{'
+--     local first = true
+--     for k,v in pairs(t) do
+--
+--       if 'number' ~= type(k) or 0 ~= math.fmod(k) then -- skip integer keys
+--         k = tostring(k)
+--         if not first then result[1+#result] = ',' end
+--         first = false
+--
+--         -- Key
+--         result[1+#result] = quote_json_string(k)
+--         result[1+#result] = ':'
+--
+--         -- Value
+--         table_to_json_rec(result, v)
+--       end
+--     end
+--
+--     result[1+#result] = '}'
+--   end
+-- end
+--
+-- jsonishout = function(t)
+--   local result = {}
+--   table_to_json_rec(result, t)
+--   return table.concat(result)
+-- end
 -- >>>
 
 -- vim: fmr=<<<,>>> fdm=marker

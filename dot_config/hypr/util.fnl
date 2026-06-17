@@ -25,9 +25,15 @@
 (global mapSft (lambda [key cmd opts] (map (.. "SHIFT + " key) cmd opts)))
 (global mapAlt (lambda [key cmd opts] (map (.. "ALT + " key) cmd opts)))
 
+(lambda notify [msg icon]
+          (let [icon (or icon :OK)]
+            (hl.notification.create {:text msg :timeout 2000 :font_size 20 :icon icon})))
+(global notify-send (fn [msg icon] (notify msg icon)))
+(global notify-error (fn [msg] (notify msg :ERROR)))
+
 (local M {})
 
-(local layouts ["dwindle" "monocle" "scrolling"])
+(local layouts ["dwindle" "scrolling" "monocle"])
 (fn M.switch-layout []
   (let [w (hl.get_active_workspace)
         current (. w :tiled_layout)

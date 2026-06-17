@@ -183,6 +183,8 @@
                   :match { :class "videopopup" }
                   :float true
                   :pin true
+                  :no_initial_focus true
+                  ; :suppress_event "maximize"
                   :size [380 210]
                   :move ["monitor_w*1-383" "monitor_h*1-230"]
                   :rounding 0 })

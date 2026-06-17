@@ -1,6 +1,12 @@
 (local u (require :util))
 (local hl _G.hl) ;; removes error in diagnostics 
 
+(let [init-path (.. HOME "/.bin/lua/init.lua")
+      (loaded-chunk err) (loadfile init-path)]
+  (if loaded-chunk
+      (loaded-chunk) 
+      (print (.. "Could not load init " (tostring err)))))
+
 ;{{{ ENVIRONMENT
 ;; See https://wiki.hyprland.org/Configuring/Environment-variables/
 ; toolkit backend
@@ -36,6 +42,8 @@
 ; TODO 
 ; bind = $mainMod, C, centerwindow, 
 ; bind = $mainMod, P, pin, 
+
+; (map :A (fn [] (notify-error "test2" 4))  "test" )
 
 ;; Help / keybindings
 (mapCtl :F1 (hl.dsp.exec_cmd (.. CONFIG "/hypr/hypr-keybinds.sh")) "Show keybindings")
