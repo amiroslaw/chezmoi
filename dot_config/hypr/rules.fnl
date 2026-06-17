@@ -104,13 +104,15 @@
                   :workspace "special:drop"
                   :float true
                   :size ["monitor_w*0.9" "monitor_h*0.7"]
+                  ; :max_size [1000 "monitor_h*0.7"]
                   :move ["monitor_w*0.05" 50] })
 
 (hl.window_rule { :name "scratch-chat"
                   :match { :class "^(chat)$" }
                   :workspace "special:chat"
-                  :float true
-                  :size ["monitor_w*0.6" "monitor_h*0.9"] })
+                  :size [1000 "monitor_h*0.9"] 
+                  ; :size ["monitor_w*0.6" "monitor_h*0.9"] 
+                  :float true })
 
 (hl.window_rule { :name "scratch-news"
                   :match { :class "^(news)$" }
@@ -132,7 +134,7 @@
                   :float true
                   :size ["monitor_w*0.8" "monitor_h*0.8"] })
 
-(hl.window_rule { :name "task"
+(hl.window_rule { :name "scratch-task"
                   :match { :class "task" }
                   :workspace "special:task"
                   :float true
@@ -140,32 +142,32 @@
                   :size [1000 "monitor_h*0.9"] })
 ;}}} 
 
-(hl.window_rule { :name "windowrule-19"
+(hl.window_rule { :name "rsvp"
                   :match { :class "rsvp" }
                   :float true
                   :pin true
                   :center true
                   :size [1100 150] })
 
-(hl.window_rule { :name "windowrule-20"
+(hl.window_rule { :name "cheatsh"
                   :match { :class "cheatsh" }
                   :float true })
 
-(hl.window_rule { :name "windowrule-21"
+(hl.window_rule { :name "read"
                   :match { :class "read" }
                   :float true })
 
-(hl.window_rule { :name "windowrule-24"
+(hl.window_rule { :name "mpv-audio"
                   :match { :class "audio" }
                   :float true
                   :center true
                   :size [500 150] })
 
-(hl.window_rule { :name "windowrule-25"
+(hl.window_rule { :name "trash"
                   :match { :class "trash" }
                   :float true
                   :center true
-                  :size [700 "monitor_h*0.9"] })
+                  :size [900 "monitor_h*0.9"] })
 
 (hl.window_rule { :name "qutebrowser-popups"
                   :match { :class "qb" }
@@ -173,16 +175,17 @@
                   :center true
                   :size [900 600] })
 
-(hl.window_rule { :name "windowrule-27"
+(hl.window_rule { :name "ytfzf"
                   :match { :class "ytfzf" }
                   :float true
                   :center true
                   :size [1000 900] })
 
-(hl.window_rule { :name "windowrule-28"
+(hl.window_rule { :name "mpv-popup"
                   :match { :class "videopopup" }
                   :float true
                   :pin true
+                  :keep_aspect_ratio true
                   :no_initial_focus true
                   ; :suppress_event "maximize"
                   :size [380 210]
@@ -193,7 +196,7 @@
                   :match { :class "application.Main" }
                   :float true })
 
-(hl.window_rule { :name "windowrule-30"
+(hl.window_rule { :name "timefx"
                   :match { :class "ovh.miroslaw.timefx.TimeFX" }
                   :float true })
 
