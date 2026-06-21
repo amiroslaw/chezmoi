@@ -2,7 +2,6 @@
 
 ${HOME}/.local/share/cargo/bin/kanata &
 nm-applet --indicator &
-clipcatd &
 {{ if eq .chezmoi.hostname "pc" }}
 sleep 300 && megasync && notify-send "Megasync" &
 sleep 200 && newsboat -x reload && notify-send "newsboat updated" &
