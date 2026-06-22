@@ -80,8 +80,6 @@
 (mapCtl :N (hl.dsp.focus {:workspace "empty:next"}) "Next empty workspace")
 (mapCtl :P (hl.dsp.focus {:workspace "empty:prev"}) "Previous empty workspace")
 
-(map :W (hl.dsp.workspace.swap_monitors { :monitor1 "DVI-D-1" :monitor2 "DVI-I-1" }) "Swap windows")
-
 ;; Groups
 (map :G (hl.dsp.group.toggle) "Toggle group")
 (mapCtl :G (hl.dsp.group.lock_active) "Lock group")
@@ -275,6 +273,19 @@
 (hl.config { :binds { :drag_threshold 10 } })
 (hl.config { :debug { :disable_logs false } })
 ;}}} 
+
+(local monitor1 "DVI-D-1")
+(local monitor2 "DVI-I-1")
+
+(fn swap-monitor []
+  (let [win (hl.get_active_window)]
+    (when win
+      (let [current-mon win.monitor.name
+            target-mon  (if (= current-mon monitor1) monitor2 monitor1)]
+        (hl.dispatch (hl.dsp.window.move {:monitor target-mon}))))))
+
+(map :W swap-monitor "Swap windows")
+; (map :W (hl.dsp.workspace.swap_monitors { :monitor1 "DVI-D-1" :monitor2 "DVI-I-1" }) "Swap windows")
 
 ; include joins files into one lua file
 ;; but require is bettter https://wiki.hypr.land/Configuring/Start/#require
