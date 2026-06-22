@@ -10,8 +10,8 @@
          '[taoensso.timbre.appenders.core :as appenders]
          '[clojure.core.match :refer [match]]
          )
-
-(def default-options {:prompt "Select", :width "500px", :height 23, :multi "", :msg "", :keys "", :format "s"})
+;; TODO print error if provided wrong arguments for matching and format
+(def default-options {:prompt "Select", :width "500px", :height 23, :format "s", :matching "normal", :multi "", :msg "", :keys "", :auto-select "", :no-custom "" })
 (def default-color "#08D9D6")
 
 (timbre/merge-config!
@@ -43,9 +43,12 @@
     (assoc defaults :keys (str/join " " keybindings)
                     :msg (str (:msg defaults) (str/join " " titles)))))
 
+;; with eg. :auto-select false it will match
 (defn- combine-options [options]
   (cond-> (merge default-options options)
           (contains? options :multi) (assoc :multi " -multi-select")
+          (contains? options :auto-select) (assoc :auto-select " -auto-select")
+          (contains? options :no-custom) (assoc :no-custom " -no-custom")
           (contains? options :msg) (assoc :msg (str (:msg options) " ")) ;; or change to %n new line
           (contains? options :keys) (add-keys (:keys options))))
 
@@ -176,6 +179,11 @@
     :else (do (notify-error! "Rofi error")                  ; error
               {:out [], :err "Rofi error", :exit false})))
 
+(defn- rofi-command [opt height msg]
+  (format "rofi -case-smart -monitor -4 -i -format %s -l %s -matching %s -dmenu -p '%s' -theme-str 'window {width: %s;}' %s %s %s %s %s"
+          (:format opt) height (:matching opt) (:prompt opt) (:width opt) (:multi opt) (:auto-select opt) (:no-custom opt) (:keys opt) msg)
+  )
+
 (defn rofi-menu!
   "Displays a menu using the `rofi` command-line tool with the given `entries` and optional `options`.
 
@@ -186,6 +194,9 @@
     - `:width` - A string specifying the width of the menu window. It accepts following units: 80px;80%;80ch
     - `:height` - An integer specifying the maximum number of visible entries in the menu. Default: 24
     - `:multi` - A boolean indicating whether multiple selections are allowed, default: false
+    - `:auto-select` - A boolean indicating whether auto select is enabled. Selects the last entry on the list, default: false
+    - `:no-custom` - A boolean indicating whether no custom is enabled. Don't accept custom entry, default: false
+    - `:matching` - Set the matching algorithm. (normal, regex, glob, fuzzy, prefix), default: normal
     - `:msg` - A string of strings to display as a message in the menu.
     - `:keys` - A vector of keybindings for custom actions. It accepts pango markup(html like). Msg should fit in one line otherwise it will show fewer entries, use width to adjust.
     - `:format` - A character specifying the format of the output. Default: 's' - string. 'i'/'d' - index of the selected item 0/1 based index.
@@ -212,14 +223,13 @@
   ([entries options] {:pre [(map? options)
                             (if (contains? options :keys) (vector? (:keys options)) true)]}
    (let [opt (combine-options options)
-         height (if (> (count entries) (:height opt)) (:height opt) (count entries))
+         height (min (count entries) (:height opt))
          entries (if (string? entries) entries (str/join "\n" entries)) ; todo ? (vec entries)
-         msg (when (not-empty (:msg opt)) (format " -markup -mesg \"%s\"" (:msg opt)))]
-     (let [{:keys [exit out]}
-           (sh {:in entries}
-               (format "rofi -format %s %s -case-smart -monitor -4 -i -l %s -dmenu -p '%s' -theme-str 'window {width:  %s;}' %s %s"
-                       (:format opt) (:multi opt) height (:prompt opt) (:width opt) (:keys opt) msg))]
-       (rofi-menu-return out exit)))))
+         msg     (some->> (not-empty (:msg opt)) (format " -markup -mesg \"%s\""))
+         cmd (rofi-command opt height msg)
+        {:keys [exit out]} (sh {:in entries} (rofi-command opt height msg))]
+                               (print cmd)
+    (rofi-menu-return out exit))))
 
 (defn create-dir!
   "Creates a directory at the specified path. If the path is invalid, an error notification is triggered.
@@ -495,6 +505,8 @@
   (rofi-menu! ["a" "b" "c"] {:format \i})
   (tap> (rofi-menu! ["a" "b" "c"]))
   (tap> (rofi-menu! ["a" "b" "c"] {:prompt "Zmienioe ", :width "504px", :multi "-multi-select"}))
+
+  (tap> (rofi-menu! ["a" "b" "c"] {:prompt "Zmienioe ", :width "504px" }))
   (def keys [["Alt-j" "anonymous function" (fn [] (println "fun in keys"))] ["Alt-q" "stop function" :stop]])
   (defn stop-fn [] (println "defined function stop evaluated"))
   (def actions {:stop stop-fn, :run (fn [] (println "function run"))})
@@ -506,4 +518,8 @@
     ;(if (fu? (get keys exit)))                              ;; jak chcemy mieszać
     )
   (tap> (rofi-menu! ["a" "b" "c"] user-options))
+(rofi-menu! ["a" "ba" "c"] {:prompt "Zmienioe ", :width "504px"
+                            :matching "prefix"
+  :auto-select true 
+  :no-custom true})
   )
