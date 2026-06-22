@@ -11,8 +11,9 @@
          '[clojure.core.match :refer [match]]
          )
 ;; TODO print error if provided wrong arguments for matching and format
-(def default-options {:prompt "Select", :width "500px", :height 23, :format "s", :matching "normal", :multi "", :msg "", :keys "", :auto-select "", :no-custom "" })
-(def default-color "#08D9D6")
+(def ^:private default-options {:prompt "Select", :width "500px", :height 23, :format "s", :matching "normal", :multi "", :msg "", :keys "", :auto-select "", :no-custom "" })
+(def ^:private matching-algorithm #{"normal" "regex" "glob" "fuzzy" "prefix"})
+(def ^:private default-color "#08D9D6")
 
 (timbre/merge-config!
   {:appenders {:spit (appenders/spit-appender {:fname "/tmp/clj/scripts.log"})}})
@@ -43,12 +44,18 @@
     (assoc defaults :keys (str/join " " keybindings)
                     :msg (str (:msg defaults) (str/join " " titles)))))
 
+(defn- verify-matching-arg [options]
+  (let [m (:matching options)]
+      (if (contains? matching-algorithm m)
+        (assoc options :matching m)
+        (do (println m "-> Invalid option for flag -matching, use " (str/join ", " matching-algorithm)) (assoc options :matching (:matching default-options))))))
 ;; with eg. :auto-select false it will match
 (defn- combine-options [options]
   (cond-> (merge default-options options)
           (contains? options :multi) (assoc :multi " -multi-select")
           (contains? options :auto-select) (assoc :auto-select " -auto-select")
           (contains? options :no-custom) (assoc :no-custom " -no-custom")
+          (contains? options :matching) verify-matching-arg
           (contains? options :msg) (assoc :msg (str (:msg options) " ")) ;; or change to %n new line
           (contains? options :keys) (add-keys (:keys options))))
 
@@ -522,4 +529,5 @@
                             :matching "prefix"
   :auto-select true 
   :no-custom true})
+(contains? matching-algorithm "normal")
   )
