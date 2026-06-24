@@ -1,5 +1,6 @@
 #!/usr/bin/env bb
 ;; TODO
+; counter in rofi-menu!
 ; function guards
 ; in rofi-menu keybindings descriptions does't show in msg
 
@@ -11,7 +12,7 @@
          '[clojure.core.match :refer [match]]
          )
 ;; TODO print error if provided wrong arguments for matching and format
-(def ^:private default-options {:prompt "Select", :width "500px", :height 23, :format "s", :matching "normal", :multi "", :msg "", :keys "", :auto-select "", :no-custom "" })
+(def ^:private default-options {:prompt "Select", :width "500px", :height 23, :format "s", :matching "normal", :multi "", :msg "", :keys "", :auto-select "", :no-custom "", :only-match ""})
 (def ^:private matching-algorithm #{"normal" "regex" "glob" "fuzzy" "prefix"})
 (def ^:private default-color "#08D9D6")
 
@@ -50,14 +51,16 @@
         (assoc options :matching m)
         (do (println m "-> Invalid option for flag -matching, use " (str/join ", " matching-algorithm)) (assoc options :matching (:matching default-options))))))
 ;; with eg. :auto-select false it will match
-(defn- combine-options [options]
-  (cond-> (merge default-options options)
-          (contains? options :multi) (assoc :multi " -multi-select")
-          (contains? options :auto-select) (assoc :auto-select " -auto-select")
-          (contains? options :no-custom) (assoc :no-custom " -no-custom")
-          (contains? options :matching) verify-matching-arg
-          (contains? options :msg) (assoc :msg (str (:msg options) " ")) ;; or change to %n new line
-          (contains? options :keys) (add-keys (:keys options))))
+(defn- combine-options [opts]
+  (cond-> (merge default-options opts)
+          (contains? opts :multi) (assoc :multi " -multi-select")
+          (contains? opts :auto-select) (assoc :auto-select " -auto-select")
+          (contains? opts :no-custom) (assoc :no-custom " -no-custom")
+          (contains? opts :only-match) (assoc :only-match " -only-match")
+          (contains? opts :filter) (assoc :filter (format " -filter '%s'" (:filter opts)))
+          (contains? opts :matching) verify-matching-arg
+          (contains? opts :msg) (assoc :msg (str (:msg opts) " ")) ;; or change to %n new line
+          (contains? opts :keys) (add-keys (:keys opts))))
 
 (defn notify-error!
   "Notifies the user of an error message and logs it. Optionally exits the program.
@@ -72,13 +75,14 @@
 
   ;; TODO  rename to run but run! is taken, maybe change to signature: cmd as string and exit? as optional 
 ;; maybe add option to return vector if the output returns multiple lines
-(defn ps-error-handler! [exit? cmd & args]
+(defn ps-error-handler! 
   "Executes a shell command and handles errors.
   Parameters:
   - exit?: A boolean indicating whether to exit the program on error.
   - cmd: The shell command to execute.
   - args: Additional arguments for the shell command.
   Returns the output of the command if successful, otherwise logs and notifies the error."
+  [exit? cmd & args]
   (try
     (let [{:keys [out exit err]} (apply sh cmd args)]
       (if (zero? exit)
@@ -187,9 +191,8 @@
               {:out [], :err "Rofi error", :exit false})))
 
 (defn- rofi-command [opt height msg]
-  (format "rofi -case-smart -monitor -4 -i -format %s -l %s -matching %s -dmenu -p '%s' -theme-str 'window {width: %s;}' %s %s %s %s %s"
-          (:format opt) height (:matching opt) (:prompt opt) (:width opt) (:multi opt) (:auto-select opt) (:no-custom opt) (:keys opt) msg)
-  )
+  (format "rofi -case-smart -monitor -4 -format %s -l %s -matching %s -dmenu -p '%s' -theme-str 'window {width: %s;}' %s %s %s %s %s %s %s"
+          (:format opt) height (:matching opt) (:prompt opt) (:width opt) (:multi opt) (:auto-select opt) (:no-custom opt) (:only-match opt) (:filter opt) (:keys opt) msg))
 
 (defn rofi-menu!
   "Displays a menu using the `rofi` command-line tool with the given `entries` and optional `options`.
@@ -203,6 +206,8 @@
     - `:multi` - A boolean indicating whether multiple selections are allowed, default: false
     - `:auto-select` - A boolean indicating whether auto select is enabled. Selects the last entry on the list, default: false
     - `:no-custom` - A boolean indicating whether no custom is enabled. Don't accept custom entry, default: false
+    - `:only-match` - Force selection to be given entry, disallow no match/esc, default: false
+    - `:filter` - A string for Pre-set filter
     - `:matching` - Set the matching algorithm. (normal, regex, glob, fuzzy, prefix), default: normal
     - `:msg` - A string of strings to display as a message in the menu.
     - `:keys` - A vector of keybindings for custom actions. It accepts pango markup(html like). Msg should fit in one line otherwise it will show fewer entries, use width to adjust.
@@ -233,9 +238,9 @@
          height (min (count entries) (:height opt))
          entries (if (string? entries) entries (str/join "\n" entries)) ; todo ? (vec entries)
          msg     (some->> (not-empty (:msg opt)) (format " -markup -mesg \"%s\""))
-         cmd (rofi-command opt height msg)
+         ; cmd (rofi-command opt height msg)
         {:keys [exit out]} (sh {:in entries} (rofi-command opt height msg))]
-                               (print cmd)
+                               ; (println cmd)
     (rofi-menu-return out exit))))
 
 (defn create-dir!
@@ -526,8 +531,9 @@
     )
   (tap> (rofi-menu! ["a" "b" "c"] user-options))
 (rofi-menu! ["a" "ba" "c"] {:prompt "Zmienioe ", :width "504px"
-                            :matching "prefix"
-  :auto-select true 
-  :no-custom true})
+                            :matching "regex" :filter "^"
+  :auto-select true  :only-match true :no-custom true})
+
+(rofi-menu! ["a" "ba" "c"] {:prompt "Zmienioe ", :width "504px" :matching "regex" :filter "^" :auto-select true  :only-match true :no-custom true})
 (contains? matching-algorithm "normal")
   )
