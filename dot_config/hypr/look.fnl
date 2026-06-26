@@ -29,8 +29,10 @@
                      :exit_window_retains_fullscreen false
                      :force_default_wallpaper -1
                      :disable_hyprland_logo false
-                     :enable_swallow false
-                     :swallow_regex "^(org.wezfurlong.wezterm|foot|footclient)$" } })
+                     :enable_swallow true
+                     :swallow_regex "^(chat)$" ; idk why it doesn't work
+                     ; :swallow_regex "^(org.wezfurlong.wezterm|foot|footclient)$" 
+                     } })
 
 ; ;; ANIMATIONS
 ; (hl.config { :animations { :enabled true } })
