@@ -34,6 +34,13 @@ systemctl <user> list-unit-files --type=service <state>
 # reload daemon ::sdrel
 systemctl <user> daemon-reload
 
+# log service
+journalctl -u <service_system> <boot>
+# log service user
+journalctl --user -u <service_user> <boot>
+
+$ service_system: systemctl list-units --type=service --all | awk '{print $1}' | grep .service | sed 's/.service$//'
+$ service_user: systemctl --user list-units --type=service --all  | awk '{print $1}' | grep .service | sed 's/.service$//'
 $ service_inactive: systemctl <user> list-units --type=service --state=inactive | awk '{print $1}' | grep .service | sed 's/.service$//'
 $ service_active: systemctl <user> list-units --type=service --state=active | awk '{print $1}' | grep .service | sed 's/.service$//'
 $ service_enabled: systemctl <user> list-unit-files --type=service --state=enabled | awk '{print $1}' | grep .service | sed 's/.service$//'
@@ -42,3 +49,5 @@ $ service: systemctl <user> list-units --type=service --all | awk '{print $1}' |
 
 $ state: echo ' \n--state=enabled\n--state=disabled'
 $ user: echo ' \n--user'
+$ boot: echo '-b\n '
+$ service_all: systemctl list-units --type=service --all && systemctl --user list-units --type=service --all  | awk '{print $1}' | grep .service | sed 's/.service$//'
