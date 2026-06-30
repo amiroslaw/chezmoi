@@ -14,7 +14,6 @@
 ; end
 
 ;; WINDOW RULES
-
 ; global
 ; layerrule = noanim, namespace:rofi
 ; Ignore maximize requests from apps. You'll probably like this.

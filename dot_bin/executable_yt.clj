@@ -352,7 +352,7 @@ Examples:
    yt.clj playlist -d UCX6b17PVsYBQ0ip5gyeme-Q
   source <(yt.clj completions)  → source zsh completions
 %nDefault values can be override via system environment. The values:
-TERM_LT and TERM_LT_RUN = %s
+  TERM_LT and TERM_LT_RUN = %s %s
 %nDependencies:
  - clipster, rofi "
           (format-cmds! subcommands)
@@ -360,7 +360,8 @@ TERM_LT and TERM_LT_RUN = %s
           (cli/format-opts {:spec spec-search})
           (cli/format-opts {:spec spec-stats})
           (cli/format-opts {:spec spec-playlist})
-          media/term-run))
+          media/TERM_LT
+          media/TERM_LT_RUN))
 
 (def subcommands
   [{:cmds ["search"] :desc "Search videos." :fn search-videos :spec (merge spec-search spec-source)}

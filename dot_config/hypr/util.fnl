@@ -4,18 +4,8 @@
 (global HOME (os.getenv "HOME"))
 (global CONFIG (or (os.getenv "XDG_CONFIG_HOME") (.. HOME "/.config")))
 (global TERMINAL (or (os.getenv "TERMINAL") "wezterm"))
-(global TERM_RUN (or (os.getenv "TERM_RUN") "-- '%s'"))
 (global TERM_LT (or (os.getenv "TERM_LT") "foot"))
-(global TERM_LT_RUN (or (os.getenv "TERM_LT_RUN") "-e '%s'"))
-(global DIR_NOTE (or (os.getenv "NOTE") (.. HOME "/notes")))
 (global DIR_ROFI (or (os.getenv "ROFI") (.. CONFIG "/rofi")))
-
-(global term-lt-app (lambda [title cmd]
-  (string.format (.. TERM_LT TERM_LT_RUN) title cmd)))
-(global term-app (lambda [title cmd]
-  (string.format (.. TERMINAL TERM_RUN) title cmd)))
-(global scratchpad (lambda [name cmd]
-  (string.format "scratchpad.clj -n %s %s" name cmd)))
 
 ; TODO add bind without super
 (global map (lambda [key cmd opts]

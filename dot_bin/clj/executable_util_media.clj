@@ -1,8 +1,18 @@
 (ns util-media)
 
-(def term-run
+(def TERMINAL  (or (System/getenv "TERMINAL")    "wezterm"))
+(def TERM_RUN  (or (System/getenv "TERM_RUN")    "-- '%s'"))
+(def TERM_LT   (or (System/getenv "TERM_LT")     "foot"))
+(def TERM_LT_RUN (or (System/getenv "TERM_LT_RUN") "-e '%s'"))
+(defn term-lt-app 
   "A term-run command by concatenating environment variables TERM_LT and TERM_LT_RUN"
-  (str (System/getenv "TERM_LT") (System/getenv "TERM_LT_RUN")))
+  [title cmd]
+  (format (str TERM_LT TERM_LT_RUN) (name title) cmd))
+(defn term-app 
+  "A term-run command by concatenating environment variables TERMINAL and TERM_RUN"
+  [title cmd]
+  (format (str TERMINAL TERM_RUN) (name title) cmd))
+
 (def audio-dir "~/Musics/PODCASTS/")
 (def yt-dir "~/Videos/YouTube/")
 ;; TODO add to env
@@ -23,7 +33,7 @@
   {:video      "pueue add -g default --label '%s' -- mpv --profile=stream"
    :popup      "pueue add -g mpv-popup --label '%s' -- mpv --x11-name=videopopup --profile=stream-popup"
    :fullscreen "pueue add -g mpv-fullscreen --label '%s' -- mpv --profile=stream"
-   :audio      (str "pueue add -g mpv-audio --label '%s' -- " (format term-run "audio" (str "mpv --profile=stream-audio ")))
+   :audio      (str "pueue add -g mpv-audio --label '%s' -- " (term-lt-app "audio" "mpv --profile=stream-audio "))
    :dl-video   (str "pueue add --escape -g dl-video --label '%s' -- yt-dlp -q --embed-metadata -f bestvideo[height<=1440]+bestaudio/best -o '" yt-dir "%%(title)s.%%(ext)s' ") ;; TODO it doesnt' work
    :dl-audio   (str "pueue add --escape -g dl-audio --label '%s' -- yt-dlp -q --embed-metadata -f bestaudio -x --audio-format mp3 -o '" audio-dir "%%(title)s.%%(ext)s' ")
    :open       "xdg-open"})

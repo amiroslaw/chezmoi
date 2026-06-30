@@ -146,26 +146,28 @@
 
 ;{{{ APPS
 ; TODO disable-gpu not needed on PC, better to remove password-store
-(map :F1 (hl.dsp.exec_cmd "brave-browser --password-store=basic --args --disable-gpu --profile-directory='Default'") "Run browser")
-(map :F2 (hl.dsp.exec_cmd "/opt/idea-IU-212.5284.40/bin/idea.sh") "Run IntelliJ IDEA")
-(map :F3 (hl.dsp.exec_cmd (term-lt-app "vifm" "vifm")) "Run Vifm in terminal")
+(map :F1 (hl.dsp.exec_cmd "launcher.clj -c brave-browser") "Run browser")
+(map :F2 (hl.dsp.exec_cmd "launcher.clj -c intellij") "Run IntelliJ IDEA")
+(map :F3 (hl.dsp.exec_cmd "launcher.clj -c vifm") "Run Vifm in terminal")
 (map :F4 (hl.dsp.exec_cmd "pcmanfm") "Run file manager")
 (map :F5 (hl.dsp.exec_cmd "keecli.sh") "Run KeePass CLI")
-(map :F6 (hl.dsp.exec_cmd (scratchpad :news (term-app :news :newsboat))) "Run newsboat")
-(map :F7 (hl.dsp.exec_cmd (.. "wezterm start --class note --cwd " DIR_NOTE " -- nvim")) "Run note editor")
-(map :F8 (hl.dsp.exec_cmd (.. "task sync && " (scratchpad :task (term-lt-app :task :taskwarrior-tui)))) "Run taskwarrior")
+(map :F6 (hl.dsp.exec_cmd  "launcher.clj -c newsboat") "Run newsboat")
+ ; "launcher.clj -c "
+(map :F7 (hl.dsp.exec_cmd  "launcher.clj -c notebook") "Run note editor")
+(map :F8 (hl.dsp.exec_cmd  "launcher.clj -c taskwarrior-tui") "Run taskwarrior")
 (map :F9 (hl.dsp.exec_cmd "todo.lua add") "Add todo item")
-(map :F10 (hl.dsp.exec_cmd "mpv.lua -o ~/Videos") "Open video")
-(map :F11 (hl.dsp.exec_cmd "sh -c $(ls ~/.bin | rofi -dmenu)") "Run script")
-(map :F12 (hl.dsp.exec_cmd (.. "rofi -show power-menu -modi power-menu:" DIR_ROFI "/power.sh")) "Power menu")
+(map :F10 (hl.dsp.exec_cmd "launcher.clj -c local-videos") "Open video")
+(map :F11 (hl.dsp.exec_cmd "launcher.clj -c scripts") "Run script")
+(map :F12 (hl.dsp.exec_cmd "launcher.clj -c power-menu") "Power menu")
 
 ;; Notifications
 (map :Escape (hl.dsp.exec_cmd "makoctl dismiss -a") "Dismiss all notifications")
 (mapSft :Escape (hl.dsp.exec_cmd "makoctl restore") "Restore notifications")
 
 ;; Scratchpad
-(hl.bind "F12" (hl.dsp.exec_cmd (scratchpad :drop (term-app "drop" ""))) { :description "Dropdown terminal" })
-(mapCtl :M (hl.dsp.exec_cmd (.. "if ! pidof -x mpd; then mpd && mpDris2 && rmpc update; fi && " (scratchpad :music (term-lt-app :music :rmpc)))) { :description "Music player" :locked true })
+(hl.bind "F12" (hl.dsp.exec_cmd  "launcher.clj -c dropdown-terminal") { :description "Dropdown terminal" })
+;; TODO test
+(mapCtl :M (hl.dsp.exec_cmd (.. "if ! pidof -x mpd; then mpd && mpDris2 && rmpc update; fi && launcher.clj -c music")) { :description "Music player" :locked true })
 (map :D (hl.dsp.exec_cmd "scratchpad.clj --switcher") "List windows")
 (mapCtl :D (hl.dsp.exec_cmd "scratchpad.clj --list") "List scratchpad windows")
 (map :S (hl.dsp.exec_cmd "scratchpad.clj --toggle") "Toggle scratchpad")
@@ -178,9 +180,9 @@
 (mapCtl :V (hl.dsp.exec_cmd "clipcat.clj clip --previous --paste") "Paste previous clipboard item")
 
 ;; Chat AI
-(map :I (hl.dsp.exec_cmd "chat.clj ask --output scratchpad") "Ask chat AI")
-(mapCtl :I (hl.dsp.exec_cmd "chat.clj action --action-list --output scratchpad") "AI action list")
-(mapSft :I (hl.dsp.exec_cmd "chat.clj ask --list --output scratchpad") "Ask chat AI - choose model")
+(map :A (hl.dsp.exec_cmd "chat.clj ask --output scratchpad") "Ask chat AI")
+(mapCtl :A (hl.dsp.exec_cmd "chat.clj action --action-list --output scratchpad") "AI action list")
+(mapSft :A (hl.dsp.exec_cmd "chat.clj ask --list --output scratchpad") "Ask chat AI - choose model")
 
 ;; YouTube
 (map :Y (hl.dsp.exec_cmd "yt.clj playlist --channel") "YT channel playlist")
@@ -189,8 +191,8 @@
 
 ;; Internet
 (map :B (hl.dsp.exec_cmd "rofi-buku") "Launch Buku bookmarks")
-(mapCtl :B (hl.dsp.exec_cmd (.. CONFIG "/qutebrowser/userscripts/session.sh")) "Restore Qutebrowser session")
-(mapSft :B (hl.dsp.exec_cmd (.. CONFIG "/qutebrowser/userscripts/session.sh webapp")) "Launch Qutebrowser webapp")
+(mapCtl :B (hl.dsp.exec_cmd "launcher.clj qutebrowser") "Restore Qutebrowser session")
+(mapCtl :B (hl.dsp.exec_cmd "launcher.clj qutebrowser-apps") "Launch Qutebrowser webapp")
 
 ;; Pomodoro
 (map :Z (hl.dsp.exec_cmd "pomodoro.lua add -n") "Start pomodoro")
@@ -198,20 +200,19 @@
 (mapSft :Z (hl.dsp.exec_cmd "pomodoro.lua menu -n") "Pomodoro menu")
 
 ;; Trash / file management
-(map :Delete (hl.dsp.exec_cmd (term-lt-app :trash "gomi --restore")) "Restore trashed files")
-(mapSft :Delete (hl.dsp.exec_cmd "rmmpv-playing.sh") "Remove MPV playing media")
-(mapCtl :Delete (hl.dsp.exec_cmd "rmrmpc-playing.sh") "Remove MPD playing media")
+(map :Delete (hl.dsp.exec_cmd "launcher.clj -c restore-trash") "Restore trashed files")
+(mapSft :Delete (hl.dsp.exec_cmd "launcher.clj -c remove-mpv") "Remove MPV playing media")
+(mapCtl :Delete (hl.dsp.exec_cmd "launcher.clj -c remove-mpd") "Remove MPD playing media")
 
 ;; System
-; term_lt doesn't work
-(map :BackSpace (hl.dsp.exec_cmd (term-lt-app :top :btop)) "Launch system monitor")
+(map :BackSpace (hl.dsp.exec_cmd  "launcher.clj -c top") "Launch system monitor")
 (mapCtl :BackSpace (hl.dsp.exec_cmd (.. DIR_ROFI "/kill")) "Kill process via menu")
 (mapSft :BackSpace (hl.dsp.exec_cmd "hyprctl kill") "Kill Hyprland")
 
 ;; Translate
 (map :T (hl.dsp.exec_cmd "search.lua --enpl -c") "Translate clip (EN->PL)")
 (mapCtl :T (hl.dsp.exec_cmd "search.lua --enpl -p") "Translate primary (EN->PL)")
-(mapSft :T (hl.dsp.exec_cmd (.. DIR_ROFI "/tran/trans-launcher.sh")) "Launch translator menu")
+(mapSft :T (hl.dsp.exec_cmd "launcher.clj -c menu-trans") "Launch translator menu")
 ;}}} 
 
 ;{{{ submaps
@@ -293,5 +294,6 @@
 (require :rules)
 (require :monitor)
 (require :animations.dynamic)
+; (map :A (hl.dsp.exec_cmd "launcher.clj --all") "List all scripts")
 
 ; vi: foldmethod=marker

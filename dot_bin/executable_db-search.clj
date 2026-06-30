@@ -84,7 +84,7 @@
   (printf "A script for searching links from database.
   Options:%n%s
   %nSystem environment for playing audio in terminal:
-  TERM_LT and TERM_LT_RUN = %s
+  TERM_LT and TERM_LT_RUN = %s %s
   Database paths:
   qutebrowser = %s
   newsboat = %s
@@ -92,7 +92,8 @@
    - quetebrowser, newsbout, rofi, mpv
    - optional: pueue"
           (cli/format-opts spec)
-          media/term-run
+          media/TERM_LT
+          media/TERM_LT_RUN
           (get-in db [:qutebrowser :path])
           (get-in db [:newsboat :path])))
 
