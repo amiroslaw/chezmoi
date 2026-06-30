@@ -182,7 +182,7 @@ look if some programs need to be execute with shell
   news (cmd setsid launcher.clj -c newsboat)
   quake (cmd setsid launcher.clj -c dropdown-terminal)
   tw (cmd setsid launcher.clj -c taskwarrior-tui)
-  chat (cmd setsid launcher.clj -c nchat)
+  chat (cmd launcher.clj -c nchat)
   off (cmd setsid launcher.clj -c power-menu)
   kee (cmd setsid keecli.sh)
   todo (cmd todo.lua add)
