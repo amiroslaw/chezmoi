@@ -1,6 +1,5 @@
 #!/usr/bin/env bb
 (require 
-         '[babashka.process :as p]
          '[babashka.cli :as cli]
          '[babashka.classpath :as cp])
 (cp/add-classpath (str (System/getenv "HOME") "/.bin/clj"))
@@ -167,6 +166,9 @@
       :menu   (mapv :item all)}))
   ([group]
    (let [cheats (get cheatsheets (keyword group))]
+     (println group)
+     (println "group")
+     (println cheats)
      {:cheats cheats
       :menu   (mapv #(format "%s - %s" (name (:abbr %)) (:desc %)) cheats)})))
 
@@ -206,11 +208,21 @@
       ; (println "exit ok")
       )))
 
-(defn group-list 
+(defn group-list
   "List all groups"
   []
   (doseq [[group cheats] cheatsheets]
-    (println (format "%s with elements %s" group (count cheats)))))
+    (println (format "%s with elements %s" group (count cheats))))
+  (let [group (keys cheatsheets)
+        prompt (format "Groups (%s)" (count group))
+        {:keys [out exit]} (rofi-menu! group {:prompt prompt, :width "500px", :matching "prefix", :auto-select true, :no-custom true})]
+    (if exit
+      (-> out
+          first
+          (subs 1)
+          create-menu
+          run-rofi)
+      (System/exit 0))))
 
 (def spec {:spec
            {:all {:alias :a :desc  "List all cheatsheets"}
