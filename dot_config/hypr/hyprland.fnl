@@ -184,6 +184,8 @@
 (mapCtl :A (hl.dsp.exec_cmd "chat.clj action --action-list --output scratchpad") "AI action list")
 (mapSft :A (hl.dsp.exec_cmd "chat.clj ask --list --output scratchpad") "Ask chat AI - choose model")
 
+(map :I (hl.dsp.exec_cmd "pkill -USR2 -x handy") "Toggle handy: speak to text")
+
 ;; YouTube
 (map :Y (hl.dsp.exec_cmd "yt.clj playlist --channel") "YT channel playlist")
 (mapCtl :Y (hl.dsp.exec_cmd "yt.clj search --input") "Search YouTube")

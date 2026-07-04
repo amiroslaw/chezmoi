@@ -2,9 +2,13 @@
 
 ${HOME}/.local/share/cargo/bin/kanata &
 nm-applet --indicator &
+sleep 900 && systemctl --user start clipcat.service &
+
 {{ if eq .chezmoi.hostname "pc" }}
 sleep 300 && megasync && notify-send "Megasync" &
-sleep 200 && newsboat -x reload && notify-send "newsboat updated" &
+sleep 200 && newsboat -x reload  &
+sleep 900 && handy.AppImage &
+
 {{ else if eq .chezmoi.hostname "laptop" }}
 sleep 300 && mega-sync && notify-send "Megasync" &
 {{ end }}
