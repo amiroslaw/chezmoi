@@ -1,5 +1,7 @@
 #!/usr/bin/env bb
-(require '[babashka.cli :as cli]
+(require 
+         '[babashka.process :as p]
+         '[babashka.cli :as cli]
          '[babashka.classpath :as cp])
 (cp/add-classpath (str (System/getenv "HOME") "/.bin/clj"))
 (require '[util-media :as util])
@@ -111,24 +113,28 @@
   { :abbr :wso :title :wiki-selection :desc "wiki selection" :cmd "search.lua --wiki -p" }
   { :abbr :wco :title :wiki-clip :desc "wiki clip" :cmd "search.lua --wiki -c" } ]
 :translate [ ;; move from AI to this?
-  { :abbr :ment :title :menu-trans :desc "menu translate" :cmd (str ROFI "/tran/trans-launcher.sh")}
   { :abbr :dso :title :diki-selection :desc "diki selection" :cmd "search.lua --diki -p" }
   { :abbr :dco :title :diki-clip :desc "diki clip" :cmd "search.lua --diki -c" }
   { :abbr :lso :title :deepl-selection :desc "deepl selection" :cmd "search.lua --deepl -p" }
   { :abbr :lco :title :deepl-clip :desc "deepl clip" :cmd "search.lua --deepl -c" }
   { :abbr :tso :title :translator-google-selection :desc "translator google selection" :cmd "search.lua --translator -p" } 
   { :abbr :tco :title :translator-google-clip :desc "translator google clip" :cmd "search.lua --translator -c" }
-  { :abbr :enso :title :plen-trans-selection :desc "plen trans selection" :cmd "search.lua --plen -p" }
-  { :abbr :enco :title :plen-trans-clip :desc "plen trans clip" :cmd "search.lua --plen -c" }
-  { :abbr :plso :title :enpl-trans-selection :desc "enpl trans selection" :cmd "search.lua --enpl -p" }
-  { :abbr :plco :title :enpl-trans-clip :desc "enpl trans clip" :cmd "search.lua --enpl -c" } ]
+  { :abbr :ment :title :menu-trans :desc "menu translate" :cmd (str ROFI "/tran/trans-launcher.sh")}
+  { :abbr :ein :title :plen-input-notify :desc "plen trans input to notify" :cmd (str ROFI "/tran/selfrunning/plen-notify.sh") }
+  { :abbr :eit :title :plen-input-txt :desc "plen trans input to text" :cmd (str ROFI "/tran/selfrunning/enpl-txt.sh") }
+  { :abbr :pin :title :enpl-input-notify :desc "enpl trans input to notify" :cmd (str ROFI "/tran/selfrunning/plen-notify.sh") }
+  { :abbr :pit :title :enpl-input-txt :desc "enpl trans input to text" :cmd (str ROFI "/tran/selfrunning/plen-txt.sh") }
+  { :abbr :eso :title :plen-trans-selection :desc "plen trans selection" :cmd "search.lua --plen -p" }
+  { :abbr :eco :title :plen-trans-clip :desc "plen trans clip" :cmd "search.lua --plen -c" }
+  { :abbr :pso :title :enpl-trans-selection :desc "enpl trans selection" :cmd "search.lua --enpl -p" }
+  { :abbr :pco :title :enpl-trans-clip :desc "enpl trans clip" :cmd "search.lua --enpl -c" } ]
 :apps [
        ;; chyba przenieść do hyprland, co z keychord?
   { :abbr :mnus :title :scripts :desc "list scripts" :cmd "sh -c 'ls ~/.bin | rofi -dmenu'" }
   { :abbr :music :title :music :desc "music player" :cmd (scratchpad :music (util/term-lt-app :music "rmpc"))}
   { :abbr :pueue :title :pueue-menu :desc "pueue menu" :cmd "qu.clj menu" }
-  { :abbr :qbro :title :qutebrowser :desc "qutebrowser" :cmd "$XDG_CONFIG_HOME/qutebrowser/userscripts/session.sh" }
-  { :abbr :qbroapp :title :qutebrowser-apps :desc "qutebrowser webapp" :cmd "$XDG_CONFIG_HOME/qutebrowser/userscripts/session.sh webapp" }
+  { :abbr :qbro :title :qutebrowser :desc "qutebrowser" :cmd (str CONFIG "/qutebrowser/userscripts/session.sh") }
+  { :abbr :qbroapp :title :qutebrowser-apps :desc "qutebrowser webapp" :cmd (str CONFIG "/qutebrowser/userscripts/session.sh webapp") }
   { :abbr :brave :title :brave-browser :desc "brave browser" :cmd  "brave-browser --password-store=basic --args --disable-gpu --profile-directory='Default'" }
   { :abbr :borigin :title :brave-origin-browser :desc "brave origin browser" :cmd  "brave-origin --password-store=basic --args --disable-gpu --profile-directory='Default'" }
   { :abbr :note :title :notebook :desc "notebook" :cmd (format "wezterm start --class note --cwd '%s' -- nvim" (System/getenv "NOTE")) }
@@ -170,9 +176,8 @@
   (println "exec-cmd:")
   (println cmd)
   (cond
-    (string? cmd) (ps-error-handler! false cmd) ;; TODO change to true 
-    (vector? cmd) (doseq [c cmd]
-                    (ps-error-handler! false c))
+    (string? cmd) (exec! cmd {:background? true})
+    (vector? cmd) (doseq [c cmd] (exec! c {:background? true}))
     :else (notify-error! (format "could not execute %s" cmd) true)))
 
 (defn run

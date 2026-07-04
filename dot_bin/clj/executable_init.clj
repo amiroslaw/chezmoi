@@ -73,8 +73,7 @@
    (log! msg :error)
    (when exit? (System/exit 1))))
 
-  ;; TODO  rename to run but run! is taken, maybe change to signature: cmd as string and exit? as optional 
-;; maybe add option to return vector if the output returns multiple lines
+  ;; TODO  depricated
 (defn ps-error-handler! 
   "Executes a shell command and handles errors.
   Parameters:
@@ -90,6 +89,38 @@
         (notify-error! err exit?)))
     (catch Exception e
       (notify-error! (.getMessage e) exit?))))
+
+;; maybe add option to return vector if the output returns multiple lines
+(defn exec!
+  "Executes a shell command and handles errors.
+  Call as: (exec! cmd arg1 arg2 ... {:exit? true :background? false})
+  Options map (optional, last positional arg):
+  - :exit?       Exit the program on error. Default true. (Blocking mode only.)
+  - :background? Launch and return immediately, no wait for completion. Default false.
+  Returns the command's output when blocking and successful.
+  When :background? true, returns immediately after launching (launch errors are still caught).
+  
+  ;; Default: exits on error, blocks until done
+  (println (exec! \"ls\"))
+  ;; Don't exit on error, still block
+   (println (exec! \"ls\"  {:exit? false}))
+  ;; Run in background, don't block script — returns a future immediately
+   (println (exec! \"timefx\" {:background? true})) "
+  [cmd & args]
+  (let [opts?    (map? (last args))
+        opts     (if opts? (last args) {})
+        cmd-args (if opts? (butlast args) args)
+        {:keys [exit? background?] :or {exit? true background? false}} opts]
+    (try
+      (if background?
+        (apply process (into [cmd] cmd-args) {:out :inherit :err :inherit})
+        (let [{:keys [out err exit]} (apply sh cmd cmd-args)]
+              ; @(apply process (into [cmd] cmd-args) {:out :string :err :string})
+          (if (zero? exit)
+            out
+            (notify-error! err exit?))))
+      (catch Exception e
+        (notify-error! (.getMessage e) exit?)))))
 
 (defn- replace [text pattern color]
   (str/replace text (re-pattern (str pattern)) (format "<span color='%s'>%s</span>" color pattern)))

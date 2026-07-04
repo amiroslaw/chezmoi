@@ -42,6 +42,7 @@ alias grat='gamification t -d yesterday'
 
 # {{{ config files
 alias batalias='bat ~/.config/aliases'
+alias cflauncher='chezmoi edit --apply ~/.bin/launcher.clj'
 alias cfaliases='chezmoi edit --apply ~/.config/zsh/aliases'
 alias cftask='chezmoi edit --apply ~/.config/task/taskrc'
 alias cfidea='chezmoi edit --apply ~/.config/ideavim/ideavimrc'
