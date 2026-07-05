@@ -1,7 +1,7 @@
 {
   :linters {
     :unresolved-symbol {
-      :exclude [rofi-menu! notify-error! ps-error-handler! notify! rofi-indexes->inputs format-cmds! completion! log! dialog! rofi-input! rofi-number-input! create-dir! scratchpad! editor! get-properties! url? url-params http-error-handler! dbg dbgn fireworks.core ? !? ?> !?> $ shell process]
+      :exclude [rofi-menu! notify-error! exec! ps-error-handler! notify! rofi-indexes->inputs format-cmds! completion! log! dialog! rofi-input! rofi-number-input! create-dir! scratchpad! editor! get-properties! url? url-params http-error-handler! dbg dbgn fireworks.core ? !? ?> !?> $ shell process]
     }
   }
 }

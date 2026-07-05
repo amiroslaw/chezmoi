@@ -17,7 +17,7 @@
   "Fetches and parses JSON output from a hyprctl command."
   [cmd]
   {:pre [(string? cmd)], :post [(or (map? %) (sequential? %))]}
-  (json/parse-string (ps-error-handler! true (format "hyprctl %s -j" cmd)) true))
+  (json/parse-string (exec! (format "hyprctl %s -j" cmd)) true))
 
 (defn rofi-format-item
   "Formats a window item for rofi.
@@ -37,7 +37,9 @@
         rofi-opts {:prompt (str prompt (count windows))
                    :width "80%"
                    :format \i
+                   :matching "prefix" :auto-select true :no-custom true :only-match true
                    :keys [["Alt-k" "kill window"]]}
+        ;; maybe: I could use -matching regex -filter '^' but I would have to reorder some col in the rofi menu
         {:keys [out exit key]} (rofi-menu!
                                  window-items
                                  rofi-opts)]
@@ -55,13 +57,13 @@
   "Focuses a window using its address."
   [win]
   {:pre [(and (map? win) (:address win))]}
-  (ps-error-handler! true (str "hyprctl dispatch 'hl.dsp.focus({window=\"address:" (:address win) "\"})'")))
+  (exec! (str "hyprctl dispatch 'hl.dsp.focus({window=\"address:" (:address win) "\"})'")))
 
 (defn- kill-window
   "Kills a window using its address."
   [win]
   {:pre [(and (map? win) (:address win))]}
-  (ps-error-handler! true (str "hyprctl dispatch 'hl.dsp.window.close({window=\"address:" (:address win) "\"})'")))
+  (exec! (str "hyprctl dispatch 'hl.dsp.window.close({window=\"address:" (:address win) "\"})'")))
 
 (defn- show-menu
   [{:keys [prompt filter-fn]}]
@@ -94,7 +96,7 @@
   [details]
   {:post [(string? %)]}
   (cond (string? details)
-          (ps-error-handler! true (format "hyprctl dispatch 'hl.dsp.workspace.toggle_special(\"%s\")'" details))
+          (exec! (format "hyprctl dispatch 'hl.dsp.workspace.toggle_special(\"%s\")'" details))
         (map? details) (toggle (detail->workspace-name (:workspace details)))
         (sequential? details) (toggle (detail->workspace-name (first details)))))
 
@@ -106,8 +108,7 @@
   {:pre [(string? class) (string? cmd)]}
   (if (some #(= (:class %) class) (hypr-props "clients"))
     (toggle class)
-    ;; maybe better to run by hyprctl exec
-    (ps-error-handler! true cmd)))
+    (exec! cmd {:background? true})))
 
 (defn- special-workspaces
   "Returns workspaces, optionally filtered by a name prefix."
@@ -125,8 +126,8 @@
   ([unnamed-scratchpads]
    {:pre [(sequential? unnamed-scratchpads)], :post [(char? %)]}
    (let [scratchpad-name (char (+ (count unnamed-scratchpads) 97))]
-      (ps-error-handler! true (format "hyprctl dispatch 'hl.dsp.window.move({workspace=\"special:%s%s\"})'" UNNAMED_PREFIX scratchpad-name))
-      (ps-error-handler! true (format "hyprctl dispatch 'hl.dsp.workspace.toggle_special(\"%s%s\")'" UNNAMED_PREFIX scratchpad-name))
+      (exec! (format "hyprctl dispatch 'hl.dsp.window.move({workspace=\"special:%s%s\"})'" UNNAMED_PREFIX scratchpad-name))
+      (exec! (format "hyprctl dispatch 'hl.dsp.workspace.toggle_special(\"%s%s\")'" UNNAMED_PREFIX scratchpad-name))
      scratchpad-name)))
 
 ;; todo maybe different name

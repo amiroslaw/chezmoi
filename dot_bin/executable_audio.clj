@@ -14,7 +14,7 @@
 
 (def PW
   ; (delay
-  (-> (ps-error-handler! true "pw-dump")
+  (-> (exec! "pw-dump")
       (json/parse-string true)))
   ; )
 
@@ -48,7 +48,7 @@
   [card-id profile-index]
   {:pre [(is (number? card-id)) (is (number? profile-index))]}
   (print card-id profile-index)
-  (ps-error-handler! false (format "wpctl set-profile %d %d" card-id profile-index)))
+  (exec! (format "wpctl set-profile %d %d" card-id profile-index) {:exit? true}))
 
 (defn- select-profile []
   (-> (keys devs)

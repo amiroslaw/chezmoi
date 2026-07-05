@@ -52,8 +52,8 @@
 ;; todo, change to clipcat
 (defn- clipboard [type]
   {:pre [(string? type)]}
-  (ps-error-handler! true (str "clipcat.clj " type)))
-  ; (ps-error-handler! true (str "clipster --output -m '' --" type)))
+  (exec! (str "clipcat.clj " type)))
+  ; (exec! (str "clipster --output -m '' --" type)))
 
 ;; Data Fetching
 (defn- fetch-playlist [id]
@@ -238,7 +238,7 @@
   [videos action]
   {:pre [(seq? videos) (keyword? action)]}
   (doseq [video videos]
-    (ps-error-handler! false (media/cmd-from-action action (:title video)) (:url video))))
+    (exec! (media/cmd-from-action action (:title video)) (:url video) {:exit? true :background? true})))
 
 (defn- rofi-videos [response]
   {:pre [(vector? response) (every? map? response)]}

@@ -15,17 +15,11 @@
 (def grim-formats #{"png" "ppm" "jpeg"})
 (def targets #{"region" "window" "output" "screen"})
 
-(defn- handle-out
-  [{:keys [out exit err]}]
-  (if (zero? exit) ;; Should also be surrounded with try-catch
-    out
-    (notify-error! err)))
-
 (defn- hypr-props
   "Fetches and parses JSON output from a hyprctl command."
   [cmd]
   {:pre [(is (string? cmd))], :post [(or (is map? %) (is sequential? %))]}
-  (json/parse-string (ps-error-handler! true (format "hyprctl %s -j" cmd)) true))
+  (json/parse-string (exec! (format "hyprctl %s -j" cmd)) true))
 
 (defn- grab-active-win
   "Retrieves information about the active window, including its title and geometry."
@@ -72,11 +66,11 @@
         base-name (or title name)]
     (format "%s-%s" base-name date)))
 
-(defn- convert-format   
+(defn- convert-format
   "Converts an image format"
   [input output]
   {:pre [(is (string? input)) (is (string? output))]}
-  (handle-out (sh (format "%s %s %s" "magick" input output))))
+  (exec! (format "%s %s %s" "magick" input output)))
 
 (defn- save-screenshot
   "Takes a screenshot using grim and saves it to the specified path, optionally applying format and geometry options."
@@ -85,11 +79,10 @@
   (let [args (cond-> []
                (:format opts) (conj "-t" (:format opts))
                (:geometry opts) (conj "-g" (format "'%s'" (:geometry opts))))]
-    (println (str "grim " (str/join " " args) path))
-    (handle-out (sh (str "grim " (str/join " " args) path))))) ;; ps-error-handler! doesn't work
+    (exec! (str "grim " (str/join " " args) path))))
         ; (:monitor opts) (conj "-o" ) ;; for a specific output
 
-(defn- create-temp-dir   
+(defn- create-temp-dir
   "Creates a temporary directory for screenshots."
   []
   {:post [(is (string? %)) (is (fs/directory? %))]}
@@ -134,7 +127,7 @@
   (let [{:keys [basename path-tmp]} (capture-screenshot-to-temp (:target opts) "edit" :format "ppm")
         dir-out (get-save-dir (:output opts))
         path-out (format "'%s/edit-%s.png'" dir-out basename)]
-    (ps-error-handler! true (format "satty --filename %s --output-filename %s" path-tmp path-out))))
+    (exec! (format "satty --filename %s --output-filename %s" path-tmp path-out))))
 
 (defn- ocr
   "Performs OCR (Optical Character Recognition) using Tesseract, copies the extracted text to the clipboard"
@@ -142,7 +135,7 @@
   (let [{:keys [basename path-tmp]} (capture-screenshot-to-temp (:target opts) "ocr" :format "ppm")
         dir (create-temp-dir)
         path-txt (format "%s/ocr-%s" dir basename)]
-    (ps-error-handler! true (format "tesseract %s %s" path-tmp path-txt))
+    (exec! (format "tesseract %s %s" path-tmp path-txt))
     (pipeline (pb "cat" (str path-txt ".txt")) (pb "wl-copy"))
     (notify! "Text copied to clipboard.")))
 

@@ -64,7 +64,7 @@
   - videos: A list of the videos
   - action: The action to execute, which should be a key in the actions map"
   [videos action]
-  (doseq [video videos] (ps-error-handler! false (media/cmd-from-action action (second video)) (first video))))
+  (doseq [video videos] (exec! (media/cmd-from-action action (second video)) (first video) {:exit? true :background? true} )))
 
 (defn- run [db keys default]
   (let [history (query-history! db)

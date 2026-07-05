@@ -36,7 +36,7 @@
       selected-text (System/getenv "QUTE_SELECTED_TEXT")
       url (build-url qute-url selected-text page)]
   (notify! url)
-  (ps-error-handler! true "clipcatctl insert " url))
+  (exec! "clipcatctl insert " url))
   ; (sh {:in url} "clipster -c "))
 
 (comment

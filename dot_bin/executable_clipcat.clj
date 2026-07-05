@@ -14,18 +14,18 @@
 
 (defn- primary
   [{opts :opts}]
-  (let [primary (ps-error-handler! true "wl-paste --primary")]
+  (let [primary (exec! "wl-paste --primary")]
     (if (:paste opts)
       (do
-       (ps-error-handler! true "sleep 0.100")
+       (exec! "sleep 0.100")
         ; shift+insert -  primary clipboard
-        (ps-error-handler! true "ydotool key 42:1 110:1 110:0 42:0")
+        (exec! "ydotool key 42:1 110:1 110:0 42:0")
         (println primary))
       (println primary))))
 
 (defn- list-clip-id []
   {:post [(sequential? %)]}
-  (->> (ps-error-handler! true "clipcatctl list")
+  (->> (exec! "clipcatctl list")
        str/split-lines
        (map #(str/split % #":"))
        (map first)))
@@ -33,7 +33,7 @@
 (defn- get-clip
   [id]
   {:pre [(string? id)], :post [(string? %)]}
-  (ps-error-handler! true "clipcatctl get" id))
+  (exec! "clipcatctl get" id))
 
 (defn- last-clip [] (get-clip (first (list-clip-id))))
 
@@ -42,10 +42,10 @@
   ([opts clip]
    (if (:paste opts)
      (do 
-       ; (ps-error-handler! true "sleep 0.100")
+       ; (exec! "sleep 0.100")
          ; ctrl+v
-         (ps-error-handler! true "ydotool key 29:1 47:1 47:0 29:0")
-         ; (ps-error-handler! true "clipcatctl insert -k primary" clip)
+         (exec! "ydotool key 29:1 47:1 47:0 29:0")
+         ; (exec! "clipcatctl insert -k primary" clip)
          ;       'xdotool sleep 0.100 key --clearmodifiers ctrl+v'
          (println clip))
      (println clip))))
@@ -57,10 +57,10 @@
          previous
          get-clip
          str/trim
-         (ps-error-handler! true "clipcatctl insert")))
+         (exec! "clipcatctl insert")))
   (paste-clip opts))
 
-(defn- menu [{opts :opts}] (ps-error-handler! true "clipcat-menu insert") (paste-clip opts))
+(defn- menu [{opts :opts}] (exec! "clipcat-menu insert") (paste-clip opts))
 
 (defn- join
   [{opts :opts}]

@@ -74,21 +74,21 @@
    (when exit? (System/exit 1))))
 
   ;; TODO  depricated
-(defn ps-error-handler! 
-  "Executes a shell command and handles errors.
-  Parameters:
-  - exit?: A boolean indicating whether to exit the program on error.
-  - cmd: The shell command to execute.
-  - args: Additional arguments for the shell command.
-  Returns the output of the command if successful, otherwise logs and notifies the error."
-  [exit? cmd & args]
-  (try
-    (let [{:keys [out exit err]} (apply sh cmd args)]
-      (if (zero? exit)
-        out
-        (notify-error! err exit?)))
-    (catch Exception e
-      (notify-error! (.getMessage e) exit?))))
+; (defn ps-error-handler! 
+;   "Executes a shell command and handles errors.
+;   Parameters:
+;   - exit?: A boolean indicating whether to exit the program on error.
+;   - cmd: The shell command to execute.
+;   - args: Additional arguments for the shell command.
+;   Returns the output of the command if successful, otherwise logs and notifies the error."
+;   [exit? cmd & args]
+;   (try
+;     (let [{:keys [out exit err]} (apply sh cmd args)]
+;       (if (zero? exit)
+;         out
+;         (notify-error! err exit?)))
+;     (catch Exception e
+;       (notify-error! (.getMessage e) exit?))))
 
 ;; maybe add option to return vector if the output returns multiple lines
 (defn exec!
@@ -111,11 +111,12 @@
         opts     (if opts? (last args) {})
         cmd-args (if opts? (butlast args) args)
         {:keys [exit? background?] :or {exit? true background? false}} opts]
+    (log! (format "%s %s \n%s" cmd cmd-args opts))
     (try
       (if background?
-        (apply process (into [cmd] cmd-args) {:out :inherit :err :inherit})
-        (let [{:keys [out err exit]} (apply sh cmd cmd-args)]
-              ; @(apply process (into [cmd] cmd-args) {:out :string :err :string})
+        (process (into [cmd] cmd-args) {:out :inherit :err :inherit})
+        (let [{:keys [out err exit]} @(process (into [cmd] cmd-args) {:out :string :err :string}) ]
+              ; (apply sh cmd cmd-args)
           (if (zero? exit)
             out
             (notify-error! err exit?))))

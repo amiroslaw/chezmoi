@@ -28,7 +28,7 @@
    :title  (or (not-empty (:label task)) (:command task))
    :cmd    (:original_command task)})
 
-(def TASKS (delay (-> (ps-error-handler! true "pueue status --json")
+(def TASKS (delay (-> (exec! "pueue status --json")
                       (json/parse-string true)
                       :tasks
                       (->> (map last)
@@ -64,7 +64,7 @@
 
 (defn- log [selected]
   {:pre [(or (string? selected) (seq? selected))]}
-  (let [json (-> (ps-error-handler! true (format "pueue log --json --full --all")) ;; it can be listed by group or ids
+  (let [json (-> (exec! (format "pueue log --json --full --all")) ;; it can be listed by group or ids
                  (json/parse-string true))
         logs (map json->log (map last json))
         filtered-logs (if (string? selected)
@@ -83,25 +83,25 @@
 (defn- open
   "Open the URL of the selected tasks in the default browser."
   [selected] {:pre [(seq? selected)]}
-  (ps-error-handler! true (format "%s %s" (System/getenv "BROWSER") (cmds->urls selected))))
+  (exec! (format "%s %s" (System/getenv "BROWSER") (cmds->urls selected)) {:exit? true :background? true}))
 
 (defn- make-playlist
   "Creates an mpv playlist for tasks in a specific group."
   [group]
   {:pre [(string? group)]}
-  (ps-error-handler! true (format "mpv.lua --makeQueue --input %s" group)))
+  (exec! (format "mpv.lua --makeQueue --input %s" group)))
 
 (defn- kill [selected]
   {:pre [(or (string? selected) (seq? selected))]}
   (if (sequential? selected)
-    (ps-error-handler! true (format "pueue kill %s " (tasks->ids selected)))
-    (ps-error-handler! true (format "pueue kill -g %s " selected))))
+    (exec! (format "pueue kill %s " (tasks->ids selected)))
+    (exec! (format "pueue kill -g %s " selected))))
 
 (defn- kill-any [_]
   (let [running-task (filter #(= (:status %) :Running) @TASKS)]
     (if (empty? running-task)
       (notify! "No running tasks.")
-      (ps-error-handler! true "pueue kill --all"))))
+      (exec! "pueue kill --all"))))
 
 (defn- restart
   "Restart failed or successful task(s)"
@@ -109,34 +109,34 @@
   {:pre [(or (string? selected) (seq? selected))]}
   (if (sequential? selected)
     (do
-      (ps-error-handler! true (format "pueue restart -i %s " (tasks->ids selected)))
-      (ps-error-handler! true (format "pueue start %s " (tasks->ids selected))))
+      (exec! (format "pueue restart -i %s " (tasks->ids selected)))
+      (exec! (format "pueue start %s " (tasks->ids selected))))
     (do
-      (ps-error-handler! true (format "pueue restart -i -g %s " selected))
-      (ps-error-handler! true (format "pueue start -g %s " selected)))))
+      (exec! (format "pueue restart -i -g %s " selected))
+      (exec! (format "pueue start -g %s " selected)))))
 
 (defn- reset
   "Remove all jobs in a group, first kill them if necessary."
   [_]
-  (ps-error-handler! true (format "pueue reset --force")))
+  (exec! (format "pueue reset --force")))
 
 (defn- delete
   "Remove tasks from the list. Running or paused tasks need to be killed first."
   [selected]
   {:pre [(seq? selected)]}
-  (ps-error-handler! true (format "pueue remove %s " (tasks->ids selected))))
+  (exec! (format "pueue remove %s " (tasks->ids selected))))
 
 (defn- clean
   "Remove all finished (with failed and killed) tasks from the list"
   [group]
   {:pre [(string? group)]}
-  (ps-error-handler! true (format "pueue clean -g %s" group)))
+  (exec! (format "pueue clean -g %s" group)))
 
 (defn- clean-successful
   "Remove all successful finished tasks from the list"
   [group]
   {:pre [(string? group)]}
-  (ps-error-handler! true (format "pueue clean --successful-only -g %s" group)))
+  (exec! (format "pueue clean --successful-only -g %s" group)))
 
 (defn- execute-action [action selected]
   {:pre [(or (string? selected) (seq? selected))]}
@@ -265,7 +265,7 @@ Dependencies: pueue, rofi, notify-send, mpv.lua, clipster "
 
   (list-tasks "default")
   (list-tasks nil)
-  (json/parse-string (ps-error-handler! true "pueue status --json") true)
+  (json/parse-string (exec! "pueue status --json") true)
   (kill-any)
   (menu nil)
   )

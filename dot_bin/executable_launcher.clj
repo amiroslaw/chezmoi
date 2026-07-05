@@ -166,17 +166,13 @@
       :menu   (mapv :item all)}))
   ([group]
    (let [cheats (get cheatsheets (keyword group))]
-     (println group)
-     (println "group")
-     (println cheats)
+     (when-not cheats (notify-error! (str "No group: " group) true))
      {:cheats cheats
       :menu   (mapv #(format "%s - %s" (name (:abbr %)) (:desc %)) cheats)})))
 
 (defn- exec-cmd
   "Execute a single command string or a vector of commands sequentially."
   [cmd]
-  (println "exec-cmd:")
-  (println cmd)
   (cond
     (string? cmd) (exec! cmd {:background? true})
     (vector? cmd) (doseq [c cmd] (exec! c {:background? true}))
@@ -204,9 +200,7 @@
            (get cheats)
            :cmd
           exec-cmd)
-      (System/exit 0)
-      ; (println "exit ok")
-      )))
+      (System/exit 0))))
 
 (defn group-list
   "List all groups"
