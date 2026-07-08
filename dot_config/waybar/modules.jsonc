@@ -398,4 +398,11 @@
         "return-type" : "json"
     },
 
+	"custom/voxtype": {
+		"exec": "voxtype status --follow --format json --extended",
+		"return-type": "json",
+		"format": "{}",
+		"tooltip": true
+	},
+
 }

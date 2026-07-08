@@ -184,7 +184,11 @@
 (mapCtl :A (hl.dsp.exec_cmd "chat.clj action --action-list --output scratchpad") "AI action list")
 (mapSft :A (hl.dsp.exec_cmd "chat.clj ask --list --output scratchpad") "Ask chat AI - choose model")
 
-(map :I (hl.dsp.exec_cmd "pkill -USR2 -x handy") "Toggle handy: speak to text")
+; (map :I (hl.dsp.exec_cmd "pkill -USR2 -x handy") "Toggle handy: speak to text")
+(map :I (hl.dsp.exec_cmd "voxtype record toggle --model small") "Toggle speak to text - multi")
+; (mapCtl :I (hl.dsp.exec_cmd "voxtype record toggle --model small") "Toggle speak to text - multilanguage")
+(hl.bind "PAUSE" (hl.dsp.exec_cmd "voxtype record start --model small") {:description "Start speak to text - multi"})
+(hl.bind "PAUSE" (hl.dsp.exec_cmd "voxtype record stop") {:release true :description "Stop speak to text"})
 
 ;; YouTube
 (map :Y (hl.dsp.exec_cmd "yt.clj playlist --channel") "YT channel playlist")

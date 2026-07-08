@@ -1,16 +1,22 @@
 #! /usr/bin/env bb
 
 (require '[clojure.string :as str]
-         '[clojure.core.match :refer [match]]
          '[cheshire.core :as json]
          '[clojure.test :refer [is]])
 
 ; wpctl status to find the device-name
 (def device-name "Family 17h")
 (def devs
-  {:speakers "output:analog-stereo",
+  ;; in the red input it has to be something for output:analog-stereo, cos it doesn't support input
+  {:speakers "output:analog-surround-40", ; it will play on the monitor :speakers and headset 
+  :speakers-microphone "output:analog-surround-40+input:analog-stereo",
    :headset "output:analog-surround-21",
-   :microphone "output:analog-surround-21+input:analog-stereo"})
+   :headset-microphone "output:analog-surround-21+input:analog-stereo"})
+
+; without the second headset 
+  ; {:speakers "output:analog-stereo",
+  ;  :headset "output:analog-surround-21",
+  ;  :headset-microphone "output:analog-surround-21+input:analog-stereo"})
 
 (def PW
   ; (delay
@@ -40,9 +46,9 @@
   [profiles active-profile]
   (let [active-profile (:name (first active-profile))] ;; first, what if I have many active
                                                        ;; provides ??
-    (if (= active-profile (:speakers devs))
-      (get-profile-index profiles (:headset devs))
-      (get-profile-index profiles (:speakers devs)))))
+    (if (= active-profile (:speakers-microphone devs))
+      (get-profile-index profiles (:headset-microphone devs))
+      (get-profile-index profiles (:speakers-microphone devs)))))
 
 (defn- set-profile
   [card-id profile-index]
@@ -52,7 +58,7 @@
 
 (defn- select-profile []
   (-> (keys devs)
-      (rofi-menu! {:prompt "Select audio profile", :width "32ch"})
+      (rofi-menu! {:prompt "Select audio profile", :width "32ch" :matching "prefix" :no-custom true :auto-select true})
       :out
       first
       (subs 1)
@@ -61,11 +67,11 @@
 (defn main [arg]
   (let [{:keys [card-id profiles active-profile]} (get-device device-name)]
     (if (= arg "toggle")
-    (set-profile card-id (toggle profiles active-profile))
-    (->> (select-profile)
-         (get devs)
-         (get-profile-index profiles)
-         (set-profile card-id)))))
+      (set-profile card-id (toggle profiles active-profile))
+      (->> (select-profile)
+           (get devs)
+           (get-profile-index profiles)
+           (set-profile card-id)))))
 
 (main (first *command-line-args*))
 
