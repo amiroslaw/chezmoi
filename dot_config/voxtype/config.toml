@@ -8,10 +8,12 @@ engine = "whisper"
 [audio]
 # List devices with: pactl list sources short
 device = "default"
+# device = "pipewire"
 # Sample rate in Hz (whisper expects 16000)
 sample_rate = 16000
 # Maximum recording duration in seconds (safety limit)
-max_duration_secs = 60
+# max_duration_secs = 60
+max_duration_secs = 180
 # Pause MPRIS media players (Spotify, Firefox, etc.) when recording starts,
 # resume them when recording stops. Requires playerctl.
 pause_media = true
@@ -55,6 +57,7 @@ gpu_isolation = false
 # maybe enambe gpu_isolation
 # available_models = ["small.en", "base", "base.en", "small"]
 # available_models = ["base.en", "base", "small", "small.en",  "large-v3-turbo"]
+# available_models = ["small", "base"]
 # large-v3-turbo - is too slow, maybe I can't use GPU
 
 # Maximum models to keep loaded in memory (LRU eviction when exceeded)
@@ -139,7 +142,12 @@ pl = "pl"
 # The command receives text on stdin and outputs processed text on stdout.
 # Useful for LLM-based text cleanup, grammar correction, filler word removal.
 # On any failure (timeout, error), falls back to original transcription.
-#
+
+[output.post_process]
+# save history
+command = "tee >(awk '{print strftime(\"%d-%m-%Y %H:%M:%S\"), $0}' >> /tmp/voxtype-history.txt)"
+timeout_ms = 5000
+
 # [output.post_process]
 # command = "ollama run llama3.2:1b 'Clean up this dictation. Fix grammar, remove filler words. Output only the cleaned text:'"
 # timeout_ms = 30000  # 30 second timeout (generous for LLM)
@@ -192,12 +200,13 @@ icon_theme = "nerd-font"
 
 [hotkey]
 enable = false
+# it works even if it is set to false
 # Common choices: SCROLLLOCK, PAUSE, RIGHTALT, F13-F24
 # hold key
-key = "SCROLLLOCK"
+# key = "SCROLLLOCK"
 # Optional modifier keys that must also be held
 # Example: modifiers = ["LEFTCTRL", "LEFTALT"]
-modifiers = []
+# modifiers = []
 # Modifier key to select secondary model (evdev input mode only)
 # When held while pressing the hotkey, uses whisper.secondary_model instead
 # Example: model_modifier = "LEFTSHIFT"  # Shift+hotkey uses secondary model
