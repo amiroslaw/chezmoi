@@ -2,7 +2,8 @@
 
 ${HOME}/.local/share/cargo/bin/kanata &
 nm-applet --indicator &
-sleep 200 && systemctl --user start clipcat.service &
+# sleep 200 && systemctl --user start clipcat.service &
+# sleep 200 && systemctl --user start voxtype.service &
 
 {{ if eq .chezmoi.hostname "pc" }}
 sleep 300 && megasync && notify-send "Megasync" &

@@ -23,7 +23,7 @@
 
 (local M {})
 
-(local layouts ["dwindle" "scrolling" "monocle"])
+(local layouts ["dwindle" "monocle" "scrolling"])
 (fn M.switch-layout []
   (let [w (hl.get_active_workspace)
         current (. w :tiled_layout)
