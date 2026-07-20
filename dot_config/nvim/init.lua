@@ -1109,11 +1109,13 @@ nlocLeader('cf', '<Plug>(grammarous-fixit)', 'Fix grammar error', { noremap = fa
 
 -- nap-nvim {{{
 -- Quickly jump between next and previous NeoVim buffer, tab, file, spell, change list, jump list quickfix, diagnostic, etc. 
+-- good for diagnostic/spell errors
+-- next_repeat/prev_repeat lets you keep cycling through the same kind of navigation
 require("nap").setup({
-    next_prefix = "<a-o>",
-    prev_prefix = "<a-i>",
-    next_repeat = "<c-o>",
-    prev_repeat = "<c-i>",
+    next_prefix = "<a-.>",
+    prev_prefix = "<a-,>",
+    next_repeat = "<c-.>",
+    prev_repeat = "<c-,>",
     operators = {   ["c"] = {
         next = { rhs = '<Plug>(grammarous-move-to-next-error)', opts = {desc = "grammarous-move-to-next", noremap = false} },
         prev = { rhs = '<Plug>(grammarous-move-to-previous-error)', opts = {desc = "grammarous-move-to-prev", noremap = false} },
