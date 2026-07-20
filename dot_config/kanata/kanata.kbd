@@ -38,7 +38,7 @@ look if some programs need to be execute with shell
   XX    @quake    XX    @news    XX    @tw    @yt    XX    @qb    XX    @fm    XX    XX    XX
   XX    @audio @off @rofi @vifm    XX    XX    @chat @kee     @qu   XX    XX    XX
   XX    @pom  @todo  @idea    @video    XX    @note    XX    XX    XX    XX    XX
-  XX    XX    @run              XX              XX    XX    XX
+  XX    XX	@appsl             XX              XX    XX    XX
 )
 
 (deflayer launcher
@@ -46,7 +46,7 @@ look if some programs need to be execute with shell
   XX    XX    XX    XX    XX    @task    XX    @url		XX   @open    XX    XX    XX    XX
   XX    @ai XX @trans XX    XX    XX    XX  XX     XX   XX    XX    XX
   XX    XX  XX  @clipl    XX    XX    XX    @media    XX    XX    XX    XX
-  XX    @appsl   XX           XX              XX    XX    @appsl
+  XX    @run	XX          XX              XX    XX    @run
 )
 
 (deflayer pl
@@ -155,6 +155,7 @@ look if some programs need to be execute with shell
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defalias ;; launcher scripts
+  run (cmd setsid launcher.clj --all)
   ai (cmd setsid launcher.clj -g AI)
   media (cmd setsid launcher.clj -g media)
   url (cmd setsid launcher.clj -g url)
@@ -167,7 +168,6 @@ look if some programs need to be execute with shell
 
 (defalias ;; common apps scripts
   ;; without setsid or sh -c, apps will be terminated when kanata is killed
-  run (cmd setsid launcher.clj --all)
   ;;tab (tap-dance 200 (tab M-tab  A-tab C-tab)) ;; 3x tab super + tab 3x tab = alt tab; it is too common to execute it
   trash (cmd setsid launcher.clj -c restore-trash)
   rofi (cmd rofi -modi drun,keys,run -show drun -show-icons -sidebar-mode -monitor -4 -matching fuzzy)

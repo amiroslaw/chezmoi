@@ -37,7 +37,7 @@
         rofi-opts {:prompt (str prompt (count windows))
                    :width "80%"
                    :format \i
-                   :matching "prefix" :auto-select true :no-custom true :only-match true
+                   :matching "prefix" :auto-select true :no-custom true
                    :keys [["Alt-k" "kill window"]]}
         ;; maybe: I could use -matching regex -filter '^' but I would have to reorder some col in the rofi menu
         {:keys [out exit key]} (rofi-menu!
