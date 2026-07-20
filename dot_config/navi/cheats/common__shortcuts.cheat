@@ -55,6 +55,14 @@ $ clip:  bb -o '(case "<clip-op>" "clip" "clipcat.clj clip" "select" "clipcat.cl
 # ffmpeg increase volume; double around 2-3
 ffmpeg -i <file> -af "speechnorm,volume=<double>" "<base>-loud.<ext>"
 
+# ffmpeg convert file types
+ffmpeg -i <file> -q:a 2 <output>
+
+# ffmpeg convert file types bunch
+for f in *.<ffmpeg-ext-in>; do ffmpeg -i "$f" -q:a 2 "${f%.<ffmpeg-ext-in>}.mp3"; done
+# ffmpeg -i <file> -c:a libmp3lame -q:a 2 output.mp3
+
+$ ffmpeg-ext-in
 $ file: find . -maxdepth 1 -type f 
 $ base: basename <file> .<ext>
 # split filename and extention

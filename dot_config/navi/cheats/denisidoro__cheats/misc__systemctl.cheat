@@ -2,7 +2,8 @@
 
 # shutdown ::shutd
 sleep <timer> && systemctl poweroff
-$ timer: echo '900\n1800\n2700\n3600\n4'
+$ timer-op: echo '15 min\n30 min\n45 min\n60 min'
+$ timer:  bb -i '(case "<timer-op>" "15 min" "900" "30 min" "1800" "45 min" "2700" "60 min" "3600" (str (* <timer-op> 60)))'
 
 # start service
 systemctl <user> start <service_inactive>
@@ -34,20 +35,28 @@ systemctl <user> list-unit-files --type=service <state>
 # reload daemon ::sdrel
 systemctl <user> daemon-reload
 
-# log service
-journalctl -u <service_system> <boot>
-# log service user
-journalctl --user -u <service_user> <boot>
+# cat print config
+journalctl <user> cat <service_system> 
 
-$ service_system: systemctl list-units --type=service --all | awk '{print $1}' | grep .service | sed 's/.service$//'
-$ service_user: systemctl --user list-units --type=service --all  | awk '{print $1}' | grep .service | sed 's/.service$//'
-$ service_inactive: systemctl <user> list-units --type=service --state=inactive | awk '{print $1}' | grep .service | sed 's/.service$//'
-$ service_active: systemctl <user> list-units --type=service --state=active | awk '{print $1}' | grep .service | sed 's/.service$//'
+# log service
+journalctl <user> <level> -u <service_system> <lines> 
+# log service user
+journalctl --user <level> -u <service_user> <lines>
+$ user: echo ' \n--user'
+$ level: echo ' \n-p err \n-p warning \n-p notice \n-p debug'
+
+# it doesn't list all eg. xdg-desktop-portal-hyprland 
+$ service_system: systemctl <user> list-unit-files --type=service --all | awk '{print $1}' | grep .service | sed 's/.service$//'
+# I can remove that
+$ service_user: systemctl --user list-unit-files --type=service --all  | awk '{print $1}' | grep .service | sed 's/.service$//'
+$ service_inactive: systemctl <user> list-unit-files --type=service --state=inactive | awk '{print $1}' | grep .service | sed 's/.service$//'
+$ service_active: systemctl <user> list-unit-files --type=service --state=active | awk '{print $1}' | grep .service | sed 's/.service$//'
 $ service_enabled: systemctl <user> list-unit-files --type=service --state=enabled | awk '{print $1}' | grep .service | sed 's/.service$//'
 $ service_disabled: systemctl <user> list-unit-files --type=service --state=disabled | awk '{print $1}' | grep .service | sed 's/.service$//'
-$ service: systemctl <user> list-units --type=service --all | awk '{print $1}' | grep .service | sed 's/.service$//'
+$ service: systemctl <user> list-unit-files --type=service --all | awk '{print $1}' | grep .service | sed 's/.service$//'
 
 $ state: echo ' \n--state=enabled\n--state=disabled'
-$ user: echo ' \n--user'
-$ boot: echo '-b\n '
+$ lines: echo '--boot\n--follow\n--all'
 $ service_all: systemctl list-units --type=service --all && systemctl --user list-units --type=service --all  | awk '{print $1}' | grep .service | sed 's/.service$//'
+# maybe add 
+$ output: echo 'short\ncat\njson'
