@@ -30,14 +30,14 @@
 ;{{{ AUTOSTART
 (hl.on "hyprland.start"
   (fn []
-    (hl.exec_cmd "systemctl --user start hyprland-session.target")
-    (hl.exec_cmd "systemctl --user start hyprpolkitagent")
-    (hl.exec_cmd "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
 ; Start a custom session or import target manually (systemd doesn't allow direct starting of graphical-session.target, but importing environment helps systemd recognize the session)
-    (hl.exec_cmd "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+    (hl.exec_cmd "systemctl --user start hyprland-session.target")
+    (hl.exec_cmd "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP PATH")
+    (hl.exec_cmd "systemctl --user start hyprpolkitagent")
+    (hl.exec_cmd "dbus-update-activation-environment --systemd --all")
 ; name has to match with the dir name in ~/.local/share/icons/
     (hl.exec_cmd "hyprctl setcursor GoogleDot-cursor 14")
-    (hl.exec_cmd "sleep 1 && waybar &")
+    ; (hl.exec_cmd "sleep 1 && waybar &")
     (hl.exec_cmd TERMINAL)
     (hl.exec_cmd "$XDG_CONFIG_HOME/hypr/autostart.sh")))
 
