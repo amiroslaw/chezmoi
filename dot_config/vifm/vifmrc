@@ -393,7 +393,7 @@ command! pasteFile xclip-pastefile
 " associacja :f  wybieramy program gdy mamy kilka ustawionych
 " 2>/dev/null but better use %i
 " Pdf need poppler and libcaca
-filextype {*.pdf},<application/pdf> zathura %c %i &, pqiv %c, xreader %c
+filextype {*.pdf},<application/pdf> zathura %c %i &, xreader %c
 
 " PostScript
 filextype {*.ps,*.eps,*.ps.gz},<application/postscript> zathura %f, pqiv %f,

@@ -384,21 +384,21 @@ alias ......='cd ../../../../..'
 #}}}
 
 #{{{ list of the files/directories
-alias l='eza --icons'
-alias la='eza --icons -a'
-alias lt='eza --icons --tree'
-alias lr='eza --icons --recurse'
+alias l='eza --icons always'
+alias la='eza --icons always -a'
+alias lt='eza --icons always --tree'
+alias lr='eza --icons always --recurse'
 alias ld='eza --only-dirs'
-alias ll='eza --icons -l' #long
-alias llg='eza --icons --git -l'
-alias lle='eza --icons --extended -l'
-alias lla='eza --icons -la'
+alias ll='eza --icons always -l' #long
+alias llg='eza --icons always --git -l'
+alias lle='eza --icons always --extended -l'
+alias lla='eza --icons always -la'
 alias lld='eza --only-dirs -l'
-alias lls='eza --icons -l --group-directories-first -ssize' # sort by size
-alias llS='eza --icons -l --group-directories-first -ssize --reverse' # sort by size
-alias llc='eza --icons -l -schanged' # sort by changed
-alias llC='eza --icons -l -schanged --reverse'
-alias lt='eza --icons --tree'
+alias lls='eza --icons always -l --group-directories-first -ssize' # sort by size
+alias llS='eza --icons always -l --group-directories-first -ssize --reverse' # sort by size
+alias llc='eza --icons always -l -schanged' # sort by changed
+alias llC='eza --icons always -l -schanged --reverse'
+alias lt='eza --icons always --tree'
 # alias lt='tree -Ch'
 
 #}}}
