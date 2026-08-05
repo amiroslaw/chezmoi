@@ -88,7 +88,26 @@ urgency.tags.coefficient=0 # Just because its tagged/annotated doesn't mean its 
 #                       TUI
 # -------------------------------------------------------------------------
 uda.taskwarrior-tui.task-report.next.filter=stat:pending
-# there is context switcher but it has move views like `completed`
+
+# If ther are custom shortcut keys, 1-9 won't be available 
+# uda.taskwarrior-tui.keyconfig.shortcut3=P
+# Add tag
+uda.taskwarrior-tui.keyconfig.shortcut2=T
+# Remove tag
+uda.taskwarrior-tui.keyconfig.shortcut7=r
+# Remove inbox
+uda.taskwarrior-tui.keyconfig.shortcut5=i
+# Context switcher but it has more views like `completed`
+# to reset select `none`, idk why some like `pro` opens a new instance of taskwarrior-tui
+uda.taskwarrior-tui.keyconfig.shortcut3=C
+# Add project
+uda.taskwarrior-tui.keyconfig.shortcut4=p
+# Open url from annotation
+uda.taskwarrior-tui.keyconfig.shortcut6=l
+# Duplicate task
+uda.taskwarrior-tui.keyconfig.shortcut8=Y
+# Sync TW
+uda.taskwarrior-tui.keyconfig.shortcut9=n
 uda.taskwarrior-tui.shortcuts.2=~/.config/task/scripts/tui.lua add-tag
 uda.taskwarrior-tui.shortcuts.3=~/.config/task/scripts/tui.lua view
 # tags can be added by H M L keyshorts
@@ -106,16 +125,6 @@ uda.taskwarrior-tui.shortcuts.1=notify-send "Taskwarrior-TUI" "H/M/L-priority: s
 # add a done task
 uda.taskwarrior-tui.keyconfig.log=D
 # 0 can't be bind
-# If ther are custom shortcut keys, 1-9 won't be available 
-# uda.taskwarrior-tui.keyconfig.shortcut3=P
-uda.taskwarrior-tui.keyconfig.shortcut2=T
-uda.taskwarrior-tui.keyconfig.shortcut3=C
-uda.taskwarrior-tui.keyconfig.shortcut4=p
-uda.taskwarrior-tui.keyconfig.shortcut5=i
-uda.taskwarrior-tui.keyconfig.shortcut6=l
-uda.taskwarrior-tui.keyconfig.shortcut7=r
-uda.taskwarrior-tui.keyconfig.shortcut8=Y
-uda.taskwarrior-tui.keyconfig.shortcut9=n
 
 # Color theme (uncomment one to use)
 # include ./themes/dark-blue-256.theme
