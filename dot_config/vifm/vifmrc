@@ -437,8 +437,10 @@ filextype {*.odt,*.ods,*.doc,*.docx,*.xls,*.xlsx,*.csv,*.odp,*.pptx,*.ppt},
         \ libreoffice %f &
 
 "e-book
-filextype {*.cbr,*cbz} pqiv %f,
+filextype {*.cbr,*cbz} 
+		\ zathura %f %i,
 filextype {*.mobi,*.epub,*azw3,*azw,*pobi} 
+		\ zathura %f %i,
 		\ foliate %f %i,
 		\ FBReader %f %i,
 		\ ebook-viewer %f %i, 
