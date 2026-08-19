@@ -363,115 +363,82 @@ config.bind('xs', 'cmd-set-text --space :screenshot "{title}.png"') # todo bind 
 config.bind('xp', 'cmd-set-text --space :print --pdf "{title}.pdf"')
 config.bind('xh', 'download --mhtml')
 # }}}
-
-# ======================= Searchengines ============= {{{
-# engine name (such as `DEFAULT`, or `ddg`) to a URL with a `{}` placeholder. The placeholder will be replaced by the search term, use `{{` and `}}` for literal `{`/`}` braces.  
+config.bind('sj', 'mode-enter caret ;; /target_word ;; enter')
+# ======================= SEARCH bindings ============= {{{
+# tip. Define one letter for the most common engine in a group np. x , alternaties can have double charcter bindings that start with a different but the same charcter `if`
 c.url.searchengines = {
     'DEFAULT': 'https://search.brave.com/search?q={}',
-    'v': 'https://search.brave.com/videos?q={}',
-    'g': 'https://www.google.com/search?q={}',
-    'dd': 'https://duckduckgo.com/?q={}',
-    'b': 'https://search.brave.com/search?q={}',
-    'y': 'https://www.youtube.com/results?search_query={}',
-    'w': 'https://en.wikipedia.org/wiki/{}',
-    'wp': 'https://pl.wikipedia.org/wiki/{}',
-    'c': 'https://www.ceneo.pl/;szukaj-{}',
-    'cc': 'https://cenowarka.pl/?fs={}',
-    'am': 'https://www.amazon.com/s?k={}',
-    'aw': 'https://wiki.archlinux.org/?search={}',
-    'au': 'https://aur.archlinux.org/packages?O=0&K={}',
+
+    # commerce - common bindings
     'a': 'https://allegro.pl/listing?string={}',
-    'f': 'https://www.filmweb.pl/search?q={}',
-    'ly': 'https://www.tekstowo.pl/wyszukaj.html?search-artist=Podaj+wykonawc%C4%99&search-title={}',
-    'so': 'https://stackoverflow.com/search?q={}',
-    'wa': 'https://www.wolframalpha.com/input/?i={}',
-    'syn': 'https://www.thesaurus.com/browse/{}?s=t',
-    'm': 'https://maps.google.com/maps?q={}',
-    'o': 'https://www.google.com/search?q={}&tbm=isch',
-    'l' :'https://www.deepl.com/en/translator#en/pl/{}',
-    'd': 'https://www.diki.pl/slownik-angielskiego?q={}',
-    't': 'https://translate.google.pl/?hl=pl#pl/en/{}',
-    'cam': 'https://dictionary.cambridge.org/spellcheck/english/?q={}', 
-    'sci': 'https://sci-hub.se/{}', 
+    'z': 'https://www.amazon.pl/s?k={}',
+    'c': 'https://www.ceneo.pl/;szukaj-{}',
+    'gi': 'https://www.google.com/search?q={}&tbm=isch', # image
     'gh': 'https://github.com/search?q={}',
     'gr': "https://github.com/search?q={}&type=repositories",
+    'f': 'https://www.filmweb.pl/search?q={}',
+    'k': 'https://www.tekstowo.pl/wyszukaj.html?search-artist=Podaj+wykonawc%C4%99&search-title={}',
+    'm': 'https://maps.google.com/maps?q={}',
+    'h': 'https://sci-hub.se/{}', 
+    'o': 'https://stackoverflow.com/search?q={}',
+    'y': 'https://www.youtube.com/results?search_query={}',
+    # search engines
+    'b': 'https://search.brave.com/search?q={}',
+    'p': 'https://search.brave.com/images?q={}',
+    'g': 'https://www.google.com/search?q={}',
+    'v': 'https://search.brave.com/videos?q={}',
+    # 'au': 'https://aur.archlinux.org/packages?O=0&K={}',
+    # 'dg': 'https://duckduckgo.com/?q={}',
+    # wiki
+    'wn': 'https://en.wikipedia.org/wiki/{}',
+    'wp': 'https://pl.wikipedia.org/wiki/{}',
+    'wa': 'https://wiki.archlinux.org/?search={}',
+    'wl': 'https://www.wolframalpha.com/input/?i={}',
+    # eng
+    'd': 'https://www.diki.pl/slownik-angielskiego?q={}',
+    'l' :'https://www.deepl.com/en/translator#en/pl/{}',
+    't': 'https://translate.google.pl/?hl=pl#pl/en/{}',
+    'ec': 'https://dictionary.cambridge.org/spellcheck/english/?q={}', 
+    'et': 'https://www.thesaurus.com/browse/{}?s=t',
+
     # AI
     'x': 'https://www.perplexity.ai/search?q={}', # ddos 
-    'p': 'https://www.phind.com/search?q={}', # unavailable
-    'h': 'https://felo.ai/search?q={}',
-    'i': 'https://search.brave.com/images?q={}',
-    'ia': 'https://iask.ai/?options[detail_level]=concise&q={}',
+    # 'p': 'https://www.phind.com/search?q={}', # unavailable
+    'if': 'https://felo.ai/search?q={}',
+    'ii': 'https://iask.ai/?options[detail_level]=concise&q={}',
     'ie': 'https://iask.ai/?options[detail_level]=comprehensive&q={}',
-    'u': 'https://you.com/search?fromSearchBar=true&tbm=youchat&q={}'
+    'iu': 'https://you.com/search?fromSearchBar=true&tbm=youchat&q={}'
 }
 
-# ======================= SEARCH bindings ============= {{{
-config.bind('ss', 'open -b b {primary} ')
-config.bind('sS', 'open -b b {clipboard} ')
-config.bind('ss', 'spawn -u engine.clj -s b', 'caret')
-config.bind('sk', 'open -b g {primary} ')
-config.bind('sK', 'open -b g {clipboard} ')
-config.bind('sk', 'spawn -u engine.clj -s g', 'caret')
-config.bind('so', 'open -b o {primary} ')
-config.bind('sO', 'open -b o {clipboard} ')
-config.bind('so', 'spawn -u engine.clj -s o', 'caret')
-config.bind('sm', 'open -b m {primary} ')
-config.bind('sM', 'open -b m {clipboard} ')
-config.bind('sm', 'spawn -u engine.clj -s m', 'caret')
-config.bind('sb', 'open -b b {primary} ')
-config.bind('sB', 'open -b b {clipboard} ')
-config.bind('sb', 'spawn -u engine.clj -s b', 'caret')
-config.bind('sc', 'open -b c {primary} ')
-config.bind('sC', 'open -b c {clipboard} ')
-config.bind('sc', 'spawn -u engine.clj -s c', 'caret')
-config.bind('se', 'open -b cc {primary} ')
-config.bind('sE', 'open -b cc {clipboard} ')
-config.bind('se', 'spawn -u engine.clj -s cc', 'caret')
-config.bind('sa', 'open -b a {primary} ')
-config.bind('sA', 'open -b a {clipboard} ')
-config.bind('sa', 'spawn -u engine.clj -s a', 'caret')
-config.bind('st', 'open -b t {primary} ')
-config.bind('sT', 'open -b t {clipboard} ')
-config.bind('st', 'spawn -u engine.clj -s t', 'caret')
-config.bind('sl', 'open -b l {primary} ')
-config.bind('sL', 'open -b l {clipboard} ')
-config.bind('sl', 'spawn -u engine.clj -s l', 'caret')
-config.bind('sw', 'open -b w {primary} ')
-config.bind('sW', 'open -b w {clipboard} ')
-config.bind('sw', 'spawn -u engine.clj -s w', 'caret')
-config.bind('sf', 'open -b f {primary} ')
-config.bind('sF', 'open -b f {clipboard} ')
-config.bind('sf', 'spawn -u engine.clj -s f', 'caret')
-config.bind('sy', 'open -b y {primary} ')
-config.bind('sY', 'open -b y {clipboard} ')
-config.bind('sy', 'spawn -u engine.clj -s y', 'caret')
-config.bind('sp', 'open -b p {primary} ')
-config.bind('sP', 'open -b p {clipboard} ')
-config.bind('sp', 'spawn -u engine.clj -s p', 'caret')
-config.bind('sd', 'open -b d {primary} ')
-config.bind('sD', 'open -b d {clipboard} ')
-config.bind('sd', 'spawn -u engine.clj -s d', 'caret')
-config.bind('si', 'open -b i {primary} ')
-config.bind('sI', 'open -b i {clipboard} ')
-config.bind('si', 'spawn -u engine.clj -s i', 'caret')
-# AI 
-config.bind('sz', 'open -b ia {primary} ')
-config.bind('sZ', 'open -b ia {clipboard} ')
-config.bind('sz', 'spawn -u engine.clj -s ia', 'caret')
-config.bind('sp', 'open -b p {primary} ')
-config.bind('sP', 'open -b p {clipboard} ')
-config.bind('sp', 'spawn -u engine.clj -s p', 'caret')
-config.bind('sh', 'open -b h {primary} ')
-config.bind('sH', 'open -b h {clipboard} ')
-config.bind('sh', 'spawn -u engine.clj -s h', 'caret')
-config.bind('sx', 'open -b x {primary} ')
-config.bind('sX', 'open -b x {clipboard} ')
-config.bind('sx', 'spawn -u engine.clj -s x', 'caret')
-config.bind('su', 'open -b u {primary} ')
-config.bind('sU', 'open -b u {clipboard} ')
-config.bind('su', 'spawn -u engine.clj -s u', 'caret')
+# nothing can override this binding
+config.bind('ss', 'open -b DEFAULT {primary}')
+config.bind('sS', 'open -b DEFAULT {clipboard}')
+config.bind('ss', 'spawn -u engine.clj -s DEFAULT', 'caret')
 
-config.bind('sg', 'cmd-set-text --space :open -t site:{url} ')
+keys = [k for k in c.url.searchengines.keys() if k != 'DEFAULT']
+# Znajdź klucze 1-znakowe, które mają konflikt (tj. istnieją inne klucze zaczynające się od tej litery)
+single_letter_keys = [k for k in keys if len(k) == 1]
+conflicting_singles = {
+    sl for sl in single_letter_keys 
+    if any(k != sl and k.startswith(sl) for k in keys)
+}
+
+for target in keys:
+    binding_key = target
+    # Jeśli to konfliktowy klucz 1-znakowy, zduplikuj jego znak (np. 'a' -> 'aa')
+    if target in conflicting_singles:
+        binding_key = target * 2
+        # Zabezpieczenie: jeśli zduplikowany klucz koliduje z innym istniejącym, dopisz kolejny znak
+        while binding_key in keys:
+            binding_key += target
+
+    config.bind(f's{binding_key}', f'open -b {target} {{primary}}')
+    config.bind(f's{binding_key.upper()}', f'open -b {target} {{clipboard}}')
+    config.bind(f's{binding_key}', f'spawn -u engine.clj -s {target}', 'caret') # visual mode
+
+# ===================================================== }}}
+
+config.bind('zg', 'cmd-set-text --space :open -t site:{url} ')
 
 config.bind('zz', 'spawn -u engine.clj -s ')
 config.bind('zz', 'spawn -u engine.clj -s', 'caret')
