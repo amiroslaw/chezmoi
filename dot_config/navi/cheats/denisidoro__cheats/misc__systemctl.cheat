@@ -50,7 +50,7 @@ $ service_system: systemctl <user> list-unit-files --type=service --all | awk '{
 # I can remove that
 $ service_user: systemctl --user list-unit-files --type=service --all  | awk '{print $1}' | grep .service | sed 's/.service$//'
 $ service_inactive: systemctl <user> list-unit-files --type=service --state=inactive | awk '{print $1}' | grep .service | sed 's/.service$//'
-$ service_active: systemctl <user> list-unit-files --type=service --state=active | awk '{print $1}' | grep .service | sed 's/.service$//'
+$ service_active: systemctl <user> list-units --type=service --state=active | awk '{print $1}' | grep .service | sed 's/.service$//'
 $ service_enabled: systemctl <user> list-unit-files --type=service --state=enabled | awk '{print $1}' | grep .service | sed 's/.service$//'
 $ service_disabled: systemctl <user> list-unit-files --type=service --state=disabled | awk '{print $1}' | grep .service | sed 's/.service$//'
 $ service: systemctl <user> list-unit-files --type=service --all | awk '{print $1}' | grep .service | sed 's/.service$//'

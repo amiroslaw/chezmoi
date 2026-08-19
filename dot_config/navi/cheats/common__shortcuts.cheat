@@ -1,6 +1,15 @@
 % shortcuts
 @ util
 
+
+# distrobox enter
+distrobox enter <distrobox-list>
+
+# distrobox export
+distrobox export --bin 
+
+$ distrobox-list: distrobox list | awk -F'|' 'NR!=1 {print $2}'
+
 # chezmoi apply managed
 chezmoi apply <force> $HOME/<chezmoi-managed>
 
