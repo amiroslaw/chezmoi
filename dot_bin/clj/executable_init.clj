@@ -93,10 +93,11 @@
 ;; maybe add option to return vector if the output returns multiple lines
 (defn exec!
   "Executes a shell command and handles errors.
-  Call as: (exec! cmd arg1 arg2 ... {:exit? true :background? false})
+  Call as: (exec! cmd arg1 arg2 ... {:exit? true :background? false log? true})
   Options map (optional, last positional arg):
   - :exit?       Exit the program on error. Default true. (Blocking mode only.)
   - :background? Launch and return immediately, no wait for completion. Default false.
+  - :log?       Log command. Default false. Can brake scripts based on terminal.
   Returns the command's output when blocking and successful.
   When :background? true, returns immediately after launching (launch errors are still caught).
   
@@ -110,8 +111,8 @@
   (let [opts?    (map? (last args))
         opts     (if opts? (last args) {})
         cmd-args (if opts? (butlast args) args)
-        {:keys [exit? background?] :or {exit? true background? false}} opts]
-    (log! (format "%s %s \n%s" cmd cmd-args opts))
+        {:keys [exit? background? log?] :or {exit? true background? false log? false}} opts]
+    (when log? (log! (format "%s %s \n%s" cmd cmd-args opts)))
     (try
       (if background?
         (process (into [cmd] cmd-args) {:out :inherit :err :inherit})

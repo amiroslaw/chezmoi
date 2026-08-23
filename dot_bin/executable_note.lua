@@ -8,7 +8,7 @@ List of the options:
 	sel, selection - clip notes from primary (selection) clipboard 
 	write - write note form form input
 	task - write task form form input
-	number - number of clipboard history, if it will be empty, input form will appear
+	number - number of clipboard history to join, if it will be empty, input form will appear
 	-h help - write help
 
 -- dependency: rofi, clipcat
@@ -22,17 +22,15 @@ if not action then
 	notifyError('Provide argument')
 end
 
-function clipster(clipboard) 
+function clipster(clipboard)
 	local clipType = clipboard
 	return function()
 		local clipboardAmount = 1
-		if not arg[2] then clipboardAmount = rofiNumberInput('Number of clips') 
+		if not arg[2] then clipboardAmount = rofiNumberInput('Number of clips')
 		else
 			clipboardAmount = arg[2]
 		end
-
-		local clipElements = {}
-		local clipsterOutput = io.popen("clipcat.clj " .. clipType .. " -n " .. clipboardAmount + 1):read('*a')
+		local clipsterOutput = io.popen("clipcat.clj " .. clipType .. " -n " .. clipboardAmount):read('*a')
 		assert(#clipsterOutput ~= 0, "Can not get clipboard history")
 		return clipsterOutput
 	end

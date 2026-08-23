@@ -19,7 +19,7 @@
 (def duplicated {
   ;; TODO test
    :taskwarrior-tui { :abbr :tui :title :taskwarrior-tui :desc "taskwarrior-tui" :cmd ["task sync" (scratchpad :task (util/term-lt-app :task "taskwarrior-tui"))]}
-  :task-add { :abbr :task :title :task-add :desc "add task to inbox" :cmd "todo.lua add" }
+  :task-add { :abbr :inbox :title :task-add :desc "add task to inbox file" :cmd "todo.lua add" }
   :selection-paste { :abbr :sp :title :selection-paste :desc "selection paste" :cmd "clipcat.clj primary --paste"}
   :local-videos { :abbr :video :title :local-videos :desc "local videos" :cmd (str "setsid mpv.lua -o" VIDEOS)}
   :local-playlist { :abbr :lpl :title :local-playlist :desc "local video playlist" :cmd "setsid mpv.lua -o"}})

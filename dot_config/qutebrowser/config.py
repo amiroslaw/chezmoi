@@ -255,9 +255,9 @@ config.bind('alm', 'spawn -v mpv.lua --makeOnline --input "{url}"')
 
 # ======================= COPING OR CREATE ============= {{{
 # TODO: add chat.clj; flag --input
-config.bind('cn', 'spawn -u ~/.bin/note.lua sel {primary}')
-config.bind('cn', 'spawn -u ~/.bin/note.lua sel {primary}', 'caret')
-config.bind('cN', 'spawn -u ~/.bin/note.lua clip {clipboard}')
+config.bind('cn', 'spawn -u ~/.bin/note.lua sel 1') # config.bind('cn', 'spawn -u ~/.bin/note.lua sel {primary}')
+config.bind('cn', 'spawn -u ~/.bin/note.lua sel 1', 'caret')
+config.bind('cN', 'spawn -u ~/.bin/note.lua clip 1')
 # select custom hints - use hint_wrapper if you need to pass an argument in hint
 config.bind('ck', 'hint code userscript select.lua')
 config.bind('cK', 'hint --rapid code userscript select.lua')
