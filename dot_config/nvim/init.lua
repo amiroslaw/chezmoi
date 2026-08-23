@@ -389,6 +389,7 @@ nmap('<F14>', ':split term://zsh<cr>', 'Open horizontal terminal') -- S-F2
 --dictionary
 vim.cmd 'syntax spell toplevel'
 --togle spellcheck
+-- nap-nvim is good for jumping between errors a-. and c-.
 nmap('<C-A-s>', ':set spell!<cr> ', 'Toggle spellcheck')
 nmap('<S-A-s>', ':setlocal spell spelllang=pl<cr>', 'Set Polish spellcheck')
 imap('<S-A-s>', '<cmd>setlocal spell spelllang=pl<cr>', 'Set Polish spellcheck')
