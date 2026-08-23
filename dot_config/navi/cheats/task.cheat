@@ -1,0 +1,44 @@
+% task
+
+#todo add fzf for searching for tasks
+
+# undo task
+task undo
+
+# add project dependency to the last task
+task add dep:"$(task +LATEST uuids)"
+
+# add annotation to the last task
+task "$(task +LATEST uuids)" annotate
+
+# purge
+task +DELETED -TEMPLATE purge
+
+# add annotation
+~/.config/task/scripts/tan.sh <task-nr>
+
+# burndown chart
+task burndown.<burndown>
+
+# calendar
+task calendar
+
+# summary project chart
+task summary
+
+# summary time chart
+timew summary :ids <summary>
+
+# time percentage chart
+timew percentage
+
+# time distribution chart
+timew dist
+
+# gamification
+gamification s -f -s slim -d lastweek
+
+$ summary: echo ":today\n:yesterday\n:week"
+
+$ burndown: echo "daily\nweekly"
+
