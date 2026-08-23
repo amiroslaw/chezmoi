@@ -8,7 +8,7 @@ end
 local taskConfirmationCmd = 'task rc.bulk=0 rc.confirmation=off rc.dependency.confirmation=off rc.recurrence.confirmation=off '
 local contextPrefix = enum { ADD = '+', REMOVE = '-' }
 local contextAliases = {
-	inbox = 'in',
+	inbox = 'inbox',
 	routine = 'rou',
 	carrer = 'car',
 	code = 'cod',

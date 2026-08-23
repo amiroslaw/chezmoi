@@ -1,7 +1,5 @@
 # vim:ft=python
-# [Created by task 2.6.2 9/8/2022 23:26:18]
-# For more documentation, see https://taskwarrior.org or try 'man task', 'man task-color',
-# 'man task-sync' or 'man taskrc'
+# For more documentation, see https://taskwarrior.org or try 'man task', 'man task-color', 'man task-sync' or 'man taskrc'
 #   variable=      -- By specifying no value, this means no default
 #   variable=$HOME/task You can also refence environment variables:
 # Use the command 'task show' to see all defaults and overrides
@@ -12,11 +10,15 @@ editor=nvim
 weekstart=monday
 calendar.holidays=full
 search.case.sensitive=0
+purge.on-sync=0
+# If set, old tasks will be purged automatically after each synchronization. Tasks are identified as “old” when they have status “Deleted” and have not been modified for 180 days.
 
 # -------------------------------------------------------------------------
 #                       context
 # -------------------------------------------------------------------------
+alias.rm=delete
 alias.rep=+rou
+alias.in=+inbox
 context.routine.read=+rou
 context.routine.write=+rou
 context.inbox.read=+in
@@ -143,7 +145,8 @@ hooks.location=~/.config/task/hooks
 #sync
 # problem with modifing files in mega 
 data.location=~/.local/share/task
-sync.local.server_dir={{- env "PRIVATE" -}}/task/
+include {{- env "PRIVATE" -}}/task/wingtask-config
+# sync.local.server_dir={{- env "PRIVATE" -}}/task/
 {{ if eq .chezmoi.hostname "pc" }}
 recurrence=1
 # data.location={{- env "PRIVATE" -}}/task/pc
@@ -156,5 +159,5 @@ recurrence=0
 # include holidays.pl-PL.rc
 # include ~/Documents/Ustawienia/private/task/wingtask/wingtask-config
 # include ~/Documents/Ustawienia/private/task/test/wingtask-config
-news.version=3.1.0
+news.version=3.4.2
 
