@@ -84,8 +84,9 @@ set timefmt=\ %Y/%m/%d\ %H:%M
 
 
 " What should be saved automatically between vifm runs Like in vi
+" set vifminfo=dhistory,savedirs,chistory,state,tui,tabs,shistory,ehistory,phistory,fhistory,dirstack,registers,bookmarks,bmarks,mchistory
 " set vifminfo=options,filetypes,commands,bookmarks,tui,state,cs,chistory,shistory,dirstack,registers,phistory
-set vifminfo=bookmarks,chistory,shistory,phistory,savedirs,dhistory
+set vifminfo=bookmarks,chistory,shistory,phistory,ehistory,mchistory,savedirs,dhistory,tabs,tui
 
 
 """""""""" my config
@@ -502,6 +503,8 @@ fileviewer {*.docx},<application/vnd.openxmlformats-officedocument.wordprocessin
 " fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk %c -
 " fileviewer {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,*.fl[icv],*.m2v,*.mov,*.webm,*.mts,*.m4v,*.r[am],*.qt,*.divx,*.as[fx]},<video/*>
 "          \ ffprobe -pretty %c 2>&1
+fileviewer <audio/*>
+	\ ffprobe -hide_banner -show_format %f
 
 " ueberzug plugin - IT HANTLES preview other than IMG
 " https://github.com/vifm/vifm/tree/master/data/plugins/ueberzug - DEPENDENCIES 
@@ -556,6 +559,7 @@ fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
 	
 fileviewer {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,*.fl[icv],*.m2v,*.mov,*.webm,*.mts,*.m4v,*.r[am],*.qt,*.divx,*.as[fx]},<video/*>
 	\ timg -U -p sixel --frames=1 -g%pwx%ph %c %pd 2>/dev/null
+	\ ffprobe -hide_banner -show_format %f
 
 fileviewer {*.pdf},<application/pdf> timg -p sixel -W --auto-crop --frames=1 -g%pwx%ph %c %pd
 
@@ -657,5 +661,18 @@ mark W /media/winC
 "command! yankName echo -n %c | xclip -sel clip %i
 "}}} 
 
+
+" use Vim to diff files
+" uses selection of the current pane when it contains more than one file
+" otherwise uses left pane file and right pane file keeping order inside Vim
+"command! diff : if selected() < 2
+"            \ |     if paneisat('right') && paneisat('bottom')
+"            \ |         execute '!vim -d %%C %%c'
+"            \ |     else
+"            \ |         execute '!vim -d %%c %%C'
+"            \ |     endif
+"            \ | else
+"            \ |     execute '!vim -d %%f'
+"            \ | endif
 
 " vim: foldmethod=marker
