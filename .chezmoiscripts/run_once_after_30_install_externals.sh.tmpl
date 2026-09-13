@@ -26,6 +26,8 @@ go build
 cp -v --update=none "$FASDER_FILE" "$LOCAL_BIN_DIR/fasder"
 echo "✅ Build complete and copied - fasder."
 
+soulseek-rs completions install 
+
 # # kanata
 # BIN_DIR="{{ .chezmoi.sourceDir }}/dot_bin"
 # KANATA_DIR="$TMP/kanata/"
