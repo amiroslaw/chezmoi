@@ -1,0 +1,15 @@
+# it doesn't recognise password from soulseek-rs conf
+[Unit]
+Description=soulseek-rs daemon
+After=dbus.socket
+Requires=dbus.socket
+
+[Service]
+Type=simple
+ExecStart=/home/miro/.local/bin/soulseek-rs daemon
+Restart=on-failure
+RestartSec=5
+Environment=DBUS_SESSION_BUS_ADDRESS=%t/bus
+
+[Install]
+WantedBy=default.target

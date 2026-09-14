@@ -1,6 +1,8 @@
 % shortcuts
 @ util
 
+# soulseek
+soulseek-rs search "<query>" | fzf --exact --ignore-case --multi | soulseek-rs download --stdin
 
 # distrobox enter
 distrobox enter <distrobox-list>
