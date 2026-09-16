@@ -1,6 +1,15 @@
 % shortcuts
 @ util
 
+# ghgrab download in the current folder
+ghgrab <repo> --cwd --no-folder
+
+# ghgrab release  Extract archives after download
+ghgrab rel <repo> --extract
+
+# ghgrab release download package
+ghgrab rel <repo>
+
 # soulseek
 soulseek-rs search "<query>" | fzf --exact --ignore-case --multi | soulseek-rs download --stdin
 
@@ -22,7 +31,7 @@ chezmoi apply <force> --source-path <chezmoi-files>
 chezmoi apply --include <type> <force>
 $ chezmoi-files: fd -t f ~/.local/share/chezmoi/
 $ chezmoi-managed: chezmoi managed
-$ type: echo "files\nall"
+$ type: echo "files\nexternals\nall"
 $ force: echo " \n--force"
 
 # wormhole receive

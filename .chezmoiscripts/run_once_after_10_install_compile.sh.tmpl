@@ -2,12 +2,14 @@
 set -e
 export CARGO_HOME="$HOME/.local/share/cargo"
 
-cargo install --locked pueue
-cargo install --locked --features cmd kanata
-# for nvim
+# for nvim I got an error when I wanted to download it in externals
 cargo install --locked tree-sitter-cli
+
+# moved to externals
+# cargo install --locked pueue
+# cargo install --locked --features cmd kanata
 # it has rpm version
-cargo install --locked navi
+# cargo install --locked navi
 # cargo install --locked taskwarrior-tui opi
 # with --git it will install beta versions and always compile that?
 # cargo install --locked --features cmd kanata --git  https://github.com/jtroo/kanata

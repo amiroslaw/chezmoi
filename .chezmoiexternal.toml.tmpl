@@ -1,5 +1,10 @@
 # chezmoi apply --include externals
+# important for archive-file
+# if after unzip a file is in a folder `./filename` should be added 
+# linux versions - musl - ok jak jest tylko to 
+# https://www.chezmoi.io/reference/templates/github-functions/gitHubLatestReleaseAssetURL/
 
+# BUILD
 # it doesn't work idk why
 ["tmp-chezmoi/fasder"]
 	type = "git-repo" 
@@ -12,6 +17,75 @@
 ["tmp-chezmoi/clipcat.rpm"]
 	type = "file" 
     url = {{ gitHubLatestReleaseAssetURL "xrelkd/clipcat" "clipcat-*.x86_64.rpm" | quote }}
+
+# FILES
+[".local/bin/bb"]
+    type = "archive-file"
+    url = {{ gitHubLatestReleaseAssetURL "babashka/babashka" "babashka-*-linux-amd64-static.tar.gz" | quote }}
+    path = "bb"
+    executable = true
+    refreshPeriod = "168h"
+
+# v1.6.4
+[".local/bin/gomi"] 
+    type = "archive-file"
+    url = {{ gitHubLatestReleaseAssetURL "babarot/gomi" "gomi_Linux_x86_64.tar.gz" | quote }}
+    path = "gomi"
+    executable = true
+    refreshPeriod = "168h"
+
+# v1.18.2
+[".local/bin/localsend"]
+    type = "file"
+	url = {{ gitHubReleaseAssetURL "localsend/localsend" "v1.18.2" "LocalSend-*-linux-x86-64.AppImage" | quote }}
+    executable = true
+    refreshPeriod = "168h"
+[".local/bin/localsend-cli"]
+    type = "archive-file"
+	url = {{ gitHubReleaseAssetURL "localsend/localsend" "v1.18.2" "LocalSend-CLI-*-linux-x86-64.tar.gz" | quote }}
+    path = "localsend-cli"
+    executable = true
+    refreshPeriod = "168h"
+
+[".local/bin/pueue"]
+    type = "file"
+    url = {{ gitHubLatestReleaseAssetURL "Nukesor/pueue" "pueue-x86_64-unknown-linux-musl" | quote }}
+    executable = true
+    refreshPeriod = "168h"
+[".local/bin/pueued"]
+    type = "file"
+    url = {{ gitHubLatestReleaseAssetURL "Nukesor/pueue" "pueued-x86_64-unknown-linux-musl" | quote }}
+    executable = true
+    refreshPeriod = "168h"
+
+# # there is a package for cli, error with tar
+# [".local/bin/tree-sitter"]
+#     type = "archive-file"
+#     url = {{ gitHubLatestReleaseAssetURL "tree-sitter/tree-sitter" "tree-sitter-linux-x64.gz" | quote }}
+# 	path = "tree-sitter-linux-x64"
+#     executable = true
+#     refreshPeriod = "168h"
+
+[".local/bin/ghgrab"]
+	type = "file" 
+    url = {{ gitHubLatestReleaseAssetURL "abhixdd/ghgrab" "ghgrab-linux" | quote }}
+    executable = true
+    refreshPeriod = "168h"
+
+# v1.2.0
+[".local/bin/kanata"]
+    type = "archive-file"
+    url = {{ gitHubLatestReleaseAssetURL "jtroo/kanata" "linux-binaries-x64.zip" | quote }}
+    path = "kanata_linux_cmd_allowed_x64"
+    executable = true
+    refreshPeriod = "168h"
+
+[".local/bin/navi"]
+    type = "archive-file"
+    url = {{ gitHubLatestReleaseAssetURL "denisidoro/navi" "navi-*-x86_64-unknown-linux-musl.tar.gz" | quote }}
+    path = "./navi"
+    executable = true
+    refreshPeriod = "168h"
 
 [".local/bin/soulseek-rs"]
     type = "archive-file"

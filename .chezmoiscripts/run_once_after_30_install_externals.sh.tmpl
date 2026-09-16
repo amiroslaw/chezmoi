@@ -7,13 +7,9 @@ LOCAL_BIN_DIR="$HOME/.local/bin"
 TMP="$HOME/tmp-chezmoi"
 mkdir -p "$TMP"
 mkdir -p "$LOCAL_BIN_DIR"
-sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
 
 echo "🔨 install clipcat..."
 sudo zypper --no-gpg-checks install -y $TMP/clipcat.rpm
-
-curl -fsSL https://gomi.dev/install | bash
-mv "$HOME/bin/gomi" "$LOCAL_BIN_DIR"
 
 # fasder
 FASDER_DIR="$TMP/fasder"
@@ -26,7 +22,14 @@ go build
 cp -v --update=none "$FASDER_FILE" "$LOCAL_BIN_DIR/fasder"
 echo "✅ Build complete and copied - fasder."
 
+# after install
 soulseek-rs completions install 
+
+# sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+#gomi
+# curl -fsSL https://gomi.dev/install | bash
+# mv "$HOME/bin/gomi" "$LOCAL_BIN_DIR"
+
 
 # # kanata
 # BIN_DIR="{{ .chezmoi.sourceDir }}/dot_bin"
