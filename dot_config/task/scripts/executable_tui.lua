@@ -9,7 +9,7 @@ local taskConfirmationCmd = 'task rc.bulk=0 rc.confirmation=off rc.dependency.co
 local contextPrefix = enum { ADD = '+', REMOVE = '-' }
 local contextAliases = {
 	inbox = 'inbox',
-	routine = 'rou',
+	reminder = 'rem',
 	carrer = 'car',
 	code = 'cod',
 	finance = 'fin',

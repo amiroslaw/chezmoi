@@ -17,10 +17,10 @@ purge.on-sync=0
 #                       context
 # -------------------------------------------------------------------------
 alias.rm=delete
-alias.rep=+rou
+alias.rep=+rem
 alias.in=+inbox
-context.routine.read=+rou
-context.routine.write=+rou
+context.reminder.read=+rem
+context.reminder.write=+rem
 context.inbox.read=+inbox
 context.inbox.write=+inbox
 context.finance.read=+fin
@@ -96,7 +96,7 @@ uda.taskwarrior-tui.task-report.next.filter=stat:pending
 # Add tag
 uda.taskwarrior-tui.keyconfig.shortcut2=T
 # Remove tag
-uda.taskwarrior-tui.keyconfig.shortcut7=r
+uda.taskwarrior-tui.keyconfig.shortcut7=R
 # Remove inbox
 uda.taskwarrior-tui.keyconfig.shortcut5=i
 # Context switcher but it has more views like `completed`
@@ -123,7 +123,7 @@ uda.taskwarrior-tui.shortcuts.7=~/.config/task/scripts/tui.lua rm-tag
 uda.taskwarrior-tui.shortcuts.8=~/.config/task/scripts/tui.lua duplicate
 uda.taskwarrior-tui.shortcuts.9=task sync
 
-uda.taskwarrior-tui.shortcuts.1=notify-send "Taskwarrior-TUI" "H/M/L-priority: set priority\\nY-duplicate task\\nT-add tag: add tag\\nC-view: view context\\np-add project: add project\\ni-rm inbox: remove inbox tag\\nl-open URL\\nr-rm tag: remove tag\\nn-sync: sync tasks" -i
+uda.taskwarrior-tui.shortcuts.1=notify-send "Taskwarrior-TUI" "H/M/L-priority: set priority\\nY-duplicate task\\nT-add tag: add tag\\nC-view: view context\\np-add project: add project\\ni-rm inbox: remove inbox tag\\nl-open URL\\nR-rm tag: remove tag\\nn-sync: sync tasks" -i
 # add a done task
 uda.taskwarrior-tui.keyconfig.log=D
 # 0 can't be bind
