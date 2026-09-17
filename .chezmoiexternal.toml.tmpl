@@ -26,6 +26,22 @@
     executable = true
     refreshPeriod = "168h"
 
+# v0.27 has opi version
+[".local/bin/taskwarrior-tui"] 
+    type = "archive-file"
+    url = {{ gitHubLatestReleaseAssetURL "kdheepak/taskwarrior-tui" "taskwarrior-tui-x86_64-unknown-linux-gnu.tar.gz" | quote }}
+    path = "taskwarrior-tui"
+    executable = true
+    refreshPeriod = "168h"
+
+# v0.22 has opi version
+[".local/bin/satty"] 
+    type = "archive-file"
+    url = {{ gitHubLatestReleaseAssetURL "Satty-org/Satty" "satty-x86_64-unknown-linux-gnu.tar.gz" | quote }}
+    path = "./satty"
+    executable = true
+    refreshPeriod = "168h"
+
 # v1.6.4
 [".local/bin/gomi"] 
     type = "archive-file"
@@ -47,6 +63,15 @@
     executable = true
     refreshPeriod = "168h"
 
+# # v2.45 has opi version
+# [".local/bin/dua"] 
+#     type = "archive-file"
+#     url = {{ gitHubReleaseAssetURL "Byron/dua-cli" "v2.45.0"  "dua-v*-x86_64-unknown-linux-musl" | quote }}
+#     path = "./dua"
+#     executable = true
+#     refreshPeriod = "168h"
+
+# 4.0.4
 [".local/bin/pueue"]
     type = "file"
     url = {{ gitHubLatestReleaseAssetURL "Nukesor/pueue" "pueue-x86_64-unknown-linux-musl" | quote }}
@@ -66,6 +91,7 @@
 #     executable = true
 #     refreshPeriod = "168h"
 
+# 2.0.2
 [".local/bin/ghgrab"]
 	type = "file" 
     url = {{ gitHubLatestReleaseAssetURL "abhixdd/ghgrab" "ghgrab-linux" | quote }}
@@ -80,6 +106,7 @@
     executable = true
     refreshPeriod = "168h"
 
+# 2.24.0
 [".local/bin/navi"]
     type = "archive-file"
     url = {{ gitHubLatestReleaseAssetURL "denisidoro/navi" "navi-*-x86_64-unknown-linux-musl.tar.gz" | quote }}
@@ -87,6 +114,7 @@
     executable = true
     refreshPeriod = "168h"
 
+# 19.0.0
 [".local/bin/soulseek-rs"]
     type = "archive-file"
     url = {{ gitHubLatestReleaseAssetURL "michel/soulseek-rs" "soulseek-rs-v*-x86_64-unknown-linux-musl.tar.gz" | quote }}
