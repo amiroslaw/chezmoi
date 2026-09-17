@@ -71,13 +71,12 @@
         http-error-handler!
         (get-in [:candidates 0 :content :parts 0 :text])
         (str/trim)))
-  (models [this] [ (->Gemini "gemini-2.5-flash-lite") 
+  (models [this] [ (->Gemini "gemini-3.8-flash") 
+                  (->Gemini "gemini-3.5-flash-lite")
                   (->Gemini "gemini-2.5-flash") 
                   (->Gemini "gemini-3-flash-preview") ; slow
-                  (->Gemini "gemini-2.0-flash-lite") ; not available
-                  (->Gemini "gemini-2.0-flash") ; gemini 2 expired on 31st of march
                   (->Gemini "gemini-2.5-pro")])
-  (get-model [this] (or model-name "gemini-2.5-flash-lite")))
+  (get-model [this] (or model-name "gemini-3.5-flash-lite")))
   ; (get-model [this] (or model-name "gemini-3-flash-preview")))
 
 (defrecord Ollama [model-name]
@@ -107,7 +106,7 @@
         env
         "llama3:latest"))))
 
-; (def default-model (->Gemini "gemini-2.5-flash-lite"))
+; (def default-model (->Gemini "gemini-3.5-flash-lite"))
 (def default-model (->Gemini (get-model (->Gemini nil))))
 
 (defn- rofi-model-list []
