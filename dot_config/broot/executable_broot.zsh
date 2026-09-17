@@ -67,8 +67,8 @@ broot-print-files () {  # [broot-arg...]
 	--cmd="${CMD}" \
     --color yes \
     --git-ignored \
-    --show-git-info \
     --no-sizes \
+    # --show-git-info \
     $@
 }
 
