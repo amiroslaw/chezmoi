@@ -5,18 +5,19 @@
 # https://www.chezmoi.io/reference/templates/github-functions/gitHubLatestReleaseAssetURL/
 
 # BUILD
-# it doesn't work idk why
-["tmp-chezmoi/fasder"]
+# without refreshPeriod you should run, this otherwise it won't fetch the repo
+# chezmoi apply --refresh-externals 
+[".cache/chezmoi/tmp/fasder"]
 	type = "git-repo" 
 	url = "https://github.com/wyne/fasder.git"
+
+[".cache/chezmoi/tmp/clipcat.rpm"]
+	type = "file" 
+    url = {{ gitHubLatestReleaseAssetURL "xrelkd/clipcat" "clipcat-*.x86_64.rpm" | quote }}
 
 [".config/zgenom"]
 	type = "git-repo" 
 	url = "https://github.com/jandamm/zgenom.git"
-
-["tmp-chezmoi/clipcat.rpm"]
-	type = "file" 
-    url = {{ gitHubLatestReleaseAssetURL "xrelkd/clipcat" "clipcat-*.x86_64.rpm" | quote }}
 
 # FILES
 [".local/bin/bb"]
