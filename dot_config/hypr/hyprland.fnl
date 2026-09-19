@@ -34,6 +34,8 @@
     (hl.exec_cmd "systemctl --user start hyprland-session.target")
     (hl.exec_cmd "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP PATH")
     (hl.exec_cmd "systemctl --user start hyprpolkitagent")
+    (hl.exec_cmd "systemctl --user start hyprpolkitagent")
+    (hl.exec_cmd "$XDG_CONFIG_HOME/systemd/user-generators/env.sh")
     (hl.exec_cmd "dbus-update-activation-environment --systemd --all")
 ; name has to match with the dir name in ~/.local/share/icons/
     (hl.exec_cmd "hyprctl setcursor GoogleDot-cursor 14")
