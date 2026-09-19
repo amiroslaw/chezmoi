@@ -186,7 +186,7 @@ invocation="toggle_perm"
 internal = ":toggle_perm"
 ##### SORT
 [[verbs]]
-key = "alt-g"
+key = "alt-shift-s"
 internal = "toggle_sizes"
 [[verbs]]
 key = "F10"

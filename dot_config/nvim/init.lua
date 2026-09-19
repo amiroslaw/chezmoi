@@ -286,7 +286,7 @@ nmap('<F7>', ':!preview-ascii.sh % <CR>', 'adoc preview')
 -- nmap('x', '"_x') -- doesn't add to register from `x`, will brake xp
 nmap('<C-/>', ':nohlsearch<cr>', 'Clear search highlights')
 nmap('<F4>', ':term taskwarrior-tui<CR>', 'Open taskwarrior TUI')
-nmap(',l', '<cmd>luafile dev/init.lua<cr>', 'Reload dev init.lua', {}) -- for plugin development
+nmap(',<F5>', '<cmd>luafile dev/init.lua<cr>', 'Reload dev init.lua', {}) -- for plugin development
 nmap('Zz', ' :q! <cr>', 'Quit without saving')
 imap('<c-z>', '<Esc>:wq<CR>', 'Save and quit')
 -- nmap('ZZ', ' :write | bdelete!<cr>')
@@ -1041,9 +1041,10 @@ require("diffview").setup({
 
 --{{{ neogit https://github.com/NeogitOrg/neogit
 local neogit = require('neogit')
-nmap(",g", neogit.open, "Open Neogit UI")
-nmap(",hp", "<cmd>Neogit pull<CR>", "Neogit pull")
-nmap(",hP", "<cmd>Neogit push<CR>", "Neogit push")
+nmap(",gg", neogit.open, "Open Neogit UI")
+nmap(",gl","<cmd>Neogit log<CR>", "Open Neogit log")
+nmap(",gp", "<cmd>Neogit pull<CR>", "Neogit pull")
+nmap(",gP", "<cmd>Neogit push<CR>", "Neogit push")
 nmap(",b", ":Telescope git_branches<CR>", "Neogit push", { silent = true })
 nmap(",cn", "<cmd>Neogit commit<CR>", "Neogit commit")
 nmap(",ca", function()
