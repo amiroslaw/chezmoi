@@ -1,0 +1,10 @@
+[Unit]
+Description=Run backup daily script
+
+[Timer]
+OnBootSec=1h
+OnUnitActiveSec=1d
+Persistent=true
+
+[Install]
+WantedBy=timers.target

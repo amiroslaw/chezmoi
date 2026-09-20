@@ -1,0 +1,8 @@
+[Unit]
+Description=Backup daily script
+
+[Service]
+Type=oneshot
+ExecStart=%h/.bin/backup-daily.sh
+Nice=19
+IOSchedulingClass=idle

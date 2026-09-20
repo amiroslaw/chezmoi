@@ -16,6 +16,8 @@ systemctl --user enable --now clipcat.service
 # sleep 200 && systemctl --user start clipcat.service &
 {{ if eq .chezmoi.hostname "pc" }}
 systemctl --user enable --now voxtype.service
+systemctl --user enable --now backup-daily.timer
+systemctl --user enable --now backup-weekly.timer
 # systemctl --user enable --now ollama.service               
 # sudo systemctl enable --now lm_sensors.service 
 # sudo systemctl enable --now nvidia-hibernate.service           
