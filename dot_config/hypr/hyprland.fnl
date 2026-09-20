@@ -178,8 +178,8 @@
 
 ;; Scratchpad
 (hl.bind "F12" (hl.dsp.exec_cmd  "launcher.clj -c dropdown-terminal") { :description "Dropdown terminal" })
-;; TODO test
-(mapCtl :M (hl.dsp.exec_cmd (.. "if ! pidof -x mpd; then mpd && mpDris2 && rmpc update; fi && launcher.clj -c music")) { :description "Music player" :locked true })
+;; TODO  mpDris2 doesn's work
+(mapCtl :M (hl.dsp.exec_cmd (.. "if ! pidof -x mpd; then mpd && rmpc update && mpDris2 ; fi && launcher.clj -c music")) { :description "Music player" :locked true })
 (map :D (hl.dsp.exec_cmd "scratchpad.clj --switcher") "List windows")
 (mapCtl :D (hl.dsp.exec_cmd "scratchpad.clj --list") "List scratchpad windows")
 (map :S (hl.dsp.exec_cmd "scratchpad.clj --toggle") "Toggle scratchpad")
