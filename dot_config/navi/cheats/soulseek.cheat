@@ -1,0 +1,31 @@
+% soulseek
+@ util
+
+# search fzf
+soulseek-rs search "<query>" --sort <sort> | fzf --exact --ignore-case --multi | soulseek-rs download --stdin
+
+# search list
+soulseek-rs search "<query>" --sort <sort> --extension <extension> 
+
+$ sort: echo "best\nspeed\nsize\nbitrate"
+# --exclude <exclude>
+      # --min-size <BYTES>
+      # --max-size <BYTES>
+
+# daemon status
+soulseek-rs daemon status
+
+# user folder folder
+soulseek-rs browse <username>
+
+# Grab a peer's whole FLAC folder
+soulseek-rs browse <username> | grep -i '\.flac$' | soulseek-rs download --stdin
+
+# message send
+soulseek-rs message send <username> "<message>"
+
+# message read
+soulseek-rs message read --duration 60  
+
+# wish Nobody has it today: keep looking, and fetch it the day someone does
+soulseek-rs wish add "<query>"
