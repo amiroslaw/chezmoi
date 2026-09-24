@@ -1,0 +1,44 @@
+% sdkman
+
+# important  "change GRAALVM_HOME env !!" after update/install
+
+# Switch to Java version quickly
+sdk use java <java_available_version>
+
+# Use a version in the current shell only
+sdk use <candidate> <available_version>
+
+# Set the default version for a candidate
+sdk default <candidate> <available_version>
+
+# Show current version(s) in use
+sdk current
+
+# Show current version of a specific candidate
+sdk current <candidate>
+
+# List available versions of a candidate
+sdk list <candidate>
+
+# List all candidates (gradle, maven, etc)
+sdk list
+
+# Install the latest version of a candidate
+sdk install <candidate>
+
+# Install a specific version of a candidate
+sdk install <candidate> <version>
+
+# Uninstall a version of a candidate
+sdk uninstall <candidate> <available_version>
+
+# Upgrade all outdated candidates
+sdk upgrade
+
+$ candidate: echo 'java\nkotlin\nscala\nmaven\nmvnd\njreleaser\njmc\nvisualvm'
+
+$ available_version: source "$HOME/.local/share/sdkman/bin/sdkman-init.sh"; sdk list ${candidate} 2>/dev/null | awk -F'|' '{gsub(/^[ \t]+|[ \t]+$/,"",$2); gsub(/^[ \t]+|[ \t]+$/,"",$4); if ($2 != "" && $4 ~ /^[0-9]/) print $4}'
+
+$ java_available_version: source "$HOME/.local/share/sdkman/bin/sdkman-init.sh"; sdk list java 2>/dev/null | awk -F'|' '{gsub(/^[ \t]+|[ \t]+$/,"",$2); gsub(/^[ \t]+|[ \t]+$/,"",$4); if ($2 != "" && $4 ~ /^[0-9]/) print $4}'
+
+$ version: source "$HOME/.local/share/sdkman/bin/sdkman-init.sh"; sdk list ${candidate} 2>/dev/null | grep -oE '[0-9][0-9A-Za-z._+-]*' | sort -u
