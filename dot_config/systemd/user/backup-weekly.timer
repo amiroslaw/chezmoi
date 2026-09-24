@@ -2,8 +2,9 @@
 Description=Run backup weekly script
 
 [Timer]
+OnCalendar=weekly
+; OnUnitActiveSec=7d
 OnBootSec=2h
-OnUnitActiveSec=7d
 Persistent=true
 
 [Install]

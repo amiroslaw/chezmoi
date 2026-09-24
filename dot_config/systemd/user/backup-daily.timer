@@ -2,9 +2,11 @@
 Description=Run backup daily script
 
 [Timer]
+OnCalendar=daily
+; OnUnitActiveSec=1d
 OnBootSec=1h
-OnUnitActiveSec=1d
 Persistent=true
+
 
 [Install]
 WantedBy=timers.target
