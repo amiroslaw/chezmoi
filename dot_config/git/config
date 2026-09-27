@@ -6,6 +6,23 @@
 	; pager = difftool | less
 	autocrlf = input
 	editor = nvim
+
+[pull]
+  rebase = true
+# sort by newer
+[branch]
+  sort = -committerdate
+# [push]
+  # autoSetupRemote = true
+# does git push --set-upstream origin <nazwa-gałęzi>
+# deletes local branch if it doesn't exist on the server 
+# [fetch]
+  # prune = true
+[rerere]
+# Git remembers how you solved the conflict last time.
+  enabled = true
+# adds to the staging area (git add
+	# autoupdate = true
 [difftool]
   prompt = false
 [diff]

@@ -1,6 +1,9 @@
 # -------------------------------------------------------------------------
 #                       p10k
 # -------------------------------------------------------------------------
+# profiling
+# zmodload zsh/zprof
+
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -148,4 +151,5 @@ if [ -n "${ZSH_VERSION-}" ]; then
  }
 fi
 
+# zprof > /tmp/zprofile
 # vi: ft=zsh
