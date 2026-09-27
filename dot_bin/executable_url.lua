@@ -42,7 +42,7 @@ url.lua --kindle --email url
 Choose action from menu, and pass url from PRIMARY clipboard
 url.lua --menu --primary
 
-dependencies:  clipcat, yt-dlp, gallery-dl, rdrview, mailx, speedread, pandoc, pueue
+dependencies:  clipcat, yt-dlp, gallery-dl, go-readability, mailx, speedread, pandoc, pueue
 ]]
 
 local YT_DIR = '~/Videos/YouTube/'
@@ -91,17 +91,27 @@ local function createEpub(link)
 	local args = cliparse(arg, 'url')
 	local link = args.url[1] and args.url[1] or link
 
-	local readerCmd =  'rdrview -A "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" "' .. link .. '" '
-	
-	local title = io.popen(readerCmd .. ' -M | head -1 | cut -d ":" -f 2'):read('*a'):gsub("\n", ""):gsub('/', ''):gsub('\"',''):gsub('^%s', '')
-	if #title == 0 then 
+	local readerCmd =  'go-readability "' .. link .. '" '
+	local metadataJson = io.popen(readerCmd .. ' --metadata'):read('*a')
+	local metadata = jsonish(metadataJson)
+	local title = metadata["title"]
+	local fileName
+	if title then
+		fileName = title:gsub("\n", ""):gsub('/', ''):gsub('\"',''):gsub('^%s', '')
+	else
+		fileName = 'untitled-' .. os.date('%Y-%m-%dT%H:%M:%S')
 		title = 'untitled-' .. os.date('%Y-%m-%dT%H:%M:%S')
 	end 
 	-- pandoc has error when converting to pdf, html need to have <html> <body> tags and has problem with encoding
 	-- metadata title is required by the kindle server. excerpt can be add
-	local date = os.date('%Y-%m-%d')
 	os.execute('mkdir -p ' .. KINDLE_TMP_DIR)
-	local ok = os.execute(readerCmd .. ' -H -T url,sitename,byline | pandoc --from html --to epub --output "' .. KINDLE_TMP_DIR .. title .. '.epub" --toc --metadata title="' .. title .. '" --metadata date='..date)
+	-- metadata can have a nil
+	local cmd = string.format('%s  | pandoc --from html --to epub --output "%s%s".epub --toc --metadata title="%s" --metadata date="%s" --metadata subtitle="%s" --metadata author="%s" ',
+		readerCmd, KINDLE_TMP_DIR, fileName, title, os.date('%Y-%m-%d'), link, metadata["byline"])
+	print(cmd)
+	local ok = os.execute(cmd)
+ --metadata cover-image="%s" , metadata["image"]
+
 	assert(ok, "Can't create ebook: " .. title)
 	return title
 end
@@ -127,10 +137,12 @@ local function kindle(linkTab)
 end
 
 local function urlToDoc(url, filePath, docFormat)
-	local cmd = ('rdrview -H -A "Mozilla" "%s" -T title | pandoc --from html --to %s --output "%s"'):format(url, docFormat, filePath)
+	local cmd = ('go-readability "%s" | pandoc --from html --to %s --output "%s"'):format(url, docFormat, filePath)
+ --metadata title="%s" I can fetch once again metadata
 	assert(os.execute(cmd), 'Could not create file')
 end
 
+-- https://github.com/mrusme/reader an alternative
 local function readable(linkTab)
 	-- I assume that `linkTab` will have only one element
 	local tmpPath, tmpName = createTmpFile({prefix = 'readable', format = 'adoc'})
@@ -140,8 +152,9 @@ local function readable(linkTab)
 		os.execute(termCmd)
 	end
 	return 'Created file ' .. tmpName
-end 
+end
 
+-- with go-readability I can use --text, I don't need to convert via pandoc
 local function speed(linkTab)
 	local tmpPath, tmpName = createTmpFile({prefix = 'rsvp'})
 	for _, link in ipairs(linkTab) do

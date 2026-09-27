@@ -1,7 +1,5 @@
 
 --[[
--- I don't know how to bidn it 
-
     https://github.com/stax76/mpv-scripts
 
     This script instantly deletes the file that is currently playing
@@ -51,8 +49,6 @@ function is_protocol(path)
 end
 
 function delete_file(path)
-
-    local is_windows = package.config:sub(1,1) == "\\"
 
     if is_protocol(path) or not file_exists(path) then
         return

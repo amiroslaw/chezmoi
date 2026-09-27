@@ -11,7 +11,9 @@ mkdir -p "$LOCAL_BIN_DIR"
 echo "🔨 install clipcat..."
 sudo zypper --no-gpg-checks install -y $TMP/clipcat.rpm
 
-# fasder
+go install codeberg.org/readeck/go-readability/cmd/go-readability@latest
+
+# fasder https://github.com/wyne/fasder
 FASDER_DIR="$TMP/fasder"
 FASDER_FILE="fasder"
 # mkdir -p "$FASDER_DIR"

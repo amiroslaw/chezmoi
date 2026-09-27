@@ -1456,5 +1456,103 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 
 -- }}} 
 
+-- local function vertopen_url()
+--   vim.cmd('normal! "uyiW')
+--   local url = vim.fn.getreg('u')
+--   vim.cmd('vertical terminal reader ' .. url)
+-- end
+-- vim.keymap.set('n', 'gX', vertopen_url, { desc = 'Open URL under cursor with reader' })
+
+local function vertopen_url()
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 1-indexed
+
+  local url = nil
+
+  -- AsciiDoc link syntax: https://example.com[link text]
+  for start_pos, match_url, end_pos in line:gmatch("()(%S+%[[^%]]*%])()") do
+    if col >= start_pos and col < end_pos then
+      url = match_url:match("^(.-)%[")
+      break
+    end
+  end
+
+  -- fallback: bare URL under cursor
+  if not url then
+    for start_pos, match_url, end_pos in line:gmatch("()(https?://[^%s%[%]]+)()") do
+      if col >= start_pos and col < end_pos then
+        url = match_url
+        break
+      end
+    end
+  end
+
+  if not url then
+    vim.notify("No URL found under cursor", vim.log.levels.WARN)
+    return
+  end
+
+  local tmpfile = vim.fn.tempname() .. ".md"
+  local cmd = string.format(
+    "reader -o %s > %s",
+    vim.fn.shellescape(url),
+    vim.fn.shellescape(tmpfile)
+  )
+
+  vim.notify("Fetching " .. url .. " ...", vim.log.levels.INFO)
+
+  vim.fn.jobstart(cmd, {
+    on_exit = function(_, exit_code)
+      if exit_code ~= 0 then
+        vim.notify("reader failed (exit code " .. exit_code .. ")", vim.log.levels.ERROR)
+        return
+      end
+      vim.schedule(function()
+        vim.cmd("tabnew " .. vim.fn.fnameescape(tmpfile))
+        vim.bo.filetype = "markdown"
+      end)
+    end,
+  })
+end
+
+vim.keymap.set("n", "gX", vertopen_url, { desc = "Open URL under cursor as markdown (reader)" })
+
+-- local function vertopen_url()
+--   local line = vim.api.nvim_get_current_line()
+--   local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 1-indexed
+--
+--   local url = nil
+--
+--   -- Look for AsciiDoc link syntax: https://example.com[link text]
+--   for start_pos, match_url, end_pos in line:gmatch("()(%S+%[[^%]]*%])()") do
+--     if col >= start_pos and col < end_pos then
+--       -- strip the [text] part, keep only the URL
+--       url = match_url:match("^(.-)%[")
+--       break
+--     end
+--   end
+--
+--   -- fall back to a bare URL under the cursor if no AsciiDoc match found
+--   if not url then
+--     for start_pos, match_url, end_pos in line:gmatch("()(https?://[^%s%[%]]+)()") do
+--       if col >= start_pos and col < end_pos then
+--         url = match_url
+--         break
+--       end
+--     end
+--   end
+--
+--   if not url then
+--     vim.notify("No URL found under cursor", vim.log.levels.WARN)
+--     return
+--   end
+--
+--   vim.cmd("tabnew")
+--   vim.cmd("terminal reader " .. vim.fn.shellescape(url))
+--   vim.cmd("startinsert")
+-- end
+-- vim.keymap.set("n", "gX", vertopen_url, { desc = "Open URL under cursor with reader (new tab)" })
+
+
 -- set complete+=kspell spellcheck complete
 -- vim: foldmethod=marker

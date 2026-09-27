@@ -27,6 +27,14 @@
     executable = true
     refreshPeriod = "168h"
 
+[".local/bin/nchat"]
+    type = "archive-file"
+    url = {{ gitHubLatestReleaseAssetURL "d99kris/nchat" "nchat-*-linux-x86_64-musl.tar.gz" | quote }}
+    path = "bin/nchat"
+	stripComponents = 1
+    executable = true
+    refreshPeriod = "168h"
+
 # v0.27 has opi version
 [".local/bin/taskwarrior-tui"] 
     type = "archive-file"

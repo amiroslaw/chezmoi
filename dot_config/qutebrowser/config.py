@@ -205,10 +205,10 @@ config.bind('alo', 'spawn chat.clj action --action-list --url="{url}" -o scratch
 config.bind('aho', urlCmdHint + 'chat.clj action --action-list --url="{url}" -o scratchpad')
 config.bind('alt', 'spawn chat.clj text --url="{url}" -o scratchpad')
 config.bind('aht', urlCmdHint + 'chat.clj text --url="{url}" -o scratchpad')
-# rdrview
-config.bind('alf', 'spawn -u readermode.lua')
-config.bind('ahf', 'hint links userscript readermode.lua')
-config.bind('aaf', 'hint --rapid links userscript readermode.lua')
+# doesn't work
+config.bind('alx', 'spawn -u readermode.lua')
+config.bind('ahx', 'hint links userscript readermode.lua')
+config.bind('aax', 'hint --rapid links userscript readermode.lua')
 config.bind('ahd', urlCmdHint+ 'url.lua --dlAudio "{hint-url}"')
 config.bind('aad', urlCmdRapid + 'url.lua --dlAudio "{hint-url}"')
 config.bind('ald', 'spawn url.lua --dlAudio "{url}"')
@@ -488,8 +488,6 @@ c.hints.selectors["video"] = [ "ytd-thumbnail a#thumbnail", '.video-grid > div >
 
 # config.bind('J', 'move-to-start-of-next-block', 'caret') # [
 # config.bind('K', 'move-to-start-of-prev-block', 'caret')
-# config.bind(',R', 'spawn -u readability')
-# rdrview -B qutebrowser - bład
 # config.bind(',F', 'spawn -u openfeeds') - module needed
 # move cursor in command mode
 # bind go cmd-set-text :open {url:pretty} ;; fake-key -g <Home><Ctrl-Right><Shift-End>

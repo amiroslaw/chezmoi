@@ -136,21 +136,23 @@
            [nil true] (request (rofi-model-list) prompt)
            :else (request default-model prompt))))
 
-(defn- fetch-page-html [url]
-  (let [{:keys [exit out]} (sh "rdrview" "-H" "-A" "Mozilla" url "-T" "title")]
+(defn- fetch-page [url]
+  (let [{:keys [exit out]} (sh "go-readability" "--text" url)]
+
     (if (zero? exit)
       out
       (notify-error! (str "Fetching html from page " url) true))))
 
-(defn- html->txt [url]
-  (let [{:keys [exit out]} (sh {:in (fetch-page-html url)} "pandoc" "--from" "html" "--to" "plain" "--output" "-")]
-    (if (zero? exit)
-      out
-      (notify-error! (str "Converting html to text " url) true))))
+; for rdrview
+; (defn- html->txt [url]
+;   (let [{:keys [exit out]} (sh {:in (fetch-page-html url)} "pandoc" "--from" "html" "--to" "plain" "--output" "-")]
+;     (if (zero? exit)
+;       out
+;       (notify-error! (str "Converting html to text " url) true))))
 
 (defn- get-text [opts]
   (cond
-    (:url opts) (html->txt (:url opts))
+    (:url opts) (fetch-page (:url opts))
     (:primary opts) (:out (sh "clipcat.clj primary"))
     ; (:primary opts) (:out (sh "clipster --output -m '' --primary"))
     (:input opts) (:input opts)
@@ -249,7 +251,7 @@
   TERM_LT and TERM_LT_RUN = %s
   %nDependencies:
    - ollama, clipcat, rofi
-   - optional for `url` flag: rdrview, pandoc
+   - optional for `url` flag: go-readability, pandoc
    - optional for `scratchpad`: nvim "
           (format-cmds! subcommands)
           (cli/format-opts {:spec spec})

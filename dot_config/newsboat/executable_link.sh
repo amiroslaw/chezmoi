@@ -29,5 +29,4 @@ case "$url" in
 		# setsid -f rdrview -A "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" -B w3m "$url" 
 		# setsid -f rdrview -A "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" "$url" 
 		# setsid -f rdrview -A "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" "$url" -H /tmp/newsboat.html && setsid -f "$BROWSER" /tmp/newsboat.html >/dev/null 2>&1
-		#readable -o! /tmp/newshoat.html "$url" >/dev/null 2>&1 && setsid -f "$BROWSER" /tmp/newshoat.html >/dev/null 2>&1
 esac
