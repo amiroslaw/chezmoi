@@ -1,6 +1,9 @@
 % shortcuts
 @ util
 
+#kindle2anki
+java -jar "$HOME/.local/bin/kindle2anki.jar" --config.path="$HOME/.config/kindle2anki/kindle-vocab"
+
 # ghgrab download in the current folder
 ghgrab <repo> --cwd --no-folder
 

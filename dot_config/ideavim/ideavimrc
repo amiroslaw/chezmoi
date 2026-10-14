@@ -56,6 +56,7 @@ set ideajoin
 " # -------------------------------------------------------------------------
 " #                       PLUGINS
 " https://github.com/JetBrains/ideavim/blob/master/doc/IdeaVim%20Plugins.md
+" https://github.com/JetBrains/ideavim/wiki/IdeaVim-Plugins
 " set exchange - interesting
 " Additional motions / text objects:
 "   s - Surround. Ex: cis" = change inside surrounding quotes
@@ -71,6 +72,7 @@ set ideajoin
 " # -------------------------------------------------------------------------
 " have to install from marketplace
 set which-key
+set VimEverywhere
 set timeoutlen=5000
 " jump between if and <> like with %
 " idk if it works
