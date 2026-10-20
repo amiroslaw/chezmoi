@@ -1,6 +1,8 @@
 -- S-k - jump to help page
 -- free keybinding leader-b/B
--- TODO
+-- esc something
+-- enter 
+-- TODO 
 -- now I can remove duplication if I have 2 the same bindings for different modes 
 -- for example nmap and vmap 
 -- lsp_map to my function
@@ -33,15 +35,16 @@ vim.api.nvim_create_autocmd( -- go to last loc when opening a buffe
 )
 
 local update_config = vim.api.nvim_create_augroup('update-chezmoi-config', { clear = true })
-vim.api.nvim_create_autocmd("BufWritePost", {
+vim.api.nvim_create_autocmd("BufWritePost", { -- or VimLeavePre
 	group = update_config,
   pattern = os.getenv("HOME") .. "/.local/share/chezmoi/*",
   callback = function(args)
 	  -- the --force flag, will override files in ~/.config
     vim.fn.system({ "chezmoi", "apply", "--force", "--source-path", args.file })
-  end,
+	end,
   desc = "Apply chezmoi changes after writing a chezmoi file",
 })
+
 -- has to be after chezmoi apply, but even that 
 vim.api.nvim_create_autocmd("BufWritePost", {
 	group = update_config,
@@ -162,6 +165,7 @@ vim.o.fileencoding = 'utf-8'
 vim.o.fileencodings = 'utf-8', 'latin1'
 vim.o.spelloptions  = 'camel' -- Treat camelCase word parts as separate words
 vim.opt.completeopt = { "menu", "menuone", "noselect" } -- it fixes nvim-cmp plugin
+vim.opt.confirm = true
 
 -- UI =========================================================================
 vim.o.colorcolumn    = '+1'       -- Draw column on the right of maximum width
@@ -284,7 +288,7 @@ nmap('<F5>', '<cmd>restart<cr>', 'Reload')
 nmap('<F7>', ':!preview-ascii.sh % <CR>', 'adoc preview')
 
 -- nmap('x', '"_x') -- doesn't add to register from `x`, will brake xp
-nmap('<C-/>', ':nohlsearch<cr>', 'Clear search highlights')
+nmap('<Esc>', ':nohlsearch<cr>', 'Clear search highlights')
 nmap('<F4>', ':term taskwarrior-tui<CR>', 'Open taskwarrior TUI')
 nmap(',<F5>', '<cmd>luafile dev/init.lua<cr>', 'Reload dev init.lua', {}) -- for plugin development
 nmap('Zz', ' :q! <cr>', 'Quit without saving')
@@ -317,7 +321,7 @@ nmap('zp', '[z <cr>', 'Previous fold start')
 nmap('zo', 'zO <cr>', 'Open all folds')
 nmap('zO', 'zo <cr>', 'Open fold')
 
-nmap('<Esc><Esc>', ':w<CR>', 'Save on double escape') -- saving 2x esc
+nmap('<space><space>', ':w<CR>', 'Save on double escape') -- saving 2x esc
 -- TODO check out
 nmap('<leader>sudo ', ':w !sudo tee % <CR><CR>', 'Save with sudo') -- leader to backslash \w saving as root
 nmap('<S-X>', '<C-^>', 'Alternate file') -- alternate-file file that was last edited in the current window.
@@ -1454,6 +1458,32 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
     end,
 })
 
+local function chezmoi_re_add(file_path)
+  -- Default to current buffer's file if no path is provided
+  local target = file_path
+  if not target or target == "" then
+    target = vim.api.nvim_buf_get_name(0)
+  end
+
+  if not target or target == "" then
+    vim.notify("chezmoi re-add: No file path provided or active buffer is empty", vim.log.levels.WARN)
+    return
+  end
+
+  -- Run chezmoi re-add asynchronously in the background
+  vim.system({ "chezmoi", "re-add", target }, { text = true }, function(result)
+    vim.schedule(function()
+      if result.code == 0 then
+        vim.notify("chezmoi re-add: successfully updated " .. vim.fn.fnamemodify(target, ":t"), vim.log.levels.INFO)
+      else
+        vim.notify("chezmoi re-add failed: " .. (result.stderr or ""), vim.log.levels.WARN)
+      end
+    end)
+  end)
+end
+vim.keymap.set("n", "<leader>c", function()
+  chezmoi_re_add()
+end, { desc = "Chezmoi re-add current file" })
 -- }}} 
 
 -- local function vertopen_url()
