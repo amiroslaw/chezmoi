@@ -243,7 +243,7 @@ command! diffMeld meld %c %C %i
 nmap ,d :diffVim<cr>
 command! diffVim nvim -d %f %F
 nmap ,c :compare listall<cr>
-command! checkout ~/.bin/checkout.lua %d
+command! checkout ~/.bin/checkout.clj %d
 nnoremap ,b :checkout <cr>
 " nnoremap ,c :!~/.bin/checkout.lua %d <cr>
 " git log preview for a file
@@ -324,7 +324,7 @@ nmap aa ggvG<cr>
 "unselect all
 nmap au vv<cr>
 nmap I :invert s <cr>
-nmap <A-s>	:sync <cr>
+nmap <a-s>	:sync <cr>
 nmap S	:sort <cr>
 nmap U	:undolist <cr>
 "podglad w panelu, maybe change to tw

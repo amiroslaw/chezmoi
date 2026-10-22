@@ -1014,6 +1014,7 @@ nmap(',h', function() toggle_diffview('DiffviewFileHistory') end, 'Diffview view
 nmap(',F', function() toggle_diffview('DiffviewFileHistory %') end, 'Diffview view history for the current file.')
 nmap(',f', function() toggle_diffview('DiffviewFileHistory % --base=LOCAL') end, 'Diffview view history for the current file. Local base.')
 nmap(',d', function() toggle_diffview('DiffviewOpen') end, 'Diffview')
+nmap(',D', function() toggle_diffview('DiffviewOpen HEAD~1') end, 'Diffview last commit,') -- afer that open pane ;b
 nmap(',m', function() toggle_diffview('DiffviewOpen master') end, 'Diffview master')
 
 require("diffview").setup({

@@ -37,7 +37,7 @@
 (local vertical "DVI-I-1")
 (hl.workspace_rule { :workspace 1  :monitor main :default true })
 (hl.workspace_rule { :workspace 2  :monitor main })
-(hl.workspace_rule { :workspace 3  :monitor main })
+(hl.workspace_rule { :workspace 3  :monitor main :layout "monocle" })
 (hl.workspace_rule { :workspace 4  :monitor main })
 (hl.workspace_rule { :workspace 5  :monitor main })
 (hl.workspace_rule { :workspace 6  :monitor main })
@@ -48,6 +48,7 @@
 
 {{ else if eq .chezmoi.hostname "laptop" }}
 (hl.workspace_rule { :workspace 1 :layout "scrolling" })
+(hl.workspace_rule { :workspace 3 :layout "monocle" })
 ;; Screenshots
 (hl.bind "Scroll_Lock" (hl.dsp.exec_cmd "screenshot.clj save --target window") { :description "Screenshot the active window" })
 (map :Scroll_Lock (hl.dsp.exec_cmd "screenshot.clj ocr --target region") "Screenshot ocr")

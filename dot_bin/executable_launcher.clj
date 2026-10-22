@@ -139,7 +139,8 @@
   { :abbr :note :title :notebook :desc "notebook" :cmd (format "wezterm start --class note --cwd '%s' -- nvim" (System/getenv "NOTE")) }
   ;; TODO veirfy if with keyword it will work
   { :abbr :rmr :title :restore-trash :desc "restore from trash" :cmd (util/term-lt-app :trash "gomi --restore") }
-  { :abbr :fm :title :vifm :desc "vifm" :cmd (util/term-lt-app :vifm "vifm") }
+  { :abbr :vfm :title :vifm :desc "vifm" :cmd (util/term-lt-app :vifm "vifm") }
+  { :abbr :fm :title :fm :desc "strata" :cmd "strata" }
   { :abbr :news :title :newsboat :desc "newsboat" :cmd (scratchpad :news (util/term-app :news "newsboat")) }
   { :abbr :drop :title :dropdown-terminal :desc "dropdown terminal" :cmd (scratchpad :drop (util/term-app :drop "")) }
   { :abbr :chat :title :nchat :desc "nchat" :cmd (scratchpad :chat (util/term-app "chat" "nchat")) }
