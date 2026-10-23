@@ -59,4 +59,7 @@
 [alias]
 	dft = difftool
 
+[credential]
+	helper = store
+
 # vim: ft=cfg
