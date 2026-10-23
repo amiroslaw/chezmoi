@@ -99,36 +99,41 @@ return {
 		event = "BufReadPost",
 		opts = true,
 	},
-	{ "huynle/ogpt.nvim",
-		event = "VeryLazy",
-		opts = {
-			-- debug = true, 
-			default_provider = "ollama",
-			providers = {
-			  ollama = {
-				enabled = true,
-				api_host = os.getenv("OLLAMA_API_HOST") or "http://localhost:11434",
-				api_key = os.getenv("OLLAMA_API_KEY") or "",
-				model = {
-				  name = 'qwen2.5:3b',
-				  -- name = 'llama3:latest',
-				  system_message = nil,
-				},
-			  },
-			},
-			actions_paths = {
-				'~/.config/nvim/custom/ogpt-actions.json',
-					  -- default action that comes with lua/ogpt/actions.json
-					  -- debug.getinfo(1, "S").source:sub(2):match("(.*/)") .. "actions.json",
-			},
-			predefined_chat_gpt_prompts = "https://raw.githubusercontent.com/f/awesome-chatgpt-prompts/main/prompts.csv",
-		},
-		dependencies = {
-		  "MunifTanjim/nui.nvim",
-		  "nvim-lua/plenary.nvim",
-		  "nvim-telescope/telescope.nvim"
-		}
+	{ "olimorris/codecompanion.nvim",
+	  dependencies = {
+		"ravitemer/mcphub.nvim"
+	  }
 	},
+	-- { "huynle/ogpt.nvim",
+	-- 	event = "VeryLazy",
+	-- 	opts = {
+	-- 		-- debug = true, 
+	-- 		default_provider = "ollama",
+	-- 		providers = {
+	-- 		  ollama = {
+	-- 			enabled = true,
+	-- 			api_host = os.getenv("OLLAMA_API_HOST") or "http://localhost:11434",
+	-- 			api_key = os.getenv("OLLAMA_API_KEY") or "",
+	-- 			model = {
+	-- 			  name = 'qwen2.5:3b',
+	-- 			  -- name = 'llama3:latest',
+	-- 			  system_message = nil,
+	-- 			},
+	-- 		  },
+	-- 		},
+	-- 		actions_paths = {
+	-- 			'~/.config/nvim/custom/ogpt-actions.json',
+	-- 				  -- default action that comes with lua/ogpt/actions.json
+	-- 				  -- debug.getinfo(1, "S").source:sub(2):match("(.*/)") .. "actions.json",
+	-- 		},
+	-- 		predefined_chat_gpt_prompts = "https://raw.githubusercontent.com/f/awesome-chatgpt-prompts/main/prompts.csv",
+	-- 	},
+	-- 	dependencies = {
+	-- 	  "MunifTanjim/nui.nvim",
+	-- 	  "nvim-lua/plenary.nvim",
+	-- 	  "nvim-telescope/telescope.nvim"
+	-- 	}
+	-- },
 	--}}}
 
 	--{{{ Note
@@ -203,7 +208,7 @@ return {
 	-- asciidoctor
 	{ 'habamax/vim-asciidoctor' }, -- ft = { 'asciidoctor' } }, -- doesn't work with lazy
 	-- markdown
-	{ 'OXY2DEV/markview.nvim', lazy = false, ft = {'markdown'}, dependencies = {'hrsh7th/nvim-cmp'}},
+	{ 'OXY2DEV/markview.nvim', lazy = false, ft = {'markdown', "codecompanion"}, ignore_buftypes = {}, dependencies = {'hrsh7th/nvim-cmp'}},
 	{ 'godlygeek/tabular', cmd = { 'Tab' } }, -- do wyrównywania np w tabelach http://vimcasts.org/episodes/aligning-text-with-tabular-vim/ :Tab /| ft = { 'markdown', 'asciidoctor' }
 	{ 'majutsushi/tagbar', cmd = 'TagbarToggle' },
 	{ 'stevearc/aerial.nvim',
@@ -304,7 +309,7 @@ return {
 	{ 'nvim-lualine/lualine.nvim', event = 'VeryLazy',
 		config = function()
 			local function line_total()
-				return tostring(vim.api.nvim_buf_line_count(vim.fn.winbufnr( vim.g.statusline_winid))) 
+				return tostring(vim.api.nvim_buf_line_count(vim.fn.winbufnr( vim.g.statusline_winid)))
 			end
 			local spellang = function ()
 				if vim.opt.spell:get() ~= true then return '[]' end
@@ -337,7 +342,7 @@ return {
 			 options = { theme = 'dracula', component_separators = '|', globalstatus = true }, 
 			 sections = {
 				lualine_x = {'selectioncount', 'searchcount'}, -- redundant
-				lualine_y = {asciidoc_header, spellang, permissions, 'filetype'},
+				lualine_y = {asciidoc_header, spellang, permissions, 'filetype', require("codecompanion_spinner"),},
 				lualine_z = {line_total, 'progress', 'location'}}
 		 }
 		-- opts = { options = { theme = 'dracula', component_separators = '|', globalstatus = true }, -- sections = {lualine_a = {'buffers'}} - takes too much space

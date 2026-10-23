@@ -1159,24 +1159,120 @@ map({"i", "s"}, "<C-h>", function()
 end, 'luasnip next choice', {silent = true})
 -- }}} 
 
+--{{{ https://github.com/olimorris/codecompanion.nvim
+require("codecompanion").setup({
+	opts = { log_level = "DEBUG", -- Opcje: ERROR, WARN, INFO, DEBUG, TRACE
+			-- make_slash_commands = true,
+		},
+	interactions = {
+      chat = { adapter = "gemini", },
+      inline = { adapter = "gemini", },
+	  cmd = { adapter = "gemini", },
+    },
+    adapters = {
+      http = {
+        gemini = function()
+          return require("codecompanion.adapters").extend("gemini", {
+            env = {
+              api_key = "GEMINI_API_KEY", -- CodeCompanion checks this environment variable automatically
+            },
+            -- Optional: Customize default model parameters if needed
+            schema = {
+              model = {
+                -- default = "gemini-3.8-flash",
+                default = "gemini-3.6-flash",
+                -- default = "gemini-3.5-flash-lite",
+              },
+            },
+          })
+        end,
+      },
+    },
+	prompt_library = {
+	  markdown = {
+		dirs = {
+		  -- vim.fn.stdpath("config") .. "/prompts",
+		  "/home/miro/.config/nvim/prompts",
+		},
+	  },
+["Translate to Polish"] = {
+        strategy = "inline",
+        description = "Przetłumacz tekst z angielskiego na polski",
+        opts = {
+          modes = { "n", "v" },
+          short_name = "tlpl",
+          auto_submit = true,
+          stop_context_insertion = true,
+        },
+        prompts = {
+          {
+            role = "system",
+            content = "Jesteś precyzyjnym tłumaczem. Twoim jedynym zadaniem jest przetłumaczenie dostarczonego tekstu z języka angielskiego na język polski. Zwróć wyłącznie przetłumaczony tekst, bez żadnych wstępów, komentarzy, wyjaśnień ani znaczników formatowania.",
+          },
+          {
+            role = "user",
+            content = function(context)
+              return "Przetłumacz poniższy tekst na język polski:\n\n #{buffer}"
+            end,
+          },
+        },
+      },
+	},
+  extensions = {
+    mcphub = {
+      callback = "mcphub.extensions.codecompanion",
+      opts = {
+        make_vars = true,
+        make_slash_commands = true,
+        show_result_in_chat = true
+      }
+    }
+  },
+ display = {
+    action_palette = {
+      provider = "telescope",
+      opts = {
+        show_preset_actions = true,
+        show_preset_prompts = true, -- maybe disable
+        title = "Actions",
+      },
+    },
+  },
+})
+
+locLeader({"n", "v"}, 'oa', '<cmd>CodeCompanionActions<CR>', 'CC Actions')
+locLeader({"n", "v"}, 'oc', '<cmd>CodeCompanionChat Toggle<CR>', 'CC Chat Toggle')
+locLeader({"n", "v"}, 'oC', '<cmd>CodeCompanionChat Toggle<CR>', 'CC Chat New')
+locLeader({"n", "v"}, 'oo', '<cmd>CodeCompanion<CR>', 'CC Inline')
+locLeader({ "n", "v" }, "ol", function()
+  -- require("codecompanion").prompt("translate_to_pl")
+  -- require("codecompanion").prompt("{tlpl}")
+  require("codecompanion").prompt("trans")
+end, { desc = "Przetłumacz zaznaczenie/bufor" })
+locLeader({ "n", "v" }, "op", function()
+	require("codecompanion").prompt()
+end, { desc = "Open prompt library" })
+
+--}}} 
+
 --{{{ ogpt https://github.com/huynle/ogpt.nvim
-nlocLeader('oo', '<cmd>OGPT<CR>', 'OGPT')
-nlocLeader('oa', '<cmd>OGPTActAs<CR>', 'OGPTActAs')
-locLeader({"n", "v"}, 'oe', "<cmd>OGPTEditWithInstruction<CR>", "Edit with instruction")
-locLeader({"n", "v"}, 'oc', "<cmd>OGPTRun grammar-append<CR>", "Grammar Correction")
-imap('<c-x>', "<esc><cmd>OGPTRun grammar-append<CR>", "Grammar Correction")
-locLeader({"n", "v"}, 'oC', "<cmd>OGPTRun grammar-append-explain<CR>", "Grammar Correction with explanation")
-locLeader({"n", "v"}, 'ol', "<cmd>OGPTRun translate-append<CR>", "Translate to english")
-locLeader({"n", "v"}, 'oL', "<cmd>OGPTRun translate-append polish<CR>", "Translate to polish")
-locLeader({"n", "v"}, 'ok', "<cmd>OGPTRun keywords<CR>", "Keywords")
-locLeader({"n", "v"}, 'oj', "<cmd>OGPTRun javdoc<CR>", "Java documentation")
-locLeader({"n", "v"}, 'ot', "<cmd>OGPTRun add_tests<CR>", "Add Tests")
-locLeader({"n", "v"}, 'oi', "<cmd>OGPTRun optimize_code<CR>", "Optimize Code")
-locLeader({"n", "v"}, 'os', "<cmd>OGPTRun summarize<CR>", "Summarize")
-locLeader({"n", "v"}, 'ob', "<cmd>OGPTRun fix_bugs<CR>", "Fix Bugs")
-locLeader({"n", "v"}, 'ox', "<cmd>OGPTRun explain_code<CR>", "Explain Code")
-locLeader({"n", "v"}, 'or', "<cmd>OGPTRun code_readability_analysis<CR>", "Code Readability Analysis")
-locLeader({"n", "v"}, 'of', "<cmd>OGPTRun format-adoc table<CR>", "Format asciidoc table")
+-- nlocLeader('oo', '<cmd>OGPT<CR>', 'OGPT')
+-- nlocLeader('oa', '<cmd>OGPTActAs<CR>', 'OGPTActAs')
+-- locLeader({"n", "v"}, 'oe', "<cmd>OGPTEditWithInstruction<CR>", "Edit with instruction")
+-- locLeader({"n", "v"}, 'oc', "<cmd>OGPTRun grammar-append<CR>", "Grammar Correction")
+-- imap('<c-x>', "<esc><cmd>OGPTRun grammar-append<CR>", "Grammar Correction")
+-- locLeader({"n", "v"}, 'oC', "<cmd>OGPTRun grammar-append-explain<CR>", "Grammar Correction with explanation")
+-- locLeader({"n", "v"}, 'ol', "<cmd>OGPTRun translate-append<CR>", "Translate to english")
+-- locLeader({"n", "v"}, 'oL', "<cmd>OGPTRun translate-append polish<CR>", "Translate to polish")
+-- locLeader({"n", "v"}, 'ok', "<cmd>OGPTRun keywords<CR>", "Keywords")
+-- locLeader({"n", "v"}, 'oj', "<cmd>OGPTRun javdoc<CR>", "Java documentation")
+-- locLeader({"n", "v"}, 'ot', "<cmd>OGPTRun add_tests<CR>", "Add Tests")
+-- locLeader({"n", "v"}, 'oi', "<cmd>OGPTRun optimize_code<CR>", "Optimize Code")
+-- locLeader({"n", "v"}, 'os', "<cmd>OGPTRun summarize<CR>", "Summarize")
+-- locLeader({"n", "v"}, 'ob', "<cmd>OGPTRun fix_bugs<CR>", "Fix Bugs")
+-- locLeader({"n", "v"}, 'ox', "<cmd>OGPTRun explain_code<CR>", "Explain Code")
+-- locLeader({"n", "v"}, 'or', "<cmd>OGPTRun code_readability_analysis<CR>", "Code Readability Analysis")
+-- locLeader({"n", "v"}, 'of', "<cmd>OGPTRun format-adoc table<CR>", "Format asciidoc table")
 --}}} 
 
 -- {{{  Substitute. nvim  https://github.com/gbprod/substitute.nvim
