@@ -11,6 +11,7 @@ opts:
   stop_context_insertion: true
   ignore_system_prompt: true
   is_slash_cmd: true
+
 ---
 
 ## system
@@ -19,7 +20,3 @@ You are a precise translator. Your only task is to translate the provided text f
 
 ## user
 
-Translate text below:
-
-
-${context.code}

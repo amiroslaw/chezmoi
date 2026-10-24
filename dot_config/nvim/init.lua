@@ -1214,8 +1214,17 @@ require("codecompanion").setup({
         title = "Actions",
       },
     },
-  },
+	diff = {
+			enabled = true,
+			 -- threshold_for_chat = 0, -- only in chat
+			 window = {
+				 opts = { wrap = true, linebreak = true, breakindent = true }, -- idk if opts are valid
+			 },
+		   }
+	  },
 })
+
+require("codecompanion_diff_wrap").setup()
 
 vim.cmd([[cab cc CodeCompanion]]) -- alias cc in command mode
 
@@ -1223,9 +1232,6 @@ locLeader({"n", "v"}, 'oa', '<cmd>CodeCompanionActions<CR>', 'CC Actions')
 locLeader({"n", "v"}, 'oc', '<cmd>CodeCompanionChat Toggle<CR>', 'CC Chat Toggle')
 locLeader({"n", "v"}, 'oC', '<cmd>CodeCompanionChat Toggle<CR>', 'CC Chat New')
 locLeader({"n", "v"}, 'oo', '<cmd>CodeCompanion<CR>', 'CC Inline')
--- vim.keymap.set({"n", "v"}, "<LocalLeader>ot", function()
---   require("codecompanion").prompt("trans")
--- end, { noremap = true, silent = true })
 
 locLeader({ "n", "v" }, "ot", function()
   require("codecompanion").prompt("trans")
