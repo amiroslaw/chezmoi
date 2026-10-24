@@ -1191,32 +1191,32 @@ require("codecompanion").setup({
 	prompt_library = {
 	  markdown = {
 		dirs = {
-		  -- vim.fn.stdpath("config") .. "/prompts",
-		  "/home/miro/.config/nvim/prompts",
+		  vim.fn.stdpath("config") .. "/prompts",
+		  "~/.config/nvim/prompts",
 		},
 	  },
-["Translate to Polish"] = {
-        strategy = "inline",
-        description = "Przetłumacz tekst z angielskiego na polski",
-        opts = {
-          modes = { "n", "v" },
-          short_name = "tlpl",
-          auto_submit = true,
-          stop_context_insertion = true,
-        },
-        prompts = {
-          {
-            role = "system",
-            content = "Jesteś precyzyjnym tłumaczem. Twoim jedynym zadaniem jest przetłumaczenie dostarczonego tekstu z języka angielskiego na język polski. Zwróć wyłącznie przetłumaczony tekst, bez żadnych wstępów, komentarzy, wyjaśnień ani znaczników formatowania.",
-          },
-          {
-            role = "user",
-            content = function(context)
-              return "Przetłumacz poniższy tekst na język polski:\n\n #{buffer}"
-            end,
-          },
-        },
-      },
+-- ["Translate to Polish"] = {
+--         strategy = "inline",
+--         description = "Przetłumacz tekst z angielskiego na polski",
+--         opts = {
+--           modes = { "n", "v" },
+--           short_name = "tlpl",
+--           auto_submit = true,
+--           stop_context_insertion = true,
+--         },
+--         prompts = {
+--           {
+--             role = "system",
+--             content = "Jesteś precyzyjnym tłumaczem. Twoim jedynym zadaniem jest przetłumaczenie dostarczonego tekstu z języka angielskiego na język polski. Zwróć wyłącznie przetłumaczony tekst, bez żadnych wstępów, komentarzy, wyjaśnień ani znaczników formatowania.",
+--           },
+--           {
+--             role = "user",
+--             content = function(context)
+--               return "Przetłumacz poniższy tekst na język polski:\n\n #{buffer}"
+--             end,
+--           },
+--         },
+--       },
 	},
   extensions = {
     mcphub = {
@@ -1240,10 +1240,16 @@ require("codecompanion").setup({
   },
 })
 
+vim.cmd([[cab cc CodeCompanion]]) -- alias cc in command mode
+
 locLeader({"n", "v"}, 'oa', '<cmd>CodeCompanionActions<CR>', 'CC Actions')
 locLeader({"n", "v"}, 'oc', '<cmd>CodeCompanionChat Toggle<CR>', 'CC Chat Toggle')
 locLeader({"n", "v"}, 'oC', '<cmd>CodeCompanionChat Toggle<CR>', 'CC Chat New')
 locLeader({"n", "v"}, 'oo', '<cmd>CodeCompanion<CR>', 'CC Inline')
+vim.keymap.set({"n", "v"}, "<LocalLeader>ot", function()
+  require("codecompanion").prompt("trans")
+end, { noremap = true, silent = true })
+
 locLeader({ "n", "v" }, "ol", function()
   -- require("codecompanion").prompt("translate_to_pl")
   -- require("codecompanion").prompt("{tlpl}")

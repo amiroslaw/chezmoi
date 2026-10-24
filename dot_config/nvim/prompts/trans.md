@@ -1,13 +1,14 @@
 ---
-name: translate
+name: trans
 description: Przetłumacz tekst z angielskiego na polski
 strategy: inline
 opts:
     modes: {"n", "v"}
-    alias: enpl
+    alias: trans
     auto_submit: true
     stop_context_insertion: true
     ignore_system_prompt: true
+    is_slash_cmd: true
 ---
 
 ## System Prompt
