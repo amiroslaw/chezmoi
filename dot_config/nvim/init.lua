@@ -1161,7 +1161,7 @@ end, 'luasnip next choice', {silent = true})
 
 --{{{ https://github.com/olimorris/codecompanion.nvim
 require("codecompanion").setup({
-	opts = { log_level = "DEBUG", -- Opcje: ERROR, WARN, INFO, DEBUG, TRACE
+	opts = { log_level = "TRACE", -- Opcje: ERROR, WARN, INFO, DEBUG, TRACE
 			-- make_slash_commands = true,
 		},
 	interactions = {
@@ -1180,8 +1180,8 @@ require("codecompanion").setup({
             schema = {
               model = {
                 -- default = "gemini-3.8-flash",
-                default = "gemini-3.6-flash",
-                -- default = "gemini-3.5-flash-lite",
+                -- default = "gemini-3.6-flash",
+                default = "gemini-3.5-flash-lite",
               },
             },
           })
@@ -1192,31 +1192,8 @@ require("codecompanion").setup({
 	  markdown = {
 		dirs = {
 		  vim.fn.stdpath("config") .. "/prompts",
-		  "~/.config/nvim/prompts",
 		},
 	  },
--- ["Translate to Polish"] = {
---         strategy = "inline",
---         description = "Przetłumacz tekst z angielskiego na polski",
---         opts = {
---           modes = { "n", "v" },
---           short_name = "tlpl",
---           auto_submit = true,
---           stop_context_insertion = true,
---         },
---         prompts = {
---           {
---             role = "system",
---             content = "Jesteś precyzyjnym tłumaczem. Twoim jedynym zadaniem jest przetłumaczenie dostarczonego tekstu z języka angielskiego na język polski. Zwróć wyłącznie przetłumaczony tekst, bez żadnych wstępów, komentarzy, wyjaśnień ani znaczników formatowania.",
---           },
---           {
---             role = "user",
---             content = function(context)
---               return "Przetłumacz poniższy tekst na język polski:\n\n #{buffer}"
---             end,
---           },
---         },
---       },
 	},
   extensions = {
     mcphub = {
