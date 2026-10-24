@@ -141,6 +141,19 @@
 	stripComponents	= 1
 	url = "https://github.com/ful1e5/Google_Cursor/releases/latest/download/GoogleDot-Blue.tar.gz"
 
+
+{{ if eq .chezmoi.hostname "laptop" }}
+{{ else if eq .chezmoi.hostname "pc" }}
+
+# 0.15
+[".local/bin/photocraft"]
+    type = "file"
+    url = {{ gitHubLatestReleaseAssetURL "storytold/photocraft" "photocraft-*-linux-x86_64.AppImage" | quote }}
+    executable = true
+    refreshPeriod = "168h"
+{{ else }}
+{{ end }}
+
 	# url = "https://github.com/ful1e5/Google_Cursor/releases/download/v2.0.0/GoogleDot-Black.tar.gz"
 # from cargo
 # ["tmp-chezmoi/taskwarrior-tui.rpm"] 
