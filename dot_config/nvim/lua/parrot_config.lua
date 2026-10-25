@@ -20,7 +20,7 @@ end
 
 local ollama_host = env("OLLAMA_API_HOST", "http://localhost:11434"):gsub("/+$", "")
 local ollama_model = env("OLLAMA_MODEL", "qwen2.5:3b")
-local gemini_api_key = env("GEMINI_API_KEY", env("GOOGLE_API_KEY", ""))
+local gemini_api_key = os.getenv("GEMINI_API_KEY")
 
 -- Run a model-list request with curl. `args` are the arguments that parrot
 -- prepared from `model_endpoint` + provider headers.
@@ -90,116 +90,6 @@ local function ollama_payload(payload)
   return payload
 end
 
-local function gemini_response_text(response)
-  if not response or response == "" then
-    return nil
-  end
-
-  local json = response:gsub("^data:%s*", ""):gsub("%s+$", "")
-  if json == "[DONE]" then
-    return nil
-  end
-
-  local ok, data = pcall(vim.json.decode, json)
-  if not ok or type(data) ~= "table" then
-    return nil
-  end
-  if data.error then
-    require("parrot.logger").error(
-      "Gemini: " .. (data.error.message or tostring(data.error))
-    )
-    return nil
-  end
-
-  local candidate = data.candidates and data.candidates[1]
-  local parts = candidate and candidate.content and candidate.content.parts
-  if type(parts) ~= "table" then
-    return nil
-  end
-
-  local text = {}
-  for _, part in ipairs(parts) do
-    if type(part.text) == "string" and not part.thought then
-      text[#text + 1] = part.text
-    end
-  end
-  if #text == 0 then
-    return nil
-  end
-  return table.concat(text)
-end
-
-local function gemini_models(self, args)
-  local data = curl_json(args)
-  if not data or type(data.models) ~= "table" then
-    return self.models
-  end
-
-  local names = {}
-  for _, item in ipairs(data.models) do
-    if item.name then
-      local methods = item.supportedGenerationMethods
-      local supports_generate = methods == nil or vim.tbl_contains(methods, "generateContent")
-      local name = item.name:gsub("^models/", "")
-      local lower = name:lower()
-      -- Keep text/chat Gemini models, skip image, audio, research and other
-      -- special-purpose models that are not useful for editing notes.
-      local is_text_model = lower:match("^gemini")
-        and not lower:match("image")
-        and not lower:match("tts")
-        and not lower:match("transcribe")
-        and not lower:match("computer%-use")
-        and not lower:match("robotics")
-        and not lower:match("omni")
-        and not lower:match("nano%-banana")
-        and not lower:match("deep%-research")
-        and not lower:match("antigravity")
-        and not lower:match("lyria")
-      if supports_generate and is_text_model then
-        names[#names + 1] = name
-      end
-    end
-  end
-  if #names == 0 then
-    return self.models
-  end
-  table.sort(names)
-  return names
-end
-
-local function gemini_payload(payload)
-  local contents = {}
-  local system_instruction = nil
-
-  for _, message in ipairs(payload.messages or {}) do
-    local text = (message.content or ""):gsub("^%s*(.-)%s*$", "%1")
-    if message.role == "system" then
-      if text ~= "" then
-        if system_instruction == nil then
-          system_instruction = { parts = {} }
-        end
-        system_instruction.parts[#system_instruction.parts + 1] = { text = text }
-      end
-    else
-      local role = message.role == "assistant" and "model" or "user"
-      contents[#contents + 1] = { role = role, parts = { { text = text } } }
-    end
-  end
-
-  local generation_config = {
-    temperature = payload.temperature,
-    topP = payload.top_p,
-    topK = payload.top_k or payload.topK,
-    maxOutputTokens = payload.max_tokens or payload.maxOutputTokens,
-  }
-
-  return {
-    contents = contents,
-    generationConfig = generation_config,
-    systemInstruction = system_instruction,
-  }
-end
-
 local providers = {
   ollama = {
     name = "ollama",
@@ -242,7 +132,7 @@ local providers = {
 
 -- Gemini is only registered when a key is available, because parrot validates
 -- every configured provider at startup.
-if gemini_api_key ~= "" then
+if gemini_api_key and gemini_api_key ~= "" then
   providers.gemini = {
     name = "gemini",
     endpoint = function(self)
@@ -250,14 +140,16 @@ if gemini_api_key ~= "" then
         .. self._model
         .. ":streamGenerateContent?alt=sse"
     end,
-    model_endpoint = "https://generativelanguage.googleapis.com/v1beta/models",
+    model_endpoint = function(self)
+      return { "https://generativelanguage.googleapis.com/v1beta/models?key=" .. self.api_key }
+    end,
     api_key = gemini_api_key,
     params = {
-      chat = { temperature = 0.7, top_p = 0.95, maxOutputTokens = 8192 },
-      command = { temperature = 0.3, top_p = 0.95, maxOutputTokens = 8192 },
+      chat = { temperature = 1.1, topP = 1, topK = 10, maxOutputTokens = 8192 },
+      command = { temperature = 0.8, topP = 1, topK = 10, maxOutputTokens = 8192 },
     },
     topic = {
-      model = "gemini-2.5-flash-lite",
+      model = "gemini-3.5-flash-lite",
       params = { maxOutputTokens = 64 },
     },
     headers = function(self)
@@ -267,14 +159,57 @@ if gemini_api_key ~= "" then
       }
     end,
     models = {
-      "gemini-2.5-flash",
-      "gemini-2.5-flash-lite",
-      "gemini-2.5-pro",
+      "gemini-3.8-flash",
+      "gemini-3.6-flash",
+      "gemini-3.5-flash-lite",
+      "gemini-3.1-flash-lite",
     },
-    get_available_models = gemini_models,
-    preprocess_payload = gemini_payload,
-    process_stdout = gemini_response_text,
-    process_onexit = gemini_response_text,
+    preprocess_payload = function(payload)
+      local contents = {}
+      local system_instruction = nil
+      for _, message in ipairs(payload.messages) do
+        if message.role == "system" then
+          system_instruction = { parts = { { text = message.content } } }
+        else
+          local role = message.role == "assistant" and "model" or "user"
+          table.insert(
+            contents,
+            { role = role, parts = { { text = message.content:gsub("^%s*(.-)%s*$", "%1") } } }
+          )
+        end
+      end
+      local gemini_payload = {
+        contents = contents,
+        generationConfig = {
+          temperature = payload.temperature,
+          topP = payload.topP or payload.top_p,
+          -- topK is set in `params` above and would otherwise be ignored.
+          topK = payload.topK or payload.top_k,
+          maxOutputTokens = payload.max_tokens or payload.maxOutputTokens,
+        },
+      }
+      if system_instruction then
+        gemini_payload.systemInstruction = system_instruction
+      end
+      return gemini_payload
+    end,
+    process_stdout = function(response)
+      if not response or response == "" then
+        return nil
+      end
+      local success, decoded = pcall(vim.json.decode, response)
+      if
+        success
+        and decoded.candidates
+        and decoded.candidates[1]
+        and decoded.candidates[1].content
+        and decoded.candidates[1].content.parts
+        and decoded.candidates[1].content.parts[1]
+      then
+        return decoded.candidates[1].content.parts[1].text
+      end
+      return nil
+    end,
   }
 end
 
