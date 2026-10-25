@@ -1,9 +1,4 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "lsp": {
-    "clojure-lsp": {
-      "command": [ "/home/miro/.local/share/nvim/mason/bin/clojure-lsp", "--stdio" ],
-      "extensions": [".clj", ".cljs", ".cljc", ".edn"]
-    }
-  }
+  "shell": "/bin/zsh"
 }
