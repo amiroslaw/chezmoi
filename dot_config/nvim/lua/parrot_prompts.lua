@@ -1,0 +1,216 @@
+-- Prompt templates for parrot.nvim.
+--
+-- This is the file to edit when you want to change the wording of an action.
+-- Parrot placeholders: {{selection}}, {{filetype}}, {{filename}},
+-- {{filecontent}}, {{command}}.
+--
+-- Every key in `actions` is registered as :Prt<Key>, e.g. `Grammar` becomes
+-- :PrtGrammar. `target` is "rewrite" (replace the text) or "popup" (show the
+-- result in a popup).
+
+local M = {}
+
+-- System prompts used by the chat and by one-shot commands.
+M.system = {
+  chat = [[
+You are a helpful assistant working inside Neovim. The user is usually editing
+notes, documentation or code. Follow the user's instructions exactly, keep the
+response focused, and use Markdown when it helps readability.
+]],
+  command = [[
+You are a precise text-editing assistant working inside Neovim. Follow the
+instruction exactly. Return only the requested text unless the instruction
+explicitly asks for an explanation. Do not add introductions, comments,
+quotation marks or code fences unless they are part of the requested result.
+]],
+}
+
+M.actions = {
+  Grammar = {
+    target = "rewrite",
+    template = [[
+You are a precise proofreader. Correct only grammar, spelling, punctuation and
+typos in the following text. Preserve the original language, meaning, tone and
+formatting. Return only the corrected text, without comments, quotation marks
+or code fences.
+
+{{selection}}
+]],
+  },
+
+  GrammarExplain = {
+    target = "rewrite",
+    template = [[
+You are a precise proofreader. Correct grammar, spelling, punctuation and typos
+in the following text while preserving its language, meaning, tone and
+formatting.
+
+Return the corrected text first. Then add a blank line, a line containing only
+"---", and a short list explaining the nontrivial corrections. Do not add any
+other introduction.
+
+{{selection}}
+]],
+  },
+
+  Keywords = {
+    target = "popup",
+    template = [[
+Extract the main keywords and key phrases from the following text. Return only
+a comma-separated list, without any introduction or explanation.
+
+{{selection}}
+]],
+  },
+
+  Javadoc = {
+    target = "popup",
+    template = [[
+Write high-quality Javadoc documentation for the following {{filetype}} code.
+Return only the documentation (and the documented code if useful). Do not add
+an introduction or a summary of the task.
+
+```{{filetype}}
+{{selection}}
+```
+]],
+  },
+
+  AddTests = {
+    target = "popup",
+    template = [[
+Implement tests for the following {{filetype}} code. Cover the important paths
+and edge cases. Return only the test code and any imports it needs, without
+comments about the task.
+
+```{{filetype}}
+{{selection}}
+```
+]],
+  },
+
+  Optimize = {
+    target = "popup",
+    template = [[
+Optimize the following {{filetype}} code for readability, correctness and
+performance. Keep the same behaviour and public interface. Return only the
+optimized code, without an introduction or a list of changes.
+
+```{{filetype}}
+{{selection}}
+```
+]],
+  },
+
+  Summarize = {
+    target = "popup",
+    template = [[
+Summarize the following text. Keep the most important facts and the author's
+intent. Match the language of the original text. Return only the summary,
+without an introduction.
+
+{{selection}}
+]],
+  },
+
+  FixBugs = {
+    target = "rewrite",
+    template = [[
+Fix bugs in the following {{filetype}} code. Preserve its behaviour and public
+interface except where the fix requires a change. Return only the corrected
+code, without comments, explanations or code fences.
+
+{{selection}}
+]],
+  },
+
+  ExplainCode = {
+    target = "popup",
+    template = [[
+Explain the following {{filetype}} code. Describe what it does, the important
+control flow, and any non-obvious details. Use concise Markdown.
+
+```{{filetype}}
+{{selection}}
+```
+]],
+  },
+
+  Readability = {
+    target = "popup",
+    template = [[
+Review the following {{filetype}} code for readability. Point out unclear
+names, unnecessary complexity, poor structure and missing comments. For every
+issue give the line number and a concrete suggestion. If the code is fine,
+respond only with "<OK>".
+
+```{{filetype}}
+{{selection}}
+```
+]],
+  },
+
+  FormatAdoc = {
+    target = "rewrite",
+    template = [[
+Render the following text as an AsciiDoc table. Remove any trailing "|" from
+each row, align the cell borders, and prepend and append a "|===" line. Do not
+add notes, headings or any additional words.
+
+{{selection}}
+]],
+  },
+}
+
+-- Translation prompts. `auto` detects the direction, `pl` and `en` force it.
+M.translate = {
+  auto = [[
+You are a precise translator. Your only task is to translate the provided text
+from English to Polish or from Polish to English. You must determine yourself
+what language the text was provided in. Return only the translated text,
+without any introductions, comments, quotation marks or code fences.
+]],
+  pl = [[
+You are a precise translator. Your only task is to translate the provided text
+into Polish. Return only the translated text, without any introductions,
+comments, quotation marks or code fences.
+]],
+  en = [[
+You are a precise translator. Your only task is to translate the provided text
+into English. Return only the translated text, without any introductions,
+comments, quotation marks or code fences.
+]],
+}
+
+M.edit_with_instruction = {
+  prompt = "Instruction: ",
+  template = [[
+Apply the following instruction to the content from {{filename}}.
+
+Instruction:
+{{command}}
+
+Content:
+{{selection}}
+
+Return only the modified content. Do not add comments, explanations or code
+fences unless the instruction explicitly asks for them.
+]],
+}
+
+M.ask = {
+  prompt = "Question: ",
+  template = [[
+Answer the question using the context below. Be concise and accurate. If the
+answer is not present in the context, say so and use your general knowledge.
+
+Question: {{command}}
+
+Context from {{filename}}:
+```{{filetype}}
+{{selection}}
+```
+]],
+}
+
+return M

@@ -7,6 +7,9 @@
 
 local M = {}
 
+-- All prompt texts live in lua/parrot_prompts.lua.
+local prompts = require("parrot_prompts")
+
 local function env(name, default)
   local value = os.getenv(name)
   if value == nil or value == "" then
@@ -275,145 +278,10 @@ if gemini_api_key ~= "" then
   }
 end
 
--- Templates use parrot placeholders: {{selection}}, {{filetype}}, {{filename}},
--- {{filecontent}}, {{command}}. A selection is used when there is one; otherwise
--- the hook runs on the whole file (see `selection_or_file` below).
-local actions = {
-  Grammar = {
-    target = "rewrite",
-    template = [[
-You are a precise proofreader. Correct only grammar, spelling, punctuation and
-typos in the following text. Preserve the original language, meaning, tone and
-formatting. Return only the corrected text, without comments, quotation marks
-or code fences.
-
-{{selection}}
-]],
-  },
-
-  GrammarExplain = {
-    target = "rewrite",
-    template = [[
-You are a precise proofreader. Correct grammar, spelling, punctuation and typos
-in the following text while preserving its language, meaning, tone and
-formatting.
-
-Return the corrected text first. Then add a blank line, a line containing only
-"---", and a short list explaining the nontrivial corrections. Do not add any
-other introduction.
-
-{{selection}}
-]],
-  },
-
-  Keywords = {
-    target = "popup",
-    template = [[
-Extract the main keywords and key phrases from the following text. Return only
-a comma-separated list, without any introduction or explanation.
-
-{{selection}}
-]],
-  },
-
-  Javadoc = {
-    target = "popup",
-    template = [[
-Write high-quality Javadoc documentation for the following {{filetype}} code.
-Return only the documentation (and the documented code if useful). Do not add
-an introduction or a summary of the task.
-
-```{{filetype}}
-{{selection}}
-```
-]],
-  },
-
-  AddTests = {
-    target = "popup",
-    template = [[
-Implement tests for the following {{filetype}} code. Cover the important paths
-and edge cases. Return only the test code and any imports it needs, without
-comments about the task.
-
-```{{filetype}}
-{{selection}}
-```
-]],
-  },
-
-  Optimize = {
-    target = "popup",
-    template = [[
-Optimize the following {{filetype}} code for readability, correctness and
-performance. Keep the same behaviour and public interface. Return only the
-optimized code, without an introduction or a list of changes.
-
-```{{filetype}}
-{{selection}}
-```
-]],
-  },
-
-  Summarize = {
-    target = "popup",
-    template = [[
-Summarize the following text. Keep the most important facts and the author's
-intent. Match the language of the original text. Return only the summary,
-without an introduction.
-
-{{selection}}
-]],
-  },
-
-  FixBugs = {
-    target = "rewrite",
-    template = [[
-Fix bugs in the following {{filetype}} code. Preserve its behaviour and public
-interface except where the fix requires a change. Return only the corrected
-code, without comments, explanations or code fences.
-
-{{selection}}
-]],
-  },
-
-  ExplainCode = {
-    target = "popup",
-    template = [[
-Explain the following {{filetype}} code. Describe what it does, the important
-control flow, and any non-obvious details. Use concise Markdown.
-
-```{{filetype}}
-{{selection}}
-```
-]],
-  },
-
-  Readability = {
-    target = "popup",
-    template = [[
-Review the following {{filetype}} code for readability. Point out unclear
-names, unnecessary complexity, poor structure and missing comments. For every
-issue give the line number and a concrete suggestion. If the code is fine,
-respond only with "<OK>".
-
-```{{filetype}}
-{{selection}}
-```
-]],
-  },
-
-  FormatAdoc = {
-    target = "rewrite",
-    template = [[
-Render the following text as an AsciiDoc table. Remove any trailing "|" from
-each row, align the cell borders, and prepend and append a "|===" line. Do not
-add notes, headings or any additional words.
-
-{{selection}}
-]],
-  },
-}
+-- Actions are defined in lua/parrot_prompts.lua. Each one becomes :Prt<Name>.
+-- A selection is used when there is one; otherwise the hook runs on the whole
+-- file (see `selection_or_file` below).
+local actions = prompts.actions
 
 -- Make the text of the selection available to a command. Without a visual
 -- selection, use the whole file (the same behaviour as the old ogpt actions).
@@ -454,24 +322,11 @@ hooks.Translate = function(parrot, params)
 
   local instruction
   if requested == "pl" or requested == "polish" then
-    instruction = [[
-You are a precise translator. Your only task is to translate the provided text
-into Polish. Return only the translated text, without any introductions,
-comments, quotation marks or code fences.
-]]
+    instruction = prompts.translate.pl
   elseif requested == "en" or requested == "english" then
-    instruction = [[
-You are a precise translator. Your only task is to translate the provided text
-into English. Return only the translated text, without any introductions,
-comments, quotation marks or code fences.
-]]
+    instruction = prompts.translate.en
   else
-    instruction = [[
-You are a precise translator. Your only task is to translate the provided text
-from English to Polish or from Polish to English. You must determine yourself
-what language the text was provided in. Return only the translated text,
-without any introductions, comments, quotation marks or code fences.
-]]
+    instruction = prompts.translate.auto
   end
 
   run_action(parrot, params, {
@@ -484,19 +339,8 @@ hooks.EditWithInstruction = function(parrot, params)
   run_action(parrot, params, {
     target = "rewrite",
     keep_args = true,
-    prompt = "Instruction: ",
-    template = [[
-Apply the following instruction to the content from {{filename}}.
-
-Instruction:
-{{command}}
-
-Content:
-{{selection}}
-
-Return only the modified content. Do not add comments, explanations or code
-fences unless the instruction explicitly asks for them.
-]],
+    prompt = prompts.edit_with_instruction.prompt,
+    template = prompts.edit_with_instruction.template,
   })
 end
 
@@ -504,18 +348,8 @@ hooks.Ask = function(parrot, params)
   run_action(parrot, params, {
     target = "popup",
     keep_args = true,
-    prompt = "Question: ",
-    template = [[
-Answer the question using the context below. Be concise and accurate. If the
-answer is not present in the context, say so and use your general knowledge.
-
-Question: {{command}}
-
-Context from {{filename}}:
-```{{filetype}}
-{{selection}}
-```
-]],
+    prompt = prompts.ask.prompt,
+    template = prompts.ask.template,
   })
 end
 
@@ -526,19 +360,7 @@ function M.setup()
   require("parrot").setup({
     providers = providers,
 
-    system_prompt = {
-      chat = [[
-You are a helpful assistant working inside Neovim. The user is usually editing
-notes, documentation or code. Follow the user's instructions exactly, keep the
-response focused, and use Markdown when it helps readability.
-]],
-      command = [[
-You are a precise text-editing assistant working inside Neovim. Follow the
-instruction exactly. Return only the requested text unless the instruction
-explicitly asks for an explanation. Do not add introductions, comments,
-quotation marks or code fences unless they are part of the requested result.
-]],
-    },
+    system_prompt = prompts.system,
 
     hooks = hooks,
 
