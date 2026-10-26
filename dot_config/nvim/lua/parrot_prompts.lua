@@ -13,19 +13,26 @@ local M = {}
 -- System prompts used by the chat and by one-shot commands.
 M.system = {
   chat = [[
-You are a helpful assistant working inside Neovim. The user is usually editing
-notes, documentation or code. Follow the user's instructions exactly, keep the
-response focused, and use Markdown when it helps readability.
+Follow the user's instructions exactly, keep the response focused, and use AsciiDoc when it helps readability.
 ]],
-  command = [[
-You are a precise text-editing assistant working inside Neovim. Follow the
-instruction exactly. Return only the requested text unless the instruction
+  command = [[ Return only the requested text unless the instruction
 explicitly asks for an explanation. Do not add introductions, comments,
 quotation marks or code fences unless they are part of the requested result.
 ]],
 }
 
 M.actions = {
+
+  Translate = {
+	  target ="append",
+	  template =[[
+You are a precise translator. Your only task is to translate the provided text
+from English to Polish or from Polish to English. You must determine yourself
+what language the text was provided in. Return only the translated text,
+without any introductions, comments, quotation marks or code fences.
+
+{{selection}}
+]],},
   Grammar = {
     target = "rewrite",
     template = [[
@@ -39,25 +46,13 @@ or code fences.
   },
 
   GrammarExplain = {
-    target = "rewrite",
+    target = "append",
     template = [[
 You are a precise proofreader. Correct grammar, spelling, punctuation and typos
 in the following text while preserving its language, meaning, tone and
 formatting.
-
-Return the corrected text first. Then add a blank line, a line containing only
-"---", and a short list explaining the nontrivial corrections. Do not add any
+Then add a blank line, a line containing only "---", and a short list explaining the nontrivial corrections. Do not add any
 other introduction.
-
-{{selection}}
-]],
-  },
-
-  Keywords = {
-    target = "popup",
-    template = [[
-Extract the main keywords and key phrases from the following text. Return only
-a comma-separated list, without any introduction or explanation.
 
 {{selection}}
 ]],
@@ -162,25 +157,6 @@ add notes, headings or any additional words.
   },
 }
 
--- Translation prompts. `auto` detects the direction, `pl` and `en` force it.
-M.translate = {
-  auto = [[
-You are a precise translator. Your only task is to translate the provided text
-from English to Polish or from Polish to English. You must determine yourself
-what language the text was provided in. Return only the translated text,
-without any introductions, comments, quotation marks or code fences.
-]],
-  pl = [[
-You are a precise translator. Your only task is to translate the provided text
-into Polish. Return only the translated text, without any introductions,
-comments, quotation marks or code fences.
-]],
-  en = [[
-You are a precise translator. Your only task is to translate the provided text
-into English. Return only the translated text, without any introductions,
-comments, quotation marks or code fences.
-]],
-}
 
 M.edit_with_instruction = {
   prompt = "Instruction: ",

@@ -251,25 +251,6 @@ for name, action in pairs(actions) do
   end
 end
 
-hooks.Translate = function(parrot, params)
-  local requested = (params.args or ""):lower()
-  requested = requested:match("%S+") or ""
-
-  local instruction
-  if requested == "pl" or requested == "polish" then
-    instruction = prompts.translate.pl
-  elseif requested == "en" or requested == "english" then
-    instruction = prompts.translate.en
-  else
-    instruction = prompts.translate.auto
-  end
-
-  run_action(parrot, params, {
-    target = "rewrite",
-    template = instruction .. "\n{{selection}}",
-  })
-end
-
 hooks.EditWithInstruction = function(parrot, params)
   run_action(parrot, params, {
     target = "rewrite",
@@ -304,8 +285,7 @@ function M.setup()
     enable_spinner = true,
     show_context_hints = true,
 
-    -- Changes are shown as a diff; press Enter/a to apply. This is also safer
-    -- for whole-file translations.
+    -- Changes are shown as a diff; press Enter/a to apply. 
     enable_preview_mode = true,
     preview_auto_apply = false,
 
