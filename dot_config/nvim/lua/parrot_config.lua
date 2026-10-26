@@ -66,6 +66,44 @@ local function ollama_models(self, args)
   return names
 end
 
+-- Gemini returns a long list that also contains image, audio, research and
+-- embedding models. Keep only models that can be used for text generation.
+local function gemini_models(self, args)
+  local data = curl_json(args)
+  if not data or type(data.models) ~= "table" then
+    return self.models
+  end
+
+  local names = {}
+  for _, item in ipairs(data.models) do
+    if item.name then
+      local methods = item.supportedGenerationMethods
+      local supports_generate = methods == nil or vim.tbl_contains(methods, "generateContent")
+      local name = item.name:gsub("^models/", "")
+      local lower = name:lower()
+      local is_text_model = lower:match("^gemini")
+        and not lower:match("image")
+        and not lower:match("tts")
+        and not lower:match("transcribe")
+        and not lower:match("computer%-use")
+        and not lower:match("robotics")
+        and not lower:match("omni")
+        and not lower:match("nano%-banana")
+        and not lower:match("deep%-research")
+        and not lower:match("antigravity")
+        and not lower:match("lyria")
+      if supports_generate and is_text_model then
+        names[#names + 1] = name
+      end
+    end
+  end
+  if #names == 0 then
+    return self.models
+  end
+  table.sort(names)
+  return names
+end
+
 local function ollama_payload(payload)
   local options = {}
 
@@ -164,6 +202,7 @@ if gemini_api_key and gemini_api_key ~= "" then
       "gemini-3.5-flash-lite",
       "gemini-3.1-flash-lite",
     },
+    get_available_models = gemini_models,
     preprocess_payload = function(payload)
       local contents = {}
       local system_instruction = nil
@@ -260,12 +299,12 @@ hooks.EditWithInstruction = function(parrot, params)
   })
 end
 
-hooks.Ask = function(parrot, params)
+hooks.AskText = function(parrot, params)
   run_action(parrot, params, {
     target = "popup",
     keep_args = true,
-    prompt = prompts.ask.prompt,
-    template = prompts.ask.template,
+    prompt = prompts.ask_about_text.prompt,
+    template = prompts.ask_about_text.template,
   })
 end
 
