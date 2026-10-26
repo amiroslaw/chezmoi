@@ -308,6 +308,187 @@ hooks.AskText = function(parrot, params)
   })
 end
 
+--- Strip whitespace and a Markdown fence that wraps the whole summary.
+local function clean_summary(text)
+  text = (text or ""):gsub("\r\n", "\n"):gsub("\r", "\n")
+  text = text:gsub("^%s+", ""):gsub("%s+$", "")
+  local fenced = text:match("^```[%w_-]*\n(.-)\n```$")
+  if fenced then
+    text = fenced:gsub("^%s+", ""):gsub("%s+$", "")
+  end
+  return text
+end
+
+--- Replace everything after the chat header with a summary exchange.
+--- Keeping the header and using the normal prefixes makes the file a valid
+--- Parrot chat that can continue with the compacted conversation as context.
+---@return boolean ok, string|nil err
+local function replace_chat_with_summary(parrot, buf, summary)
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  local Conversation = require("parrot.conversation")
+  local _, header_end = Conversation.parse_headers(lines)
+  if header_end == nil then
+    return false, "the chat header separator ('---') is missing"
+  end
+
+  -- header_end is the 0-based index of the `---` line.
+  local new_lines = vim.list_slice(lines, 1, header_end + 1)
+  new_lines[#new_lines + 1] = parrot.options.chat_user_prefix
+  new_lines[#new_lines + 1] = "Summarize the conversation so far."
+  new_lines[#new_lines + 1] = ""
+  new_lines[#new_lines + 1] = parrot.options.llm_prefix
+  for _, line in ipairs(vim.split(summary, "\n", { plain = true })) do
+    new_lines[#new_lines + 1] = line
+  end
+  new_lines[#new_lines + 1] = ""
+  new_lines[#new_lines + 1] = parrot.options.chat_user_prefix
+
+  local ok, err = pcall(function()
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, new_lines)
+    vim.api.nvim_buf_call(buf, function()
+      vim.cmd("silent write!")
+    end)
+  end)
+  if not ok then
+    return false, err
+  end
+
+  if vim.api.nvim_get_current_buf() == buf then
+    vim.api.nvim_win_set_cursor(0, { #new_lines, 0 })
+  end
+  return true
+end
+
+--- Summarize the whole current chat and replace its conversation with that
+--- summary. The optional command argument is passed to the model as an extra
+--- focus for the summary, e.g. `:PrtCompact keep the API decisions`.
+local function compact_chat(parrot, params)
+  params = params or {}
+
+  local buf = vim.api.nvim_get_current_buf()
+  local file_name = vim.api.nvim_buf_get_name(buf)
+  local utils = require("parrot.utils")
+  if not utils.is_chat(buf, file_name, parrot.options.chat_dir) then
+    parrot.logger.warning("PrtCompact only works in a Parrot chat buffer")
+    return
+  end
+
+  local chat = parrot.chat_handler
+  if not chat.pool:unique_for_buffer(buf) then
+    parrot.logger.warning("Cannot compact this chat while a request is running")
+    return
+  end
+
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  local Conversation = require("parrot.conversation")
+  local model_obj = chat:get_model("chat")
+  if not model_obj or not model_obj.provider or not model_obj.name then
+    parrot.logger.error("Cannot compact chat: no chat model is available")
+    return
+  end
+  local conversation, headers_or_error = Conversation.from_chat_buffer(lines, {
+    user_prefix = parrot.options.chat_user_prefix,
+    llm_prefix = parrot.options.llm_prefix,
+    system_prompt = model_obj.system_prompt,
+  })
+  if not conversation then
+    parrot.logger.error("Cannot compact chat: " .. tostring(headers_or_error))
+    return
+  end
+
+  local has_content = false
+  for _, message in ipairs(conversation:get_messages()) do
+    if message.role ~= "system" and message.content:match("%S") then
+      has_content = true
+      break
+    end
+  end
+  if not has_content then
+    parrot.logger.warning("There is no conversation to compact")
+    return
+  end
+
+  local focus = (params.args or ""):gsub("^%s+", ""):gsub("%s+$", "")
+  local compact_prompt = prompts.compact.template
+  if focus ~= "" then
+    compact_prompt = compact_prompt .. "\n\nFocus this summary on:\n" .. focus
+  end
+  conversation:add_user_message(compact_prompt)
+
+  local provider = model_obj.provider
+  local provider_cfg = parrot.providers[provider.name] or {}
+  local request_params = {}
+  if provider_cfg.params then
+    request_params =
+      provider_cfg.params.compact or provider_cfg.params.command or provider_cfg.params.chat or {}
+  end
+  request_params = vim.deepcopy(request_params)
+
+  provider:set_model(model_obj.name)
+  if not provider:verify() then
+    parrot.logger.error("Cannot compact chat: provider " .. provider.name .. " is not configured")
+    return
+  end
+
+  local payload = utils.prepare_payload(conversation:get_messages(), model_obj.name, request_params)
+  if not payload then
+    parrot.logger.error("Cannot compact chat: could not prepare the request")
+    return
+  end
+
+  local spinner = nil
+  if parrot.options.enable_spinner then
+    spinner = require("parrot.spinner"):new(parrot.options.spinner_type)
+    spinner:start("compacting chat...", true)
+  end
+
+  -- Do not overwrite messages the user types while the summary is generated.
+  local changedtick = vim.api.nvim_buf_get_changedtick(buf)
+
+  chat:query(buf, provider, payload, function() end, vim.schedule_wrap(function(qid)
+    local qt = chat.queries:get(qid)
+    local summary = clean_summary(qt and qt.response)
+    local failed = not qt or qt.error_occurred or summary == ""
+    if spinner then
+      spinner:stop(failed)
+    end
+    if failed then
+      parrot.logger.error("Compacting chat failed")
+      return
+    end
+
+    if not vim.api.nvim_buf_is_valid(buf) then
+      return
+    end
+    if vim.api.nvim_buf_get_changedtick(buf) ~= changedtick then
+      parrot.logger.warning("The chat changed while compacting, so the summary was discarded")
+      return
+    end
+
+    local ok, err = replace_chat_with_summary(parrot, buf, summary)
+    if not ok then
+      parrot.logger.error("Cannot compact chat: " .. tostring(err))
+      return
+    end
+    parrot.logger.info("Chat compacted. The summary replaced the conversation.")
+  end))
+end
+
+hooks.Compact = function(parrot, params)
+  compact_chat(parrot, params)
+end
+
+--- Public entry point, e.g. require("parrot_config").compact_chat({}).
+--- The :PrtCompact command calls the same function.
+function M.compact_chat(params)
+  local parrot = require("parrot.config")
+  if not parrot.chat_handler then
+    parrot.logger.error("Parrot is not initialized yet")
+    return
+  end
+  compact_chat(parrot, params or {})
+end
+
 function M.setup()
   local state_file = vim.fn.stdpath("data") .. "/parrot/persisted/state.json"
   local first_run = vim.fn.filereadable(state_file) == 0

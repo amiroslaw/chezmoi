@@ -189,4 +189,22 @@ Context from {{filename}}:
 ]],
 }
 
+-- Used by :PrtCompact to replace a whole chat with a summary of its history.
+M.compact = {
+  template = [[
+Compress the conversation above into a self-contained summary that can replace
+the full history as context for continuing the conversation.
+
+Preserve:
+- the user's goals, requirements, preferences and decisions
+- important facts, constraints, names, paths, identifiers and code
+- commands that were run and their relevant results
+- unresolved questions, errors and next steps
+
+Match the language of the conversation. Use concise Markdown with short
+sections or bullets where helpful. Do not add an introduction, do not ask
+questions, and return only the summary.
+]],
+}
+
 return M
