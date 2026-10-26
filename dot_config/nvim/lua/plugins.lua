@@ -309,11 +309,24 @@ return {
 				end
 				return 'no header'
 			end
+
+		  local function parrot_status()
+			local status_info = require("parrot.config").get_status_info()
+			local status = ""
+			if status_info.is_chat then
+			  status = status_info.prov.chat.name
+			else
+			  status = status_info.prov.command.name
+			end
+			-- return string.format("%s(%s)", status, status_info.model)
+			return string.format("%s", status)
+		  end
+
 			require'lualine'.setup {
 			 options = { theme = 'dracula', component_separators = '|', globalstatus = true }, 
 			 sections = {
 				lualine_x = {'selectioncount', 'searchcount'}, -- redundant
-				lualine_y = {asciidoc_header, spellang, permissions, 'filetype'},
+				lualine_y = {asciidoc_header, spellang, permissions, 'filetype', parrot_status},
 				lualine_z = {line_total, 'progress', 'location'}}
 		 }
 		-- opts = { options = { theme = 'dracula', component_separators = '|', globalstatus = true }, -- sections = {lualine_a = {'buffers'}} - takes too much space
