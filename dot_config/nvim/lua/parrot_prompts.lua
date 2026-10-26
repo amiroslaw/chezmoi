@@ -34,7 +34,7 @@ without any introductions, comments, quotation marks or code fences.
 {{selection}}
 ]],},
   Grammar = {
-    target = "rewrite",
+    target = "append",
     template = [[
 You are a precise proofreader. Correct only grammar, spelling, punctuation and
 typos in the following text. Preserve the original language, meaning, tone and
@@ -174,7 +174,7 @@ fences unless the instruction explicitly asks for them.
 ]],
 }
 
-M.ask = {
+M.ask_about_text = {
   prompt = "Question: ",
   template = [[
 Answer the question using the context below. Be concise and accurate. If the

@@ -1163,15 +1163,18 @@ end, 'luasnip next choice', {silent = true})
 -- In visual mode the selected text is added to the chat.
 locLeader({'n', 'v'}, 'aa', '<cmd>PrtChatToggle<CR>', 'Parrot: toggle last chat')
 locLeader({'n', 'v'}, 'an', '<cmd>PrtChatNew<CR>', 'Parrot: new chat')
+locLeader({'n', 'v'}, 'an', '<cmd>PrtEdit<CR>', 'Parrot: edit the last prompt')
+locLeader({'n', 'v'}, 'aq', '<cmd>PrtAsk<CR>', 'Parrot: edit the last prompt')
 vlocLeader('ac', ":<C-u>'<,'>PrtChatPaste<CR>", 'Parrot: paste selection into last chat')
 nlocLeader('ah', '<cmd>PrtChatFinder<CR>', 'Parrot: chat history')
+nlocLeader('ad', '<cmd>PrtChatDelete<CR>', 'Parrot: Log')
 nlocLeader('ap', '<cmd>PrtProvider<CR>', 'Parrot: select provider')
 nlocLeader('am', '<cmd>PrtModel<CR>', 'Parrot: select model')
 nlocLeader('as', '<cmd>PrtStatus<CR>', 'Parrot: status')
 nlocLeader('al', '<cmd>PrtLog<CR>', 'Parrot: Log')
 
 local parrot_actions = {
-  { 'oa', 'Ask', 'ask about text' },
+  { 'oa', 'AskText', 'ask about text' },
   { 'oc', 'Grammar', 'grammar correction' },
   { 'ol', 'GrammarExplain', 'grammar correction with explanation' },
   { 'of', 'FormatAdoc', 'format AsciiDoc table' },
