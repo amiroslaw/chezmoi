@@ -36,6 +36,13 @@
           (spit cache-path (pr-str new-cache))
           fetched-items))))
 
+(defn- clean-cache
+  "Removes cached results from /tmp/yt-cache folder."
+  []
+   (when (fs/exists? cache-dir)
+     (fs/delete-tree cache-dir))
+   (notify! "YouTube cache removed"))
+
 (defn- get-property [key]
   {:pre [(string? key)] :post [(string? %)]}
   (-> (str (System/getenv "PRIVATE") "/keys.properties")
@@ -193,13 +200,16 @@
   (->> (rofi-indexes->inputs items response)
        (map response->video)))
 
+(def rofi-keys
+  (conj media/rofi-keys ["Alt-c" "<b>clean</b> cache" :clean-cache]))
+
 (defn- rofi-video-menu [response]
   {:pre  [(vector? response) (every? map? response)]
    :post [(map? %)]}
   (let [menu (map item->menu response)
         {:keys [out key exit]}
         (-> menu
-            (rofi-menu! {:prompt "Select video", :width "80%", :format \i, :keys media/rofi-keys, :multi true, :msg "default action: <b>fullscreen</b>"}))]
+            (rofi-menu! {:prompt "Select video", :width "80%", :format \i, :keys rofi-keys, :multi true, :msg "default action: <b>fullscreen</b>"}))]
     (if exit
       {:items out, :key key}
       (System/exit 0))))
@@ -212,13 +222,13 @@
     {:id id, :title title, :desc desc}))
 
 (defn- rofi-playlists-menu [response]
-  {:pre  [(sequential? response)] :post [(sequential? %)]}
+  {:pre  [(sequential? response)] :post [(map? %)]}
   (let [menu response
-        {:keys [out exit]}
+        {:keys [out key exit]}
         (-> menu
-            (rofi-menu! {:prompt "Select playlist", :width "80%", :format \i }))]
+            (rofi-menu! {:prompt "Select playlist", :width "80%", :format \i, :keys rofi-keys}))]
     (if exit
-      out
+      {:out out, :action (when key (last (get rofi-keys key)))}
       (System/exit 0))))
 
 (defn- query [opts]
@@ -244,10 +254,11 @@
   {:pre [(vector? response) (every? map? response)]}
   (let [{:keys [items key]} (rofi-video-menu response)
         videos (rofi-selections->videos items response)
-        action (last (get media/rofi-keys key))]
+        action (last (get rofi-keys key))]
     (case action
       nil (execute-actions! videos :fullscreen)
       :metadata (doseq [v videos] (metadata {:opts {:notify true :url (:url v)}}))
+      :clean-cache (clean-cache)
       (execute-actions! videos action)))
   (rofi-videos response))
 
@@ -278,9 +289,13 @@
   (let [response (get-cached-data id "/channels.edn" fetch-user-playlists)
         playlists (map response->playlist response)
         rofi-items (map #(format "%s\t | %s" (:title %)   (first (str/split (:desc %) #"\n")) ) playlists)
-        selected (rofi-playlists-menu rofi-items)
-        playlist (rofi-indexes->inputs selected playlists)]
-    (:id (first playlist))))
+        {:keys [out action]} (rofi-playlists-menu rofi-items)]
+    (if (= action :clean-cache)
+      (do
+        (clean-cache)
+        (recur id))
+      (let [playlist (rofi-indexes->inputs out playlists)]
+        (:id (first playlist))))))
 
 (defn- playlist
   [{opts :opts}]
