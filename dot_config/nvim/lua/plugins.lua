@@ -278,7 +278,7 @@ return {
   },
 	{ 'lewis6991/gitsigns.nvim', event = { 'BufReadPre', 'BufNewFile' } },
 	{ "NeogitOrg/neogit", lazy = true, cmd = "Neogit", },
-	{ 'sindrets/diffview.nvim', event = 'VeryLazy', },
+	{ "esmuellert/codediff.nvim", cmd = "CodeDiff", },
 	'kylechui/nvim-surround',
 	{ "roobert/surround-ui.nvim",
 		dependencies = { "kylechui/nvim-surround", "folke/which-key.nvim", },
