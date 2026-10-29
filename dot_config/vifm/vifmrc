@@ -240,8 +240,9 @@ noremap cm :ffmpegSegment <cr>
 " diff
 nmap ,D :diffMeld<cr>
 command! diffMeld meld %c %C %i
+"command! diffMeld nvim +"CodeDiff --exit-on-close %c %C"
 nmap ,d :diffVim<cr>
-command! diffVim nvim -d %f %F
+command! diffVim nvim %c %C +"CodeDiff --exit-on-close file %c %C"
 nmap ,c :compare listall<cr>
 command! checkout ~/.bin/checkout.clj %d
 nnoremap ,b :checkout <cr>

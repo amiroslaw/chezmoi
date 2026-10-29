@@ -26,9 +26,9 @@
 [difftool]
   prompt = false
 [diff]
-	tool = diffview
+	tool = codediff
 [merge]
-	tool = diffview
+	tool = meld
 ; for orgi file
 	keepBackup = true
 [interactive]
@@ -36,12 +36,12 @@
 [difftool "meld"]
     cmd = meld "$LOCAL" "$REMOTE"
 [mergetool "meld"]
-	cmd = meld --auto-merge "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
+	cmd = nvim "$MERGED" -c "CodeDiff --exit-on-close merge \"$MERGED\""
 	trustExitCode = true
-[difftool "diffview"]
-	cmd = nvim -c \"DiffviewOpen\"
-[mergetool "diffview"]
-	cmd = nvim -c \"DiffviewOpen\"
+[difftool "codediff"]
+	cmd = nvim \"$LOCAL\" \"$REMOTE\" +\"CodeDiff --exit-on-close file $LOCAL $REMOTE\"
+[mergetool "codediff"]
+	cmd = nvim \"$MERGED\" -c \"CodeDiff --exit-on-close merge \\\"$MERGED\\\"\"
 [difftool "nvimdiff"]
 	cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [mergetool "nvimdiff"]
