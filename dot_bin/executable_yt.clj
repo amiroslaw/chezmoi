@@ -200,8 +200,8 @@
   (->> (rofi-indexes->inputs items response)
        (map response->video)))
 
-(def rofi-keys
-  (conj media/rofi-keys ["Alt-c" "<b>clean</b> cache" :clean-cache]))
+(def rofi-keys-playlists
+  [ ["Alt-c" "<b>clean</b> cache" :clean-cache]])
 
 (defn- rofi-video-menu [response]
   {:pre  [(vector? response) (every? map? response)]
@@ -209,7 +209,7 @@
   (let [menu (map item->menu response)
         {:keys [out key exit]}
         (-> menu
-            (rofi-menu! {:prompt "Select video", :width "80%", :format \i, :keys rofi-keys, :multi true, :msg "default action: <b>fullscreen</b>"}))]
+            (rofi-menu! {:prompt "Select video", :width "80%", :format \i, :keys media/rofi-keys, :multi true, :msg "default action: <b>fullscreen</b>"}))]
     (if exit
       {:items out, :key key}
       (System/exit 0))))
@@ -226,9 +226,9 @@
   (let [menu response
         {:keys [out key exit]}
         (-> menu
-            (rofi-menu! {:prompt "Select playlist", :width "80%", :format \i, :keys rofi-keys}))]
+            (rofi-menu! {:prompt "Select playlist", :width "80%", :format \i, :keys rofi-keys-playlists}))]
     (if exit
-      {:out out, :action (when key (last (get rofi-keys key)))}
+      {:out out, :action (when key (last (get rofi-keys-playlists key)))}
       (System/exit 0))))
 
 (defn- query [opts]
@@ -254,7 +254,7 @@
   {:pre [(vector? response) (every? map? response)]}
   (let [{:keys [items key]} (rofi-video-menu response)
         videos (rofi-selections->videos items response)
-        action (last (get rofi-keys key))]
+        action (last (get media/rofi-keys key))]
     (case action
       nil (execute-actions! videos :fullscreen)
       :metadata (doseq [v videos] (metadata {:opts {:notify true :url (:url v)}}))
