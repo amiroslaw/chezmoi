@@ -1,4 +1,16 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "shell": "/bin/zsh"
+  "shell": "/bin/zsh",
+  "mcp": {
+    "servers": {
+      "context7": {
+        "type": "remote",
+        "url": "https://mcp.context7.com/mcp"
+      },
+      // "websearch": {
+      //   "type": "remote",
+      //   "url": "https://mcp.tavily.com/mcp"
+      // }
+    }
+  }
 }

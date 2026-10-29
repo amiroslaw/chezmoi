@@ -73,11 +73,11 @@
         (str/trim)))
   (models [this] [ (->Gemini "gemini-3.8-flash") 
                   (->Gemini "gemini-3.5-flash-lite")
-                  (->Gemini "gemini-2.5-flash") 
+                  (->Gemini "gemini-3.6-flash") 
                   (->Gemini "gemini-3-flash-preview") ; slow
                   (->Gemini "gemini-2.5-pro")])
-  (get-model [this] (or model-name "gemini-3.5-flash-lite")))
-  ; (get-model [this] (or model-name "gemini-3-flash-preview")))
+  (get-model [this] (or model-name "gemini-3.5-flash")))
+  ;(get-model [this] (or model-name "gemini-3.5-flash-lite")))
 
 (defrecord Ollama [model-name]
   Provider
