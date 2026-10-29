@@ -1186,24 +1186,43 @@ map({"i", "s"}, "<C-h>", function()
 end, 'luasnip next choice', {silent = true})
 -- }}} 
 
---{{{ ogpt https://github.com/huynle/ogpt.nvim
-nlocLeader('oo', '<cmd>OGPT<CR>', 'OGPT')
-nlocLeader('oa', '<cmd>OGPTActAs<CR>', 'OGPTActAs')
-locLeader({"n", "v"}, 'oe', "<cmd>OGPTEditWithInstruction<CR>", "Edit with instruction")
-locLeader({"n", "v"}, 'oc', "<cmd>OGPTRun grammar-append<CR>", "Grammar Correction")
-imap('<c-x>', "<esc><cmd>OGPTRun grammar-append<CR>", "Grammar Correction")
-locLeader({"n", "v"}, 'oC', "<cmd>OGPTRun grammar-append-explain<CR>", "Grammar Correction with explanation")
-locLeader({"n", "v"}, 'ol', "<cmd>OGPTRun translate-append<CR>", "Translate to english")
-locLeader({"n", "v"}, 'oL', "<cmd>OGPTRun translate-append polish<CR>", "Translate to polish")
-locLeader({"n", "v"}, 'ok', "<cmd>OGPTRun keywords<CR>", "Keywords")
-locLeader({"n", "v"}, 'oj', "<cmd>OGPTRun javdoc<CR>", "Java documentation")
-locLeader({"n", "v"}, 'ot', "<cmd>OGPTRun add_tests<CR>", "Add Tests")
-locLeader({"n", "v"}, 'oi', "<cmd>OGPTRun optimize_code<CR>", "Optimize Code")
-locLeader({"n", "v"}, 'os', "<cmd>OGPTRun summarize<CR>", "Summarize")
-locLeader({"n", "v"}, 'ob', "<cmd>OGPTRun fix_bugs<CR>", "Fix Bugs")
-locLeader({"n", "v"}, 'ox', "<cmd>OGPTRun explain_code<CR>", "Explain Code")
-locLeader({"n", "v"}, 'or', "<cmd>OGPTRun code_readability_analysis<CR>", "Code Readability Analysis")
-locLeader({"n", "v"}, 'of', "<cmd>OGPTRun format-adoc table<CR>", "Format asciidoc table")
+--{{{ parrot.nvim https://github.com/frankroeder/parrot.nvim
+-- In visual mode the selected text is added to the chat.
+locLeader({'n', 'v'}, 'aa', '<cmd>PrtChatToggle<CR>', 'Parrot: toggle last chat')
+locLeader({'n', 'v'}, 'an', '<cmd>PrtChatNew<CR>', 'Parrot: new chat')
+locLeader({'n', 'v'}, 'an', '<cmd>PrtEdit<CR>', 'Parrot: edit the last prompt')
+locLeader({'n', 'v'}, 'aq', '<cmd>PrtAsk<CR>', 'Parrot: edit the last prompt')
+vlocLeader('ay', ":<C-u>'<,'>PrtChatPaste<CR>", 'Parrot: paste/yank selection into last chat')
+nlocLeader('ac', '<cmd>PrtCompact<CR>', 'Parrot: compact chat')
+nlocLeader('ah', '<cmd>PrtChatFinder<CR>', 'Parrot: chat history')
+nlocLeader('ad', '<cmd>PrtChatDelete<CR>', 'Parrot: Log')
+nlocLeader('ap', '<cmd>PrtProvider<CR>', 'Parrot: select provider')
+nlocLeader('am', '<cmd>PrtModel<CR>', 'Parrot: select model')
+nlocLeader('as', '<cmd>PrtStatus<CR>', 'Parrot: status')
+nlocLeader('al', '<cmd>PrtLog<CR>', 'Parrot: Log')
+
+local parrot_actions = {
+  { 'oa', 'AskText', 'ask about text' },
+  { 'oc', 'Grammar', 'grammar correction' },
+  { 'ol', 'GrammarExplain', 'grammar correction with explanation' },
+  { 'of', 'FormatAdoc', 'format AsciiDoc table' },
+  { 'ot', 'PrtTranslate', 'Parrot: translate PL<->EN'},
+  { 'oe', 'EditWithInstruction', 'edit with instruction' },
+  { 'oj', 'Javadoc', 'Java documentation' },
+  { 'ot', 'AddTests', 'add tests' },
+  { 'oi', 'Optimize', 'optimize code' },
+  { 'os', 'Summarize', 'summarize' },
+  { 'ob', 'FixBugs', 'fix bugs' },
+  { 'ox', 'ExplainCode', 'explain code' },
+  { 'or', 'Readability', 'code readability analysis' },
+}
+for _, action in ipairs(parrot_actions) do
+  local suffix, command, desc = action[1], action[2], action[3]
+  nlocLeader(suffix, '<cmd>Prt' .. command .. '<CR>', desc)
+  vlocLeader(suffix, ":<C-u>'<,'>Prt" .. command .. "<CR>", desc)
+end
+
+imap('<c-x>', '<Esc><cmd>PrtGrammar<CR>', 'grammar correction')
 --}}} 
 
 -- {{{  Substitute. nvim  https://github.com/gbprod/substitute.nvim

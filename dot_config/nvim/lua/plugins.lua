@@ -99,35 +99,11 @@ return {
 		event = "BufReadPost",
 		opts = true,
 	},
-	{ "huynle/ogpt.nvim",
+	{ "frankroeder/parrot.nvim",
 		event = "VeryLazy",
-		opts = {
-			-- debug = true, 
-			default_provider = "ollama",
-			providers = {
-			  ollama = {
-				enabled = true,
-				api_host = os.getenv("OLLAMA_API_HOST") or "http://localhost:11434",
-				api_key = os.getenv("OLLAMA_API_KEY") or "",
-				model = {
-				  name = 'qwen2.5:3b',
-				  -- name = 'llama3:latest',
-				  system_message = nil,
-				},
-			  },
-			},
-			actions_paths = {
-				'~/.config/nvim/custom/ogpt-actions.json',
-					  -- default action that comes with lua/ogpt/actions.json
-					  -- debug.getinfo(1, "S").source:sub(2):match("(.*/)") .. "actions.json",
-			},
-			predefined_chat_gpt_prompts = "https://raw.githubusercontent.com/f/awesome-chatgpt-prompts/main/prompts.csv",
-		},
-		dependencies = {
-		  "MunifTanjim/nui.nvim",
-		  "nvim-lua/plenary.nvim",
-		  "nvim-telescope/telescope.nvim"
-		}
+		config = function()
+			require("parrot_config").setup()
+		end,
 	},
 	--}}}
 
@@ -333,11 +309,24 @@ return {
 				end
 				return 'no header'
 			end
+
+		  local function parrot_status()
+			local status_info = require("parrot.config").get_status_info()
+			local status = ""
+			if status_info.is_chat then
+			  status = status_info.prov.chat.name
+			else
+			  status = status_info.prov.command.name
+			end
+			-- return string.format("%s(%s)", status, status_info.model)
+			return string.format("%s", status)
+		  end
+
 			require'lualine'.setup {
 			 options = { theme = 'dracula', component_separators = '|', globalstatus = true }, 
 			 sections = {
 				lualine_x = {'selectioncount', 'searchcount'}, -- redundant
-				lualine_y = {asciidoc_header, spellang, permissions, 'filetype'},
+				lualine_y = {asciidoc_header, spellang, permissions, 'filetype', parrot_status},
 				lualine_z = {line_total, 'progress', 'location'}}
 		 }
 		-- opts = { options = { theme = 'dracula', component_separators = '|', globalstatus = true }, -- sections = {lualine_a = {'buffers'}} - takes too much space
