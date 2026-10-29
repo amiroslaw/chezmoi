@@ -1205,6 +1205,7 @@ local parrot_actions = {
   { 'oa', 'AskText', 'ask about text' },
   { 'oc', 'Grammar', 'grammar correction' },
   { 'ol', 'GrammarExplain', 'grammar correction with explanation' },
+  { 'ov', 'VoiceCorrection', 'Voice correction' },
   { 'of', 'FormatAdoc', 'format AsciiDoc table' },
   { 'ot', 'PrtTranslate', 'Parrot: translate PL<->EN'},
   { 'oe', 'EditWithInstruction', 'edit with instruction' },
