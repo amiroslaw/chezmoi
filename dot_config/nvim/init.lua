@@ -1000,46 +1000,69 @@ require('gitsigns').setup {
 	end,
 } -- }}} 
 
---{{{ diffview https://github.com/sindrets/diffview.nvim
-local actions = require("diffview.actions")
-local function toggle_diffview(cmd)
-  if next(require("diffview.lib").views) == nil then
-    vim.cmd(cmd)
-    vim.cmd("DiffviewToggleFiles")
-  else
-    vim.cmd("DiffviewClose")
-  end
-end
-nmap(',h', function() toggle_diffview('DiffviewFileHistory') end, 'Diffview view history files in repo.')
-nmap(',F', function() toggle_diffview('DiffviewFileHistory %') end, 'Diffview view history for the current file.')
-nmap(',f', function() toggle_diffview('DiffviewFileHistory % --base=LOCAL') end, 'Diffview view history for the current file. Local base.')
-nmap(',d', function() toggle_diffview('DiffviewOpen') end, 'Diffview')
-nmap(',D', function() toggle_diffview('DiffviewOpen HEAD~1') end, 'Diffview last commit,') -- afer that open pane ;b
-nmap(',m', function() toggle_diffview('DiffviewOpen master') end, 'Diffview master')
+--{{{ codediff https://github.com/esmuellert/codediff.nvim
+-- All files changed since last commit (working tree overview)
+nmap(',d', ':CodeDiff<CR>', 'CodeDiff: working tree changes') -- and toggle other panes
+-- Full commit log browser — browse any past commit in the repo, you can select lines
+nmap(',h', ':CodeDiff history<CR>', 'CodeDiff: history for repo')
+-- Log browser, but filtered to only commits that touched the current file
+nmap(',F', ':CodeDiff history %<CR>', 'CodeDiff: history for current file')
+-- Only the current file vs its last committed version (live-editable)
+nmap(',f', ':CodeDiff file HEAD<CR>', 'CodeDiff: current file vs HEAD')
+-- All files changed vs the main branch (full feature branch diff)
+nmap(',m', ':CodeDiff main', 'CodeDiff: diff against main')
 
-require("diffview").setup({
-  enhanced_diff_hl = true, -- See |diffview-config-enhanced_diff_hl|
-  use_icons = true,         -- Requires nvim-web-devicons
-  show_help_hints = true,   -- Show hints for how to open the help panel
-  watch_index = true,       -- Update views and index buffers when the git index changes.
-  view = { -- For more info, see |diffview-config-view.x.layout|.
-    --    |'diff3_horizontal' |'diff3_mixed' |'diff4_mixed'
-    merge_tool = {
-      layout = "diff3_horizontal",
-      disable_diagnostics = true,   -- Temporarily disable diagnostics for diff buffers while in the view.
-      winbar_info = true,           -- See |diffview-config-view.x.winbar_info|
-    },
+require("codediff").setup({
+  diff = {
+    layout = "side-by-side", -- layout = "inline",
+    compact = true, -- hides the same lines; gc to toggle
+    cycle_next_hunk = true,
+    cycle_next_file = true,
+    jump_to_first_change = true,
   },
-
+  explorer = {
+    position = "left",
+    hidden = true,
+    initial_focus = "explorer",
+    auto_refresh = true,
+	width = 30,
+  },
   keymaps = {
-    disable_defaults = false, -- Disable the default keymaps
     view = {
-      -- The `view` bindings are active in the diff buffers, only when the current
-      -- tabpage is a Diffview.
-      { "n", ",p",      "[c"    ,                  { desc = "jump to the previous conflict" } },
-      { "n", ",n",         "]c" ,                  { desc = "jump to the next conflict" } },
-      { "n", "[x",          actions.prev_conflict,                  { desc = "In the merge-tool: jump to the previous conflict" } },
-      { "n", "]x",          actions.next_conflict,                  { desc = "In the merge-tool: jump to the next conflict" } },
+      quit            = { "q", "<Esc>" },
+      toggle_explorer = "<leader>b",
+      focus_explorer  = "<leader>e",
+      next_hunk       = "]c",
+      prev_hunk       = "[c",
+      next_file       = "]f",
+      prev_file       = "[f",
+      toggle_layout   = "t",
+      toggle_compact  = "gc",
+      stage_hunk      = "<leader>hs",
+      unstage_hunk    = "<leader>hu",
+      discard_hunk    = "<leader>hr",
+      toggle_stage    = "-",
+      show_help       = "gh",
+    },
+    explorer = {
+      select        = "<CR>",
+      hover         = "K",
+      refresh       = "R",
+      stage_all     = "S",
+      unstage_all   = "U",
+      restore       = "X",
+    },
+    conflict = {
+      accept_incoming     = "<leader>ct",
+      accept_current      = "<leader>co",
+      accept_both         = "<leader>cb",
+      discard             = "<leader>cx",
+      accept_all_incoming = "<leader>cT",
+      accept_all_current  = "<leader>cO",
+      accept_all_both     = "<leader>cB",
+      discard_all         = "<leader>cX",
+      next_conflict       = "]x",
+      prev_conflict       = "[x",
     },
   },
 }) --}}} 
@@ -1085,7 +1108,11 @@ nmap(",ca", function()
 end, "Amend tracked")
 
 neogit.setup {
-graph_style = "kitty",
+  graph_style = "kitty",
+  integrations = {
+	 codediff = true,
+    diffview = false,  -- DiffView removed; using CodeDiff instead
+  },
 } --}}} 
 
 -- translate {{{
