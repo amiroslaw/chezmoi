@@ -1,0 +1,11 @@
+{
+  "attention": {
+    "notifications": true,
+    "sound": false,
+    "volume": 0.4,
+    "sound_pack": "opencode.default",
+    "sounds": {
+      "permission": "/home/me/sounds/permission.wav"
+    }
+  }
+}
