@@ -269,6 +269,56 @@ local function selection_or_file(params)
   return params
 end
 
+--- Resolves the provider instance for a prompt action, taking into account
+--- optional action.provider or action.model overrides.
+---@param parrot table Parrot config module
+---@param is_chat boolean Whether this is a chat target
+---@param action table Action definition table
+---@return table|nil provider instance
+local function resolve_provider(parrot, is_chat, action)
+  local chat_handler = parrot.chat_handler
+  if not chat_handler then
+    return nil
+  end
+
+  local function init_prov(name)
+    local cfg = chat_handler.providers[name]
+    if cfg then
+      local init_provider = require("parrot.provider").init_provider
+      return init_provider(cfg)
+    end
+    return nil
+  end
+
+  if action.provider then
+    local prov = init_prov(action.provider)
+    if prov then
+      return prov
+    end
+  end
+
+  if action.model then
+    local current_prov = chat_handler:get_provider(is_chat)
+    if current_prov then
+      local cfg = chat_handler.providers[current_prov.name]
+      if cfg and cfg.models and vim.tbl_contains(cfg.models, action.model) then
+        return current_prov
+      end
+    end
+
+    for prov_name, prov_cfg in pairs(chat_handler.providers) do
+      if prov_cfg.models and vim.tbl_contains(prov_cfg.models, action.model) then
+        local prov = init_prov(prov_name)
+        if prov then
+          return prov
+        end
+      end
+    end
+  end
+
+  return chat_handler:get_provider(is_chat)
+end
+
 local function run_action(parrot, params, action)
   params = selection_or_file(params)
   if not action.keep_args then
@@ -277,7 +327,24 @@ local function run_action(parrot, params, action)
 
   local target = parrot.ui.Target[action.target] or parrot.ui.Target.rewrite
   local model_type = action.target == "popup" and "chat" or "command"
-  local model_obj = parrot.get_model(model_type)
+
+  local model_obj
+  if action.model and action.model ~= "" then
+    local prov = resolve_provider(parrot, action.target == "popup", action)
+    local sys_prompt = (parrot.chat_handler
+      and parrot.chat_handler.options
+      and parrot.chat_handler.options.system_prompt
+      and parrot.chat_handler.options.system_prompt[model_type]) or ""
+
+    model_obj = {
+      name = action.model,
+      provider = prov,
+      system_prompt = sys_prompt,
+    }
+  else
+    model_obj = parrot.get_model(model_type)
+  end
+
   parrot.Prompt(params, target, model_obj, action.prompt, action.template)
 end
 

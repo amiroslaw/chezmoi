@@ -8,6 +8,7 @@
 " , for git
 " - for run
 "   TODO
+"   there is new fzf search
 " Y
 " maybe map f <Plug>(easymotion-j) occupate vim actions like df[char], but dt works
 "
