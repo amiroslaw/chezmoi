@@ -124,9 +124,9 @@
 ; right button
 (hl.bind "ALT + mouse:273" (hl.dsp.window.resize)  { :mouse true })
 ; left button
-(hl.bind "ALT + mouse:272" (hl.dsp.window.drag { :mouse true :drag true }))
-; toggle float
-(hl.bind "ALT + mouse:272" (hl.dsp.window.float { :action "toggle" }) { :mouse true :click true })
+(hl.bind "ALT + mouse:272" (hl.dsp.window.drag) )
+; toggle float; can't bind to 272 again
+(hl.bind "ALT + mouse:274" (hl.dsp.window.float { :action "toggle" }) { :click true })
 ;; Scroll workspaces
 (hl.bind "ALT + mouse_down" (hl.dsp.focus {:workspace "m-1"}))
 (hl.bind "ALT + mouse_up" (hl.dsp.focus {:workspace "m+1"}))
