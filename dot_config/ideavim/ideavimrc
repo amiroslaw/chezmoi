@@ -34,6 +34,10 @@
 " maybe space 
 let mapleader = ";" 
 " let maplocalleader=" "
+" The prompt input of AI chats:
+set ideaeditor+=chat
+" Tabs in the main editor area
+set ideaeditor+=main 
 set hlsearch
 set incsearch
 set ignorecase
