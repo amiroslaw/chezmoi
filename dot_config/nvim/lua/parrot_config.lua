@@ -562,6 +562,7 @@ function M.setup()
 
   require("parrot").setup({
     providers = providers,
+    model_cache_expiry_hours = 0, -- disabled, it is slow
 
     system_prompt = prompts.system,
 

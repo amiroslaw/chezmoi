@@ -75,10 +75,10 @@ other introduction.
 ]],
   },
 
-  Javadoc = {
+  AddDoc = {
     target = "popup",
     template = [[
-Write high-quality Javadoc documentation for the following {{filetype}} code.
+Write high-quality documentation for the following code written in this filetype {{filetype}}.
 Return only the documentation (and the documented code if useful). Do not add
 an introduction or a summary of the task.
 
