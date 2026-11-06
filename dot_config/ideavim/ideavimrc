@@ -45,8 +45,8 @@ set smartcase
 set visualbell
 set history=1000
 "set clipboard+=unnamed
-set clipboard+=unnamedplus
-set clipboard+=ideaput
+set clipboard=unnamedplus
+"set clipboard=unnamedplus,ideaput
 set ideawrite=all
 set scrolloff=5 
 set ideastatusicon=gray

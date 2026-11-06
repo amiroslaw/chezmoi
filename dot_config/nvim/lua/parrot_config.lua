@@ -19,7 +19,7 @@ local function env(name, default)
 end
 
 local ollama_host = env("OLLAMA_API_HOST", "http://localhost:11434"):gsub("/+$", "")
-local ollama_model = env("OLLAMA_MODEL", "qwen2.5:3b")
+local ollama_model = env("OLLAMA_MODEL", "qwen3:4b-instruct")
 local gemini_api_key = os.getenv("GEMINI_API_KEY")
 
 -- Run a model-list request with curl. `args` are the arguments that parrot
