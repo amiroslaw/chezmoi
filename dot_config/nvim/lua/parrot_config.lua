@@ -574,7 +574,7 @@ function M.setup()
     show_context_hints = true,
 
     -- Changes are shown as a diff; press Enter/a to apply. 
-    enable_preview_mode = true,
+    enable_preview_mode = false,
     preview_auto_apply = false,
 
     chat_shortcut_respond = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g><C-g>" },
