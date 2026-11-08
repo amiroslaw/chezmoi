@@ -572,11 +572,18 @@ nmap('mL', ':BookmarksListAll<cr>', 'List all bookmarks') -- groupmarks
 -- }}} 
 
 -- undo tree  native {{{
-nmap('<A-u>', ':Undotree<cr>', 'Toggle undo tree')
+-- nmap('<A-u>', ':Undotree<cr>', 'Toggle undo tree')
 if vim.fn.has 'persistent_undo' == 1 then
 	vim.o.undodir = HOME .. '/.local/share/nvim/undo'
 	vim.o.undofile = true
 end -- }}} 
+
+--{{{ diffundo https://github.com/dsummersl/diffundo.nvim
+nmap('<A-u>', ':Diffundo focus<cr>', 'Toggle diffundo')
+nmap('<A-r>', ':Diffundo earlier<cr>', 'Diffundo earlier')
+nmap('<C-S-r>', ':Diffundo later<cr>', 'Diffundo later')
+--}}} 
+
 
 -- lazyList {{{
 nmap('glt', ":LazyList '.'<CR>", 'LazyList title') -- title

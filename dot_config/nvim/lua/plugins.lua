@@ -21,6 +21,7 @@ return {
 	},
 	{ 'mg979/vim-visual-multi', branch = 'master' },
 	{ "tpope/vim-repeat", event = "VeryLazy" },
+	  {"dsummersl/diffundo.nvim", build = false, dependencies = { "tpope/vim-repeat", }},
 	'chentoast/marks.nvim',
 	-- 'wyne/fasder.nvim', -- adds file to fasder index, stopped working, I adde my autocmd
 	'mhinz/vim-startify', -- start screen
