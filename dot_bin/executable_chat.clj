@@ -8,7 +8,6 @@
          '[babashka.cli :as cli]
          '[babashka.http-client :as http]
          '[clojure.test :refer [is]]
-         '[clojure.java.io :as io]
          '[clojure.core.match :refer [match]]
          '[cheshire.core :as json])
 
@@ -58,48 +57,69 @@
   (models [this])
   (get-model [this] "Get model or default provided if nil passed in a record"))
 
+(defn ollama-list-models
+  "Fetch all available Ollama models using `ollama list` command."
+  []
+  (try
+    (let [{:keys [exit out err]} (sh "ollama" "list")]
+      (if (zero? exit)
+        (->> (str/split-lines out)
+             rest
+             (remove str/blank?)
+             (map (fn [line] (first (str/split (str/trim line) #"\s+"))))
+             (remove str/blank?)
+             vec)
+        (do
+          (println "DEBUG: ollama list failed:" err)
+          [])))
+    (catch Exception e
+      (println "DEBUG: Error executing 'ollama list':" (.getMessage e))
+      [])))
+
 (defrecord Gemini [model-name]
   Provider
   (request [this prompt]
     (println "in gemini")
     (println model-name)
-    (-> (format "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s" model-name gemini-api-key)
-        (http/post {:headers {"Content-Type" "application/json"}
-                    :body    (json/generate-string {:contents [{:parts [{:text prompt}]}]})
-                    :throw false
-                    })
-        http-error-handler!
-        (get-in [:candidates 0 :content :parts 0 :text])
-        (str/trim)))
+    (some-> (format "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s" model-name gemini-api-key)
+            (http/post {:headers {"Content-Type" "application/json"}
+                        :body    (json/generate-string {:contents [{:parts [{:text prompt}]}]})
+                        :throw false})
+            http-error-handler!
+            (get-in [:candidates 0 :content :parts 0 :text])
+            str/trim))
   (models [this] [ (->Gemini "gemini-3.8-flash") 
                   (->Gemini "gemini-3.5-flash-lite")
                   (->Gemini "gemini-3.6-flash") 
                   (->Gemini "gemini-3-flash-preview") ; slow
-                  (->Gemini "gemini-2.5-pro")])
+                  ])
   (get-model [this] (or model-name "gemini-3.5-flash")))
   ;(get-model [this] (or model-name "gemini-3.5-flash-lite")))
 
 (defrecord Ollama [model-name]
   Provider
   (request [this prompt]
-    (-> (str api-host "/api/generate")
-          (http/post {:body  (json/generate-string {:model model-name, :prompt prompt, :stream false})
+    (some-> (str api-host "/api/generate")
+            (http/post {:body  (json/generate-string {:model model-name, :prompt prompt, :stream false :think false})
                         :throw false})
-          http-error-handler!
-          :response
-          str/trim))
+            http-error-handler!
+            :response
+            str/trim))
   (models [this]
-    (try
-      (as-> (str api-host "/api/tags") p
-            (http/get p {:throw false})
-            (:body p)
-            (json/parse-string p true)
-            (:models p)
-            (map :name p)
-            (map (fn [m] (->Ollama m)) p))
-      (catch Exception e
-        (println "DEBUG: Ollama not available:" (.getMessage e))
-        [])))
+    (let [cli-models (ollama-list-models)]
+      (if (seq cli-models)
+        (mapv ->Ollama cli-models)
+        (try
+          (as-> (str api-host "/api/tags") p
+                (http/get p {:throw false})
+                (:body p)
+                (json/parse-string p true)
+                (:models p)
+                (map :name p)
+                (mapv (fn [m] (->Ollama m)) p))
+          (catch Exception e
+            (println "DEBUG: Ollama not available:" (.getMessage e))
+            [])))))
   (get-model [this]
     (or model-name
       (if-let [env (System/getenv "AI_MODEL")]
@@ -193,6 +213,116 @@
            [nil :summary] (query->display (str (:summary templates) (get-text opts)) opts)
            [nil t] (query->display (str (t templates) (get-text opts)) opts))))
 
+(defn- provider-type-name [model]
+  (or (last (str/split (str (type model)) #"\.")) "Unknown"))
+
+(defn- resolve-provider-models
+  "Returns a list of model records for the given provider.
+   Defaults to Ollama models if provider is nil or not specified."
+  [provider]
+  (cond
+    (satisfies? Provider provider)
+    (models provider)
+
+    (or (nil? provider) (str/blank? (str provider)))
+    (models (->Ollama nil))
+
+    :else
+    (let [p (str/lower-case (name provider))]
+      (case p
+        "ollama" (models (->Ollama nil))
+        "gemini" (models (->Gemini nil))
+        "all"    (concat (models (->Ollama nil)) (models (->Gemini nil)))
+        (do
+          (println (format "Unknown provider '%s', defaulting to ollama" provider))
+          (models (->Ollama nil)))))))
+
+(def default-test-instruction "Respond with OK if you can read this.")
+
+(defn test-models
+  "Test AI models per provider with a given instruction."
+  ([]
+   (test-models nil default-test-instruction nil))
+  ([arg]
+   (cond
+     (map? arg)
+     (let [opts (or (:opts arg) arg)
+           args-list (:args arg)
+           provider (or (:provider opts) (:p opts))
+           instruction (or (:instruction opts)
+                           (:i opts)
+                           (:input opts)
+                           (first args-list)
+                           default-test-instruction)]
+       (test-models provider instruction opts))
+
+     (or (keyword? arg)
+         (satisfies? Provider arg)
+         (and (string? arg) (contains? #{"ollama" "gemini" "all"} (str/lower-case arg))))
+     (test-models arg default-test-instruction nil)
+
+     :else
+     (test-models nil arg nil)))
+  ([provider instruction]
+   (test-models provider instruction nil))
+  ([provider instruction opts]
+   (let [instruction (or instruction default-test-instruction)
+         target-models (let [ms (resolve-provider-models provider)]
+                         (if-let [filter-name (or (:model opts) (:m opts))]
+                           (filter #(= filter-name (:model-name %)) ms)
+                           ms))
+         total (count target-models)]
+     (println "==================================================")
+     (println (format "Testing models (total: %d)" total))
+     (println (format "Provider:    %s" (or provider "ollama (default)")))
+     (println (format "Instruction: %s" instruction))
+     (println "==================================================")
+     (if (zero? total)
+       (do
+         (println "No models found to test.")
+         [])
+       ;; ollama returns token/sec in json, but gemini doesn't 
+       (let [results (mapv
+                      (fn [idx model]
+                        (let [m-name (:model-name model)
+                              p-name (provider-type-name model)]
+                          (printf "\n[%d/%d] Testing %s (%s)...\n" (inc idx) total m-name p-name)
+                          (flush)
+                          (let [start-time (System/currentTimeMillis)]
+                            (try
+                              (let [res (request model instruction)
+                                    dur (- (System/currentTimeMillis) start-time)]
+                                (if (some? res)
+                                  (do
+                                    (printf "✓ OK (%d ms)\n" dur)
+                                    (println "Response:")
+                                    (println res)
+                                    (println "--------------------------------------------------")
+                                    {:model m-name :provider p-name :status :ok :duration-ms dur :response res})
+                                  (do
+                                    (printf "✗ FAILED (%d ms) - no response received\n" dur)
+                                    (println "--------------------------------------------------")
+                                    {:model m-name :provider p-name :status :error :duration-ms dur :error "No response"})))
+                              (catch Exception e
+                                (let [dur (- (System/currentTimeMillis) start-time)]
+                                  (printf "✗ FAILED (%d ms) - %s\n" dur (.getMessage e))
+                                  (println "--------------------------------------------------")
+                                  {:model m-name :provider p-name :status :error :duration-ms dur :error (.getMessage e)}))))))
+                      (range)
+                      target-models)
+             passed (count (filter #(= :ok (:status %)) results))
+             failed (- total passed)]
+         (println "\n==================== Summary ====================")
+         (doseq [{:keys [model provider status duration-ms error]} results]
+           (if (= :ok status)
+             (printf "  [✓ OK]     %-35s (%s, %d ms)\n" model provider duration-ms)
+             (printf "  [✗ FAILED] %-35s (%s, %d ms) - %s\n" model provider duration-ms (or error "Error"))))
+         (println "=================================================")
+         (printf "Total: %d | Passed: %d | Failed: %d\n\n" total passed failed)
+         results)))))
+
+(def test-models-per-provider test-models)
+
 (def spec
   {:output {:desc     "Show AI answer in a text editor or a dialog [scratchpad | dialog]. Generated text is always saved in `tmp` folder"
             :coerce   :keyword
@@ -235,16 +365,30 @@
    ;:alias    :f}
    })
 
+(def spec-test
+  {:provider    {:desc    "Provider to test [ollama | gemini | all] (default: ollama)."
+                 :default "ollama"
+                 :alias   :p}
+   :instruction {:desc    "Instruction to send to each model (default: 'Respond with OK if you can read this.')."
+                 :alias   :i}
+   :model       {:desc    "Optionally test a specific model name only."
+                 :alias   :m}})
+
 (defn- print-help [_]
   (printf "Chat AI. An helper for interact with ollama. %n%s%s%n
   Options for `action` and `text` commands:%n%s%n
   Additional options for `action` command:%n%s%n
+  Options for `test` command:%n%s%n
   Examples:
      chat.clj ask -l
      chat.clj text -i 'tell me a joke'
      chat.clj text -p -o display
      chat.clj action -p -a
      chat.clj action -o scratchpad -t 'summary-adoc' -u='https://en.wikipedia.org/wiki/Polish_hussars'
+     chat.clj test
+     chat.clj test -i 'Say hello in 5 words'
+     chat.clj test -p gemini -i 'Tell me a joke'
+     chat.clj test -p all
   %nDefault values can be override via system environment. The set values:
   default model = %s
   OLLAMA_API_HOST = %s
@@ -257,14 +401,17 @@
           (cli/format-opts {:spec spec})
           (cli/format-opts {:spec spec-source})
           (cli/format-opts {:spec spec-template})
-          (:model default-model)
-            api-host term-run))
+          (cli/format-opts {:spec spec-test})
+          (:model-name default-model)
+          api-host term-run))
 
 (def subcommands
   [{:cmds ["ask"] :desc "Ask AI." :fn ask :spec spec}
    {:cmds ["text"] :desc "Ask about provided text." :fn ask :spec (merge spec spec-source)}
    {:cmds ["action"] :desc "Take an action from a template. If not provided text will be summarised."
     :fn   action :spec (merge spec spec-source spec-template)}
+   {:cmds ["test"] :desc "Test models per provider with an instruction."
+    :fn   test-models :spec spec-test}
    {:cmds [] :desc "Show help." :fn print-help}])
 
 (when (= *file* (System/getProperty "babashka.file"))
@@ -304,6 +451,15 @@
   (cli/dispatch subcommands ["action" "-o" "dialog" "-u" "yt" "args" "llama"]) ; fail
   (cli/dispatch subcommands ["action" "-o" "dialog" "-u" wiki "-a"])
   (cli/dispatch subcommands ["action" "-o" "dialog" "-u" "https://sklep.galakta.pl/gry-planszowe/1438-filary-ziemi.html"])
+
+  (test-models)
+  (test-models "Say hello in 3 words")
+  (test-models :ollama "Tell a joke")
+  (test-models :gemini "Say OK")
+  (test-models :all "Say OK")
+  (cli/dispatch subcommands ["test"])
+  (cli/dispatch subcommands ["test" "-i" "Say hello"])
+  (cli/dispatch subcommands ["test" "-p" "gemini" "-i" "Say OK"])
 
   (html->txt "https://sklep.galakta.pl/gry-planszowe/1438-filary-ziemi.html")
   (def invalid-url "https://slep.galakta.pl/gry-planszowe/1438-filary-ziemi.html")
