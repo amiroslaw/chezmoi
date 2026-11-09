@@ -4,7 +4,7 @@
 -- Providers: Ollama (default) and Google Gemini.
 -- All Parrot commands are available as :Prt<Name>, e.g. :PrtGrammar.
 -- The key mappings live in init.lua (the <LocalLeader>o... group).
-
+-- models without instruct consider disabling think option for ollama
 local M = {}
 
 -- All prompt texts live in lua/parrot_prompts.lua.
@@ -19,7 +19,7 @@ local function env(name, default)
 end
 
 local ollama_host = env("OLLAMA_API_HOST", "http://localhost:11434"):gsub("/+$", "")
-local ollama_model = env("OLLAMA_MODEL", "qwen3:4b-instruct")
+local ollama_model = env("OLLAMA_MODEL", "llama3.1:8b-instruct-q2_K")
 local gemini_api_key = os.getenv("GEMINI_API_KEY")
 
 -- Run a model-list request with curl. `args` are the arguments that parrot

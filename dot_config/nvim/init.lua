@@ -1202,12 +1202,12 @@ locLeader({'n', 'v'}, 'aq', '<cmd>PrtAsk<CR>', 'Parrot: edit the last prompt')
 vlocLeader('ay', ":<C-u>'<,'>PrtChatPaste<CR>", 'Parrot: paste/yank selection into last chat')
 nlocLeader('ac', '<cmd>PrtCompact<CR>', 'Parrot: compact chat')
 nlocLeader('ah', '<cmd>PrtChatFinder<CR>', 'Parrot: chat history')
-nlocLeader('ad', '<cmd>PrtChatDelete<CR>', 'Parrot: Log')
+nlocLeader('ad', '<cmd>PrtChatDelete<CR>', 'Parrot: delete chat')
 nlocLeader('ap', '<cmd>PrtProvider<CR>', 'Parrot: select provider')
 nlocLeader('am', '<cmd>PrtModel<CR>', 'Parrot: select model')
 nlocLeader('as', '<cmd>PrtStatus<CR>', 'Parrot: status')
 nlocLeader('al', '<cmd>PrtLog<CR>', 'Parrot: Log')
-nlocLeader('ar', '<cmd>PrtReloadCache<CR>', 'Parrot: Log')
+nlocLeader('ar', '<cmd>PrtReloadCache<CR>', 'Parrot: Reload cache model list')
 
 local parrot_actions = {
   { 'oa', 'AskText', 'ask about text' },
