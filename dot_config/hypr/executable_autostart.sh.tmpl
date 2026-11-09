@@ -9,6 +9,7 @@ nm-applet --indicator &
 sleep 300 && megasync && notify-send "Megasync" &
 sleep 200 && newsboat -x reload  &
 sleep 600 && soulseek-rs daemon --password="{{- .soulseek.password }}"&
+sleep 300 && ollama serve &
 # sleep 900 && handy.AppImage &
 
 {{ else if eq .chezmoi.hostname "laptop" }}
