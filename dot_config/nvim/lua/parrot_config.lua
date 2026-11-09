@@ -562,7 +562,8 @@ function M.setup()
 
   require("parrot").setup({
     providers = providers,
-    model_cache_expiry_hours = 0, -- disabled, it is slow
+    -- Negative disables online model fetching/caching entirely. 0 means "cache forever", but parrot still fetches once when the cache is empty.
+    model_cache_expiry_hours = -1,
 
     system_prompt = prompts.system,
 
