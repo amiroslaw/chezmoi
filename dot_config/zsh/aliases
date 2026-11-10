@@ -470,7 +470,7 @@ alias -g G='| grep'
 alias -g H='| head'
 alias -g T='| tail'
 alias -g SN='| sort -n'
-alias -g L='| less'
+alias -g L='| bat'
 alias -g W='| wc'
 alias -g Jq='| jq .'
 alias -g X='| fx'
@@ -494,7 +494,7 @@ alias -g LL="2>&1 | less"
 alias -g NUL="> /dev/null 2>&1" # alias -g NE="2> /dev/null"
 alias -g TB="| nc termbin.com 9999" # share output of the terminal
 alias -g COL='| column -t' # format into tabelar 
-alias -g X='| xargs'
+alias -g XX='| xargs'
 alias -g X0='| xargs -0'  
 alias -g A1="| awk '{print \$1}'"
 # FZF
