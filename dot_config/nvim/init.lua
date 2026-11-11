@@ -1604,6 +1604,36 @@ end
 
 vim.keymap.set("n", "gX", vertopen_url, { desc = "Open URL under cursor as markdown (reader)" })
 
+-- Copy file path / selection reference for pasting into AI chats
+local function copy_ref(opts)
+	-- "%" is the current buffer's file name; ":." makes it relative to the cwd
+	local path = vim.fn.expand("%:.")
+	local ref = path
+
+	if opts.visual then
+		local start_line = vim.fn.line("v")
+		local end_line = vim.fn.line(".")
+		if start_line > end_line then
+			start_line, end_line = end_line, start_line
+		end
+		-- append the range, e.g. "lua/config/keymaps.lua:1:23"
+		-- ref = path .. ":" .. start_line .. ":" .. end_line
+		ref = "@" .. path .. ":" .. start_line .. "-" .. end_line
+	end
+
+	-- ask for an optional free-text note on the command line (Enter to skip)
+	local note = vim.fn.input("Prompt (optional): ")
+	if note ~= "" then
+		ref = ref .. " " .. note
+	end
+
+	vim.fn.setreg("+", ref)
+	vim.notify("Copied: " .. ref)
+end
+
+nmap("<A-y>", function() copy_ref({}) end, "Copy file path" )
+vmap("<A-y>", function() copy_ref({ visual = true }) end, "Copy file path with line range" )
+
 -- local function vertopen_url()
 --   local line = vim.api.nvim_get_current_line()
 --   local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 1-indexed
