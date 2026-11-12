@@ -149,7 +149,6 @@ end
 
 -- New UI opt-in
 require('vim._core.ui2').enable({})
-vim.cmd("packadd nvim.undotree")
 -- vim.cmd("packadd nvim.difftool")
 
 vim.o.termguicolors = true
@@ -574,7 +573,12 @@ nmap('mL', ':BookmarksListAll<cr>', 'List all bookmarks') -- groupmarks
 -- }}} 
 
 -- undo tree  native {{{
--- nmap('<A-u>', ':Undotree<cr>', 'Toggle undo tree')
+	-- I had an issue, maybe with lazy, so I lazy load it
+nmap('<S-A-u>', function()
+  vim.cmd.packadd("nvim.undotree")
+  vim.cmd.Undotree()
+  vim.cmd("vertical resize 40")
+end, "Undotree toggle")
 if vim.fn.has 'persistent_undo' == 1 then
 	vim.o.undodir = HOME .. '/.local/share/nvim/undo'
 	vim.o.undofile = true
