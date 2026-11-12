@@ -1220,7 +1220,7 @@ end, 'luasnip next choice', {silent = true})
 -- In visual mode the selected text is added to the chat.
 locLeader({'n', 'v'}, 'aa', '<cmd>PrtChatToggle<CR>', 'Parrot: toggle last chat')
 locLeader({'n', 'v'}, 'an', '<cmd>PrtChatNew<CR>', 'Parrot: new chat')
-locLeader({'n', 'v'}, 'an', '<cmd>PrtEdit<CR>', 'Parrot: edit the last prompt')
+locLeader({'n', 'v'}, 'ae', '<cmd>PrtEdit<CR>', 'Parrot: edit the last prompt')
 locLeader({'n', 'v'}, 'aq', '<cmd>PrtAsk<CR>', 'Parrot: Ask the model a question')
 nlocLeader('ar', '<cmd>PrtRetry<CR>', 'Parrot: Repeats the last rewrite/append/prepend')
 nlocLeader('ax', '<cmd>PrtStop<CR>', 'Parrot: stop request')

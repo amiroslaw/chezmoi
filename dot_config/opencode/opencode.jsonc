@@ -7,10 +7,20 @@
         "type": "remote",
         "url": "https://mcp.context7.com/mcp"
       },
-      // "websearch": {
-      //   "type": "remote",
-      //   "url": "https://mcp.tavily.com/mcp"
-      // }
+      "github": {
+        "type": "remote",
+        "url": "https://api.githubcopilot.com/mcp/"
+      },
+	  // better to use local
+		// "sqlite": {
+		// 		"type": "local",
+		// 		"command": [
+		// 		  "uvx",
+		// 		  "mcp-server-sqlite",
+		// 		  "--db-path",
+		// 		  "/absolute/path/to/database.db"
+		// 		]
+		// 	  }
     }
   }
 }
