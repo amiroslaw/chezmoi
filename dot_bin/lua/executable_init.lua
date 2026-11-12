@@ -622,31 +622,214 @@ end -- >>>
 -- IDK what lua version is supported
 
 -- jsonish <<<
--- This function parses the json-like string jsonStr to the lua table dataTab. It does not perform any validation. The parser is not fully JSON compliant, however it is very simple and it should work in most the cases.
-local function json_to_table_literal(s)
-
-  s = s:gsub([[\\]],[[\u{5C}]])
-  s = (' '..s):gsub('([^\\])(".-[^\\]")', function( prefix, quoted )
-    -- Matched string: quoted, non empty
-
-    quoted = quoted:gsub('\\"','\\u{22}')
-    quoted = quoted:gsub('\\[uU](%x%x%x%x)', '\\u{%1}')
-    quoted = quoted:gsub('%[','\\u{5B}')
-    quoted = quoted:gsub('%]','\\u{5D}')
-    return prefix .. quoted
-  end)
-
-  s = s:gsub('%[','{')
-  s = s:gsub('%]','}')
-  s = s:gsub('("[^"]-")%s*:','[%1]=')
-
-  return s
+-- This function parses a JSON / JSON-like string to a Lua table/value.
+local function codepoint_to_utf8(code)
+  if code < 0x80 then
+    return string.char(code)
+  elseif code < 0x800 then
+    return string.char(0xC0 + math.floor(code / 64), 0x80 + (code % 64))
+  elseif code < 0x10000 then
+    return string.char(
+      0xE0 + math.floor(code / 4096),
+      0x80 + (math.floor(code / 64) % 64),
+      0x80 + (code % 64)
+    )
+  elseif code < 0x110000 then
+    return string.char(
+      0xF0 + math.floor(code / 262144),
+      0x80 + (math.floor(code / 4096) % 64),
+      0x80 + (math.floor(code / 64) % 64),
+      0x80 + (code % 64)
+    )
+  end
+  return ""
 end
 
-function jsonish(s)
-  local loader, e = load('return '..json_to_table_literal(s), 'jsondata', 't', {})
-  if not loader or e then return nil, e end
-  return loader()
+function jsonish(str)
+  if type(str) ~= "string" or str == "" then return nil, "empty or invalid string" end
+  local pos = 1
+  local len = #str
+
+  local function skip_whitespace()
+    while pos <= len do
+      local b = str:byte(pos)
+      if b == 32 or b == 9 or b == 10 or b == 13 then
+        pos = pos + 1
+      elseif b == 47 and str:byte(pos + 1) == 47 then -- // comment
+        pos = pos + 2
+        while pos <= len and str:byte(pos) ~= 10 and str:byte(pos) ~= 13 do
+          pos = pos + 1
+        end
+      else
+        break
+      end
+    end
+  end
+
+  local parse_value
+
+  local function parse_string()
+    local q = str:byte(pos)
+    pos = pos + 1 -- skip opening quote
+    local start_pos = pos
+    local chunks = {}
+    while pos <= len do
+      local b = str:byte(pos)
+      if b == q then -- closing quote
+        table.insert(chunks, str:sub(start_pos, pos - 1))
+        pos = pos + 1
+        return table.concat(chunks)
+      elseif b == 92 then -- backslash \
+        table.insert(chunks, str:sub(start_pos, pos - 1))
+        pos = pos + 1
+        local esc = str:sub(pos, pos)
+        pos = pos + 1
+        if esc == "\"" or esc == "'" or esc == "\\" or esc == "/" then
+          table.insert(chunks, esc)
+        elseif esc == "b" then table.insert(chunks, "\b")
+        elseif esc == "f" then table.insert(chunks, "\f")
+        elseif esc == "n" then table.insert(chunks, "\n")
+        elseif esc == "r" then table.insert(chunks, "\r")
+        elseif esc == "t" then table.insert(chunks, "\t")
+        elseif esc == "u" then
+          local hex = str:sub(pos, pos + 3)
+          pos = pos + 4
+          local code = tonumber(hex, 16)
+          if code then
+            if code >= 0xD800 and code <= 0xDBFF and str:sub(pos, pos + 1) == "\\u" then
+              local hex2 = str:sub(pos + 2, pos + 5)
+              local code2 = tonumber(hex2, 16)
+              if code2 and code2 >= 0xDC00 and code2 <= 0xDFFF then
+                pos = pos + 6
+                code = 0x10000 + (code - 0xD800) * 0x400 + (code2 - 0xDC00)
+              end
+            end
+            table.insert(chunks, codepoint_to_utf8(code))
+          end
+        else
+          table.insert(chunks, esc)
+        end
+        start_pos = pos
+      else
+        pos = pos + 1
+      end
+    end
+    error("Unterminated string")
+  end
+
+  local function parse_number()
+    local num_str = str:match("^-?%d+%.?%d*[eE]?[+-]?%d*", pos)
+    if not num_str then error("Invalid number at pos " .. pos) end
+    pos = pos + #num_str
+    return tonumber(num_str)
+  end
+
+  local function parse_array()
+    pos = pos + 1 -- skip [
+    local arr = {}
+    skip_whitespace()
+    if pos <= len and str:byte(pos) == 93 then -- ]
+      pos = pos + 1
+      return arr
+    end
+    while pos <= len do
+      table.insert(arr, parse_value())
+      skip_whitespace()
+      local b = str:byte(pos)
+      if b == 93 then
+        pos = pos + 1
+        return arr
+      elseif b == 44 then -- ,
+        pos = pos + 1
+        skip_whitespace()
+        if pos <= len and str:byte(pos) == 93 then -- trailing comma
+          pos = pos + 1
+          return arr
+        end
+      else
+        error("Expected ] or , at pos " .. pos)
+      end
+    end
+    error("Unterminated array")
+  end
+
+  local function parse_object()
+    pos = pos + 1 -- skip {
+    local obj = {}
+    skip_whitespace()
+    if pos <= len and str:byte(pos) == 125 then -- }
+      pos = pos + 1
+      return obj
+    end
+    while pos <= len do
+      skip_whitespace()
+      local key
+      local b = str:byte(pos)
+      if b == 34 or b == 39 then -- quote
+        key = parse_string()
+      else
+        local unquoted = str:match("^[%a_][%w_]*", pos)
+        if unquoted then
+          pos = pos + #unquoted
+          key = unquoted
+        else
+          error("Expected string key at pos " .. pos)
+        end
+      end
+      skip_whitespace()
+      if str:byte(pos) ~= 58 then error("Expected : at pos " .. pos) end
+      pos = pos + 1
+      skip_whitespace()
+      local val = parse_value()
+      obj[key] = val
+      skip_whitespace()
+      local b2 = str:byte(pos)
+      if b2 == 125 then
+        pos = pos + 1
+        return obj
+      elseif b2 == 44 then
+        pos = pos + 1
+        skip_whitespace()
+        if pos <= len and str:byte(pos) == 125 then -- trailing comma
+          pos = pos + 1
+          return obj
+        end
+      else
+        error("Expected } or , at pos " .. pos)
+      end
+    end
+    error("Unterminated object")
+  end
+
+  function parse_value()
+    skip_whitespace()
+    if pos > len then return nil end
+    local b = str:byte(pos)
+    if b == 34 or b == 39 then
+      return parse_string()
+    elseif b == 123 then
+      return parse_object()
+    elseif b == 91 then
+      return parse_array()
+    elseif b == 116 and str:sub(pos, pos + 3) == "true" then
+      pos = pos + 4
+      return true
+    elseif b == 102 and str:sub(pos, pos + 4) == "false" then
+      pos = pos + 5
+      return false
+    elseif b == 110 and str:sub(pos, pos + 3) == "null" then
+      pos = pos + 4
+      return nil
+    elseif (b >= 48 and b <= 57) or b == 45 then
+      return parse_number()
+    else
+      error("Unexpected character '" .. str:sub(pos, pos) .. "' at pos " .. pos)
+    end
+  end
+
+  local ok, res = pcall(parse_value)
+  if not ok then return nil, res end
+  return res
 end
 -- >>>
 

@@ -93,7 +93,7 @@ local function createEpub(link)
 
 	local readerCmd =  'go-readability "' .. link .. '" '
 	local metadataJson = io.popen(readerCmd .. ' --metadata'):read('*a')
-	local metadata = jsonish(metadataJson)
+	local metadata = jsonish(metadataJson) or {}
 	local title = metadata["title"]
 	local fileName
 	if title then
@@ -107,7 +107,7 @@ local function createEpub(link)
 	os.execute('mkdir -p ' .. KINDLE_TMP_DIR)
 	-- metadata can have a nil
 	local cmd = string.format('%s  | pandoc --from html --to epub --output "%s%s".epub --toc --metadata title="%s" --metadata date="%s" --metadata subtitle="%s" --metadata author="%s" ',
-		readerCmd, KINDLE_TMP_DIR, fileName, title, os.date('%Y-%m-%d'), link, metadata["byline"])
+		readerCmd, KINDLE_TMP_DIR, fileName, title, os.date('%Y-%m-%d'), link, metadata["byline"] or '')
 	print(cmd)
 	local ok = os.execute(cmd)
  --metadata cover-image="%s" , metadata["image"]
