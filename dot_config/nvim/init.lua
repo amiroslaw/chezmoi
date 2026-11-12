@@ -8,6 +8,7 @@
 -- lsp_map to my function
 -- correct x/o [local]leader
 -- add shortcuts like in shell imap('<C-e>', 'normal A')
+-- vim.notify("Diffundo opened", vim.log.levels.INFO, { title = "Diffundo" })
 -- VARIABLES
 local HOME = os.getenv 'HOME'
 
@@ -217,6 +218,7 @@ vim.opt.diffopt = {
 "algorithm:histogram",
 "linematch:200",
 "indent-heuristic",
+"followwrap", -- wrap text, in codediff doesn't work
 "iwhite" -- I toggle this one, it doesn't fit all cases.
 }
 
@@ -579,9 +581,26 @@ if vim.fn.has 'persistent_undo' == 1 then
 end -- }}} 
 
 --{{{ diffundo https://github.com/dsummersl/diffundo.nvim
-nmap('<A-u>', ':Diffundo focus<cr>', 'Toggle diffundo')
+--but it only show the diff, can't restore
+local function diffundo_win()
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local name = vim.api.nvim_buf_get_name(buf)
+    if name:find("^diffundo://") then
+      return win
+    end
+  end
+end
+nmap('<A-u>', function()
+ if diffundo_win() then
+    vim.cmd("Diffundo close")
+  else
+    vim.cmd("Diffundo focus")
+  end
+end, 'Toggle diffundo')
+-- nmap('<A-u>', ':Diffundo focus<cr>', 'Toggle diffundo')
 nmap('<A-r>', ':Diffundo earlier<cr>', 'Diffundo earlier')
-nmap('<C-S-r>', ':Diffundo later<cr>', 'Diffundo later')
+nmap('<S-A-r>', ':Diffundo later<cr>', 'Diffundo later')
 --}}} 
 
 
@@ -1246,7 +1265,7 @@ nlocLeader('ss', require('substitute').line, 'Substitute - line', { noremap = tr
 nlocLeader('S', require('substitute').eol, 'Substitute - eol', { noremap = true })
 xmap('<LocalLeader>s', require('substitute').visual, 'Substitute', { noremap = true })
 -- range, idk how does it work it alway apply to a paragraph
-nmap('<S-A-r>', require('substitute.range').word, 'Substitute - range under a word', { noremap = true })
+-- nmap('<S-A-r>', require('substitute.range').word, 'Substitute - range under a word', { noremap = true }) taken by diffundo
 -- nmap('<A-r>', function() require('substitute.range').word({range = { motion = '%' }}) end, { noremap = true, desc ='Substitute - word in file'}) -- it doesn't work for whole file 
 --}}}
 
