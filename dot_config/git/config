@@ -36,7 +36,7 @@
 [difftool "meld"]
     cmd = meld "$LOCAL" "$REMOTE"
 [mergetool "meld"]
-	cmd = nvim "$MERGED" -c "CodeDiff --exit-on-close merge \"$MERGED\""
+	cmd = meld --auto-merge "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
 	trustExitCode = true
 [difftool "codediff"]
 	cmd = nvim \"$LOCAL\" \"$REMOTE\" +\"CodeDiff --exit-on-close file $LOCAL $REMOTE\"
