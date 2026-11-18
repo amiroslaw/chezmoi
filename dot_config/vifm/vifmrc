@@ -198,18 +198,14 @@ nmap . =
 " nmap <A-.> zr <cr> mapping with dot, doesn't work
 
 "archive
-"atool don't work with rar?
+"atool is only a wraper, you need to have installed 7z or rar
+" ouch is an alternative if you want a single binary
 nmap rr	:unpack<cr>
 command! unpack atool -x %f &>/dev/null &
 nmap RR	:!atool --extract-to=%D %f <cr>
 nmap rl	:packList <cr> 
 command! packList atool -l %f %m
-nmap rp :Pack 7z <cr>
-" nmap rc	:!atool -a %d:t.7z %f <cr> 
-" nmap rr	:!patool extract %f <cr>
-" nmap RR	:!patool extract --outdir %D %f <cr>
-" nmap rc	:!patool create %d:t.7z %f <cr> 
-" nmap rl	:!patool list %f %m <cr> 
+nmap rc :Pack 7z <cr>
 
 " magicimage display resolution of image
 nmap ii	:!identify %f %S <cr> 
