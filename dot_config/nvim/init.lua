@@ -286,12 +286,15 @@ vim.g.mapleader = ';'
 vim.g.maplocalleader=" " --space
 nmap('<F1>', ':messages<CR>', 'Open taskwarrior TUI')
 nmap('<F5>', '<cmd>restart<cr>', 'Reload')
-nmap('<F7>', ':!preview-ascii.sh % <CR>', 'adoc preview')
+nmap('<F7>', ':!adoc.clj html % <CR>', 'adoc preview')
+nleader('aa', ':!adoc.clj html % <CR>', 'adoc preview')
+nleader('ap', ':!adoc.clj pdf % <CR>', 'adoc create pdf')
+nleader('ae', ':!adoc.clj epub % <CR>', 'adoc create epub')
 
 -- nmap('x', '"_x') -- doesn't add to register from `x`, will brake xp
 nmap('<Esc>', ':nohlsearch<cr>', 'Clear search highlights')
 nmap('<F4>', ':term taskwarrior-tui<CR>', 'Open taskwarrior TUI')
-nmap(',<F5>', '<cmd>luafile dev/init.lua<cr>', 'Reload dev init.lua', {}) -- for plugin development
+nmap(';<F5>', '<cmd>luafile dev/init.lua<cr>', 'Reload dev init.lua', {}) -- for plugin development
 nmap('Zz', ' :q! <cr>', 'Quit without saving')
 imap('<c-z>', '<Esc>:wq<CR>', 'Save and quit')
 -- nmap('ZZ', ' :write | bdelete!<cr>')

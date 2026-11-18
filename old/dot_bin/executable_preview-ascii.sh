@@ -5,18 +5,20 @@ pkill -f "watchexec"
 
 # # --fs-events modify 
 
+  # asciidoctorj -o "$NOTE/preview.html" \
 nohup watchexec --poll 200ms --restart --watch "$1" -- \
-  asciidoc -o "$NOTE/preview.html" \
+  asciidoctor.ruby4.0 -o "$NOTE/preview.html" \
+    -b html5 \
+	-r asciidoctor-kroki \
     -a source-highlighter=highlight.js \
     -a source-language=java \
-    -a highlightjs-languages=java,js,lua,sql,css,html,typescript,kotlin \
+    -a highlightjs-languages=java,js,lua,sql,css,html,typescript,kotlin,clojure,fennel,bash \
     -a hardbreaks=true \
     -a experimental=true \
     -a toc=left \
     -a toclevels=5 \
     -a icons=font@ \
     -a allow-uri-read=true \
-    -a backend=html5 \
     -a sectanchors=true \
     -a sectlinks=true \
     -a table-stripes=even \
