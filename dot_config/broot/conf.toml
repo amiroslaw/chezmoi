@@ -4,7 +4,6 @@
 # f keys don't work
 
 default_flags = "--git-ignored --show-git-info"
-# default_flags = "--git-ignored --show-git-info"
 # enable_kitty_keyboard = false
 
 #####################

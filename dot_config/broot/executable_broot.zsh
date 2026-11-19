@@ -81,7 +81,6 @@ broot-print-folder () {  # [broot-arg...]
 	--cmd="${CMD}" \
     --color yes \
     --git-ignored \
-    --show-git-info \
     --only-folders \
     $@
 }
