@@ -1,10 +1,10 @@
 // killall -SIGUSR2 waybar
 // or pkill -SIGUSR2 waybar
 {
-    "tray": {
-        "icon-size": 12,
-        "spacing": 10
-    },
+"tray": {
+	"icon-size": 12,
+	"spacing": 10
+},
 "bluetooth": {
 	"format": " {status}",
 	"format-connected": " {device_alias}",
@@ -15,12 +15,12 @@
 	"tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
 	"tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%"
 },
-    "custom/rofi": {
-        "format": "",
-        "on-click": "rofi -show drun",
-        // "on-click": "rofi -theme ~/.config/rofi/theme/onedark_mini.rasi -show drun",
-        "tooltip": false
-    },
+"custom/rofi": {
+	"format": "",
+	"on-click": "rofi -show drun",
+	// "on-click": "rofi -theme ~/.config/rofi/theme/onedark_mini.rasi -show drun",
+	"tooltip": false
+},
 
 "group/power": {
     "orientation": "inherit",
@@ -79,15 +79,15 @@
         "tooltip-format": "Shutdown",
 },
 
-   "hyprland/windowcount" : {
-    	"format": "{}",
-    	// "format-windowed": "󰊔",
-    	// "format": " ",
-    	"format-empty": " ",
-    	"format-windowed": " ",
-    	"format-fullscreen": "{} 󰊓",
-    	"separate-outputs": false,
-     },
+"hyprland/windowcount" : {
+	"format": "{}",
+	// "format-windowed": "󰊔",
+	// "format": " ",
+	"format-empty": " ",
+	"format-windowed": " ",
+	"format-fullscreen": "{} 󰊓",
+	"separate-outputs": false,
+ },
 
 "hyprland/window": {
 // "max-length": 50, nie ma
@@ -99,61 +99,61 @@
     },
     "separate-outputs": true
 },
-    "hyprland/workspaces": {
-        "on-click": "activate",
-        // "on-click": "hyprctl dispatch '(hl.dsp.focus({:workspace {id}})'",
-		// "on-click-right": "mode",
-        "activate-only": true,
-        // "all-outputs": true, // for multimonitors
-        "show-special": true,
-		"on-scroll-up": "hyprctl dispatch '(hl.dsp.focus({:workspace \"e-1\"})'",
-		"on-scroll-down": "hyprctl dispatch '(hl.dsp.focus({:workspace \"e+1\"})'",
+"hyprland/workspaces": {
+	"on-click": "activate",
+	// "on-click": "hyprctl dispatch '(hl.dsp.focus({:workspace {id}})'",
+	// "on-click-right": "mode",
+	"activate-only": true,
+	// "all-outputs": true, // for multimonitors
+	"show-special": true,
+	"on-scroll-up": "hyprctl dispatch '(hl.dsp.focus({:workspace \"e-1\"})'",
+	"on-scroll-down": "hyprctl dispatch '(hl.dsp.focus({:workspace \"e+1\"})'",
 	"format": "{name} {windows}",
 	"format-window-separator": " ",
 	"window-rewrite-default": "󰻀",
 	"window-rewrite": {
-    //websites
-    "title<.*youtube.*>": "",
-    //browsers
-    "class<firefox>": "",
-    "class<org.qutebrowser.qutebrowser>": "",
-    "class<brave>": "",
-    //editors
-    "class<org.kde.kate>": "󱃖",
-    "class<obsidian>": "",
+		//websites
+		"title<.*youtube.*>": "",
+		//browsers
+		"class<firefox>": "",
+		"class<org.qutebrowser.qutebrowser>": "",
+		"class<brave>": "",
+		//editors
+		"class<org.kde.kate>": "󱃖",
+		"class<obsidian>": "",
 
-    //Applications
-    "class<org.kde.dolphin>": "",
-    "class<vifm>": "",
-	".*jetbrains-idea.*": "\uE7B5",
-      ".*Chromium.*": "", 
-	"class<org.wezfurlong.wezterm>": " ",
-   "foot": "",
-     "class<.*teams.*>": "󰊻",
-   "class<nvim-qt>": "",
-     "title<.*nvim.*>": "",
-	"title<.*newsboat.*>": "󰎕 ",
-	"class<audio>": "",
-	"class<VSCode|code-url-handler>": "<span font='12'>󰨞</span>",
-    "class<org.pwmt.zathura>": "",
-	},
-    },
-"hyprland/submap": {
-    "format": "✌️ {}",
-    "max-length": 8,
-    "tooltip": false
+		//Applications
+		"class<org.kde.dolphin>": "",
+		"class<vifm>": "",
+		".*jetbrains-idea.*": "\uE7B5",
+		  ".*Chromium.*": "", 
+		"class<org.wezfurlong.wezterm>": " ",
+	   "foot": "",
+		 "class<.*teams.*>": "󰊻",
+	   "class<nvim-qt>": "",
+		 "title<.*nvim.*>": "",
+		"title<.*newsboat.*>": "󰎕 ",
+		"class<audio>": "",
+		"class<VSCode|code-url-handler>": "<span font='12'>󰨞</span>",
+		"class<org.pwmt.zathura>": "",
+		},
 },
-    "wlr/taskbar": {
-        "format": "{icon}",
-        "icon-size": 12,
-        "all-outputs": true,
-        "tooltip-format": "{name}: {title}",
-        "on-click": "activate",
-        "on-click-middle": "close",
-        "ignore-list": [
-            "rofi"
-         ]
-    },
+	"hyprland/submap": {
+		"format": "✌️ {}",
+		"max-length": 8,
+		"tooltip": false
+	},
+"wlr/taskbar": {
+	"format": "{icon}",
+	"icon-size": 12,
+	"all-outputs": true,
+	"tooltip-format": "{name}: {title}",
+	"on-click": "activate",
+	"on-click-middle": "close",
+	"ignore-list": [
+		"rofi"
+	 ]
+},
 "mpris": {
 	"format": "{player_icon} {dynamic}",
 	"format": "{player_icon} {player}",
@@ -196,213 +196,213 @@
     "tooltip-format": "MPD (connected)",
     "tooltip-format-disconnected": "MPD (disconnected)"
 },
-    "cpu": {
-        "interval": 10,
-        "format": "",
-        "max-length": 10,
-        "format-alt-click": "click-right",
-        "format-alt": " {usage}%",
-    },
+"cpu": {
+	"interval": 10,
+	"format": "",
+	"max-length": 10,
+	"format-alt-click": "click-right",
+	"format-alt": " {usage}%",
+},
 
-    "memory": {
-        "interval": 30,
-        "format": " {used:0.1f}GB",
-        "format-alt-click": "click-right",
-        "format-alt": " {}%",
-        "max-length": 10,
-        "tooltip": true,
-        "tooltip-format": "Memory - {used:0.1f}GB used",
-    },
-    
-    "disk": {
-        "interval": 600,
-        "format": "󰋊",
-        "path": "/home/miro/",
-        "format-alt-click": "click-right",
-        "format-alt": "󰋊 {percentage_used}%",
-        "tooltip": true,
-        "tooltip-format": "HDD - {used} used out of {total} on {path} ({percentage_used}%)",
-        "states": {
-            "warning": 85,
-            "critical": 90,
-        },
-    },
+"memory": {
+	"interval": 30,
+	"format": " {used:0.1f}GB",
+	"format-alt-click": "click-right",
+	"format-alt": " {}%",
+	"max-length": 10,
+	"tooltip": true,
+	"tooltip-format": "Memory - {used:0.1f}GB used",
+},
 
-    "temperature": {
-        "thermal-zone": 1,
-        "format": "",
-        "format-alt-click": "click-right",
-        "format-alt": " {temperatureC}°C",
-        "critical-threshold": 70,
-        "format-critical": " {temperatureC}°C",
-    },
-
-    "battery": {
-        "states": {
-            "good": 95,
-            "warning": 30,
-            "critical": 20
-        },
-        "format": "{icon}",
-        "format-charging": " {capacity}%",
-        "format-plugged": " {capacity}%",
-        "format-alt-click": "click-right",
-        "format-alt": "{icon} {capacity}%",
-        "states": {
-            "warning": 20,
-            "critical": 10
-        },
-        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
-    },
-	"pulseaudio/slider": {
-		"min": 0,
-		"max": 100,
-		"orientation": "horizontal"
+"disk": {
+	"interval": 600,
+	"format": "󰋊",
+	"path": "/home/miro/",
+	"format-alt-click": "click-right",
+	"format-alt": "󰋊 {percentage_used}%",
+	"tooltip": true,
+	"tooltip-format": "HDD - {used} used out of {total} on {path} ({percentage_used}%)",
+	"states": {
+		"warning": 85,
+		"critical": 90,
 	},
-    "pulseaudio": {
-        "format": "{icon} {volume}%",
-        "format-muted": "",
-        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+",
-        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
-        "scroll-step": 1,
-        "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": ["", "", ""]
-        },
-        "tooltip": true,
-        "tooltip-format": "{icon} {volume}%"
-    },
+},
 
-    "pulseaudio#microphone": {
-        "format": "{format_source}",
-        "format-source": "",
-        "format-source-muted": "",
-        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
-        "on-scroll-up": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SOURCE@ 5%+",
-        "on-scroll-down": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SOURCE@ 5%-",
-        "scroll-step": 5,
-        "tooltip": true,
-        "tooltip-format": " at {volume}%"
-    },
+"temperature": {
+	"thermal-zone": 1,
+	"format": "",
+	"format-alt-click": "click-right",
+	"format-alt": " {temperatureC}°C",
+	"critical-threshold": 70,
+	"format-critical": " {temperatureC}°C",
+},
 
-    "backlight": {
-        "device": "intel_backlight",
-		"format": "{percent}% {icon}",
-        "format-alt-click": "click-right",
-        "format-alt": "{icon} {percent}%",
-        "format-icons": ["󰃞", "󰃟", "󰃠"],
-        "on-scroll-up": "brightnessctl -e4 -n2 set 2%+",
-        "on-scroll-down": "brightnessctl -e4 -n2 set 2%-"
-    },
+"battery": {
+	"states": {
+		"good": 95,
+		"warning": 30,
+		"critical": 20
+	},
+	"format": "{icon}",
+	"format-charging": " {capacity}%",
+	"format-plugged": " {capacity}%",
+	"format-alt-click": "click-right",
+	"format-alt": "{icon} {capacity}%",
+	"states": {
+		"warning": 20,
+		"critical": 10
+	},
+	"format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+},
+"pulseaudio/slider": {
+	"min": 0,
+	"max": 100,
+	"orientation": "horizontal"
+},
+"pulseaudio": {
+	"format": "{icon} {volume}%",
+	"format-muted": "",
+	"on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+	"on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+",
+	"on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
+	"scroll-step": 1,
+	"format-icons": {
+		"headphone": "",
+		"hands-free": "",
+		"headset": "",
+		"phone": "",
+		"portable": "",
+		"car": "",
+		"default": ["", "", ""]
+	},
+	"tooltip": true,
+	"tooltip-format": "{icon} {volume}%"
+},
 
-    "custom/weather": {
-        "tooltip" : true,
-        "format" : "{}",
-        "interval" : 3600,
-        "exec" : "~/.config/waybar/scripts/wttr.py",
-        "return-type" : "json"
-    },
+"pulseaudio#microphone": {
+	"format": "{format_source}",
+	"format-source": "",
+	"format-source-muted": "",
+	"on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+	"on-scroll-up": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SOURCE@ 5%+",
+	"on-scroll-down": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SOURCE@ 5%-",
+	"scroll-step": 5,
+	"tooltip": true,
+	"tooltip-format": " at {volume}%"
+},
 
-    "network": {
-        "format": "{ifname}",
-        "format-wifi": " ",
-        "format-ethernet": " ",
-        "format-disconnected": " ", //An empty format will hide the module.
-        "tooltip-format": " {ifname} via {gwaddr}",
-        "tooltip-format-wifi": " {essid} ({signalStrength}%)",
-        "tooltip-format-ethernet": " {ifname} {ipaddr}/{cidr}",
-        "tooltip-format-disconnected": "Disconnected",
-        "max-length": 50
-    },
+"backlight": {
+	"device": "intel_backlight",
+	"format": "{percent}% {icon}",
+	"format-alt-click": "click-right",
+	"format-alt": "{icon} {percent}%",
+	"format-icons": ["󰃞", "󰃟", "󰃠"],
+	"on-scroll-up": "brightnessctl -e4 -n2 set 2%+",
+	"on-scroll-down": "brightnessctl -e4 -n2 set 2%-"
+},
+
+"custom/weather": {
+	"tooltip" : true,
+	"format" : "{}",
+	"interval" : 3600,
+	"exec" : "~/.config/waybar/scripts/wttr.py",
+	"return-type" : "json"
+},
+
+"network": {
+	"format": "{ifname}",
+	"format-wifi": " ",
+	"format-ethernet": " ",
+	"format-disconnected": " ", //An empty format will hide the module.
+	"tooltip-format": " {ifname} via {gwaddr}",
+	"tooltip-format-wifi": " {essid} ({signalStrength}%)",
+	"tooltip-format-ethernet": " {ifname} {ipaddr}/{cidr}",
+	"tooltip-format-disconnected": "Disconnected",
+	"max-length": 50
+},
 "clock": {
-        "format": "{:%H:%M}",
-        "format-alt": "{:%d-%m-%Y}",
-        // "tooltip-format": "\n<span size='9pt' font='WenQuanYi Zen Hei Mono'>{calendar}</span>",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "calendar": {
-                    "mode"          : "year",
-                    "mode-mon-col"  : 3,
-                    // "weeks-pos"     : "right",
-                    "on-scroll"     : 1,
-                    "format": {
-                              "months":     "<span color='#ffead3'><b>{}</b></span>",
-                              "days":       "<span color='#ecc6d9'><b>{}</b></span>",
-                              "weeks":      "<span color='#99ffdd'><b>W{:%U}</b></span>",
-                              "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
-                              "today":      "<span color='#ff6699'><b><u>{}</u></b></span>"
-                              }
-                    },
-        "actions":  {
-                    "on-click-right": "mode",
-                    "on-click-forward": "tz_up",
-                    "on-click-backward": "tz_down",
-                    "on-scroll-up": "shift_up",
-                    "on-scroll-down": "shift_down"
-                    }
-    },
-    "custom/web-cal": {
-        "format": " ",
-		"on-click": "brave-browser --class=cal --password-store=basic --args --profile-directory='profile-cal'",
-	  "tooltip": true,
-	  "tooltip-format": "web-cal"
-	},
+	"format": "{:%H:%M}",
+	"format-alt": "{:%d-%m-%Y}",
+	// "tooltip-format": "\n<span size='9pt' font='WenQuanYi Zen Hei Mono'>{calendar}</span>",
+	"tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+	"calendar": {
+				"mode"          : "year",
+				"mode-mon-col"  : 3,
+				// "weeks-pos"     : "right",
+				"on-scroll"     : 1,
+				"format": {
+						  "months":     "<span color='#ffead3'><b>{}</b></span>",
+						  "days":       "<span color='#ecc6d9'><b>{}</b></span>",
+						  "weeks":      "<span color='#99ffdd'><b>W{:%U}</b></span>",
+						  "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
+						  "today":      "<span color='#ff6699'><b><u>{}</u></b></span>"
+						  }
+				},
+	"actions":  {
+				"on-click-right": "mode",
+				"on-click-forward": "tz_up",
+				"on-click-backward": "tz_down",
+				"on-scroll-up": "shift_up",
+				"on-scroll-down": "shift_down"
+				}
+},
+"custom/web-cal": {
+	"format": " ",
+	"on-click": "brave-browser --class=cal --password-store=basic --args --profile-directory='profile-cal'",
+  "tooltip": true,
+  "tooltip-format": "web-cal"
+},
 
-    "custom/khorshididate": {
-        "tooltip" : true,
-        "format": " {}",
-        "format-alt": " {alt}",
-        "format-alt-click": "click-right",
-        "interval": 3600,
-        "exec": "~/.config/waybar/scripts/khorshidi-date",
-        "return-type" : "json"
-    },
+"custom/khorshididate": {
+	"tooltip" : true,
+	"format": " {}",
+	"format-alt": " {alt}",
+	"format-alt-click": "click-right",
+	"interval": 3600,
+	"exec": "~/.config/waybar/scripts/khorshidi-date",
+	"return-type" : "json"
+},
 // TODO if I return json with task title I can get tooltip with that 
-	"custom/pomodoro": {
-	  "exec": "pomodoro.lua status -anc",
-	  "interval": 60,
-	  // "return-type": "json",
-	  "on-click": "pomodoro.lua pause -n",
-	  "on-click-right": "pomodoro.lua stop -n && task sync",
-	  "on-click-middle": "pomodoro.lua notify",
-	  "tooltip": true,
-	  "tooltip-format": "pomodoro"
-	},
-	"custom/mega": {
+"custom/pomodoro": {
+  "exec": "pomodoro.lua status -anc",
+  "interval": 60,
+  // "return-type": "json",
+  "on-click": "pomodoro.lua pause -n",
+  "on-click-right": "pomodoro.lua stop -n && task sync",
+  "on-click-middle": "pomodoro.lua notify",
+  "tooltip": true,
+  "tooltip-format": "pomodoro"
+},
+"custom/mega": {
 	"exec": "~/.config/waybar/scripts/mega.sh",
-        "format": " {} ",
-	  "interval": 60,
-	  "on-click": "$BROWSER 'https://mega.nz/fm'",
-	  "tooltip": true,
-	  "tooltip-format": "MEGAsync"
-	},	
-	"custom/zypper": {
+	"format": " {} ",
+  "interval": 60,
+  "on-click": "$BROWSER 'https://mega.nz/fm'",
+  "tooltip": true,
+  "tooltip-format": "MEGAsync"
+},	
+"custom/zypper": {
 	"exec": "~/.config/waybar/scripts/zypper.sh",
-        "format": " {} ",
-	  "interval": 3000,
-	  "tooltip": true,
-	  "tooltip-format": "Updates"
-	},	
-    "custom/updates": {
-        "format": "{}",
-        "exec": "~/.config/waybar/scripts/update-sys-paru",
-        "on-click": "~/.config/waybar/scripts/update-sys-paru update",
-        "interval": 3600,
-        "tooltip": true,
-        "signal": 8,
-        "return-type" : "json"
-    },
+	"format": " {} ",
+  "interval": 3000,
+  "tooltip": true,
+  "tooltip-format": "Updates"
+},	
+"custom/updates": {
+	"format": "{}",
+	"exec": "~/.config/waybar/scripts/update-sys-paru",
+	"on-click": "~/.config/waybar/scripts/update-sys-paru update",
+	"interval": 3600,
+	"tooltip": true,
+	"signal": 8,
+	"return-type" : "json"
+},
 
-	"custom/voxtype": {
-		"exec": "voxtype status --follow --format json --extended",
-		"return-type": "json",
-		"format": "{}",
-		"tooltip": true
-	},
+"custom/voxtype": {
+	"exec": "voxtype status --follow --format json --extended",
+	"return-type": "json",
+	"format": "{}",
+	"tooltip": true
+},
 
 }
