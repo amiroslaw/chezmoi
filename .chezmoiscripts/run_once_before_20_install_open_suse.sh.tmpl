@@ -52,7 +52,6 @@ sudo zypper install -y --no-recommends czkawka-gui
 # Python, some of them are version specific
 sudo zypper install python313-uv
 uv tool install sqlit-tui
-sudo zypper install -y --no-recommends python314-magic-wormhole python-magic-wormhole-zsh-completion
 
 {{ else if eq .chezmoi.hostname "laptop" }}
 sudo zypper install -y --no-recommends blueman bluez

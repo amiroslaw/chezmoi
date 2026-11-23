@@ -106,9 +106,12 @@
 	"activate-only": true,
 	// "all-outputs": true, // for multimonitors
 	"show-special": true,
-	"on-scroll-up": "hyprctl dispatch '(hl.dsp.focus({:workspace \"e-1\"})'",
-	"on-scroll-down": "hyprctl dispatch '(hl.dsp.focus({:workspace \"e+1\"})'",
+	"unique-icons": false,
+	"enable-bar-scroll": true,
+	"on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'",
+	"on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'",
 	"format": "{name} {windows}",
+	"tooltip": false,
 	"format-window-separator": " ",
 	"window-rewrite-default": "󰻀",
 	"window-rewrite": {
@@ -288,7 +291,7 @@
 	"on-scroll-down": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SOURCE@ 5%-",
 	"scroll-step": 5,
 	"tooltip": true,
-	"tooltip-format": " at {volume}%"
+	"tooltip-format": "Toggle mic. Speaker at {volume}%"
 },
 
 "backlight": {

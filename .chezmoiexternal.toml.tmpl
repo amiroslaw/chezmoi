@@ -15,6 +15,10 @@
 	type = "file" 
     url = {{ gitHubLatestReleaseAssetURL "xrelkd/clipcat" "clipcat-*.x86_64.rpm" | quote }}
 
+[".cache/chezmoi/tmp/voxtype.rpm"]
+	type = "file" 
+    url = {{ gitHubLatestReleaseAssetURL "peteonrails/voxtype" "voxtype*.x86_64.rpm" | quote }}
+
 [".config/zgenom"]
 	type = "git-repo" 
 	url = "https://github.com/jandamm/zgenom.git"
