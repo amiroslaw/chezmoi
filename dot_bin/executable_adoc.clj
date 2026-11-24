@@ -1,8 +1,8 @@
 #!/usr/bin/env bb
+
 ;; TODO add multifiles or dir support
 (require '[babashka.cli :as cli]
          '[babashka.fs :as fs]
-         '[babashka.process :as p]
          '[clojure.string :as str])
 
 (declare subcommands)
@@ -48,7 +48,7 @@ Examples:
 
 (defn- build-html
   [{{:keys [input dark]} :opts}]
-  (try (p/sh "pkill" "-f" "watchexec") (catch Exception _))
+  (exec! "pkill" "-f" "watchexec" {:exit? false :notify? false})
 
   (let [note-dir (System/getenv "NOTE")
         html-out (if-not (str/blank? note-dir)
@@ -61,8 +61,8 @@ Examples:
                                     processor "-o" html-out "-b" "html5"]
                                    (common-opts dark)
                                    [input]))]
-    (p/process watchexec-cmd {:out :ignore :err :ignore :in :close})
-    (p/process [browser html-out] {:out :ignore :err :ignore :in :close})
+    (exec! watchexec-cmd {:background? true :out :discard :err :discard})
+    (exec! browser html-out {:background? true :out :discard :err :discard})
     (notify! "AsciiDoc Preview" (str "Live preview started:\n" html-out))
     (println (str "Live HTML preview started: " html-out))))
 
@@ -84,13 +84,8 @@ Examples:
                               (common-opts dark)
                               [input]))]
     (println (str "Generating " label ": " out-file))
-    (try
-      (p/shell cmd)
-      (notify! (str "AsciiDoc " label) (str label " generated:\n" out-file))
-      (catch Exception e
-        (binding [*out* *err*]
-          (println (str "Error generating " label ": " (ex-message e))))
-        (notify-error! (str "Failed to generate " label ":\n" (ex-message e)) true)))))
+    (when (exec! cmd)
+      (notify! (str "AsciiDoc " label) (str label " generated:\n" out-file)))))
 
 (def subcommands
   [{:cmds ["html"],

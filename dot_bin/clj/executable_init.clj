@@ -73,56 +73,83 @@
    (log! msg :error)
    (when exit? (System/exit 1))))
 
-  ;; TODO  depricated
-; (defn ps-error-handler! 
-;   "Executes a shell command and handles errors.
-;   Parameters:
-;   - exit?: A boolean indicating whether to exit the program on error.
-;   - cmd: The shell command to execute.
-;   - args: Additional arguments for the shell command.
-;   Returns the output of the command if successful, otherwise logs and notifies the error."
-;   [exit? cmd & args]
-;   (try
-;     (let [{:keys [out exit err]} (apply sh cmd args)]
-;       (if (zero? exit)
-;         out
-;         (notify-error! err exit?)))
-;     (catch Exception e
-;       (notify-error! (.getMessage e) exit?))))
+(defn- lines->vec
+  "Splits a string into a vector of lines. Blank strings return an empty vector."
+  [string]
+  (if (str/blank? string)
+    []
+    (vec (str/split-lines string))))
 
-;; maybe add option to return vector if the output returns multiple lines
 (defn exec!
   "Executes a shell command and handles errors.
-  Call as: (exec! cmd arg1 arg2 ... {:exit? true :background? false log? true})
-  Options map (optional, last positional arg):
+  Call as:
+    (exec! cmd arg1 arg2 ... opts?)
+    (exec! opts? cmd arg1 arg2 ...)
+    (exec! [cmd arg1 arg2] opts?)
+
+  Options map (optional):
   - :exit?       Exit the program on error. Default true. (Blocking mode only.)
+  - :notify?     Display desktop notification on error via notify-send. Default true.
   - :background? Launch and return immediately, no wait for completion. Default false.
-  - :log?       Log command. Default false. Can brake scripts based on terminal.
-  Returns the command's output when blocking and successful.
-  When :background? true, returns immediately after launching (launch errors are still caught).
-  
-  ;; Default: exits on error, blocks until done
-  (println (exec! \"ls\"))
-  ;; Don't exit on error, still block
-   (println (exec! \"ls\"  {:exit? false}))
-  ;; Run in background, don't block script — returns a future immediately
-   (println (exec! \"timefx\" {:background? true})) "
-  [cmd & args]
-  (let [opts?    (map? (last args))
-        opts     (if opts? (last args) {})
-        cmd-args (if opts? (butlast args) args)
-        {:keys [exit? background? log?] :or {exit? true background? false log? false}} opts]
-    (when log? (log! (format "%s %s \n%s" cmd cmd-args opts)))
+  - :log?        Log command to /tmp/clj/scripts.log. Default false.
+  - :lines?      Return output as a vector of lines (omits blank output as []). Default false.
+  - :out-map?    Return the complete execution map {:out ... :err ... :exit ...} instead of just :out. Default false.
+  - :in          Input for the process (string, stream, etc.).
+  - :dir         Working directory for the process.
+  - :env         Extra environment variables map.
+
+  Returns:
+  - Blocking success: output string (or vector of lines if :lines? true, or map if :out-map? true).
+  - Blocking error: exits program if :exit? true; returns nil (or full map if :out-map? true) if :exit? false.
+  - Background mode: returns the running Process object."
+  [& args]
+  (let [opts?      (map? (first args))
+        opts-last? (and (not opts?) (map? (last args)))
+        opts       (cond opts? (first args) opts-last? (last args) :else {})
+        raw-cmd    (cond opts? (rest args) opts-last? (butlast args) :else args)
+        tokens     (vec (remove nil? (flatten raw-cmd)))
+        {:keys [exit? notify? background? log? lines? out-map? all? in dir env out err]
+         :or   {exit? true notify? true background? false log? false lines? false out-map? false all? false}} opts
+        output-map? (or out-map? all?)]
+    (when (empty? tokens)
+      (throw (IllegalArgumentException. "exec!: command cannot be empty")))
+    (when log?
+      (log! (format "%s\noptions: %s" (str/join " " tokens) opts)))
     (try
-      (if background?
-        (process (into [cmd] cmd-args) {:out :inherit :err :inherit})
-        (let [{:keys [out err exit]} @(process (into [cmd] cmd-args) {:out :string :err :string}) ]
-              ; (apply sh cmd cmd-args)
-          (if (zero? exit)
-            out
-            (notify-error! err exit?))))
+      (let [proc-opts (cond-> (if background?
+                                {:out (or out :inherit) :err (or err :inherit)}
+                                {:out (or out :string) :err (or err :string)})
+                        in  (assoc :in in)
+                        dir (assoc :dir dir)
+                        env (assoc :extra-env env))]
+        (if background?
+          (process tokens proc-opts)
+          (let [{p-out :out p-err :err p-exit :exit :as res} @(process tokens proc-opts)]
+            (if (zero? p-exit)
+              (cond
+                output-map? res
+                lines?      (lines->vec p-out)
+                :else       p-out)
+              (let [cmd-str (str/join " " tokens)
+                    err-msg (cond
+                              (not (str/blank? p-err)) p-err
+                              (not (str/blank? p-out)) p-out
+                              :else (format "Command failed with exit code %s: %s" p-exit cmd-str))]
+                (if notify?
+                  (notify-error! err-msg exit?)
+                  (do
+                    (log! err-msg :error)
+                    (when exit? (System/exit 1))))
+                (when output-map? res))))))
       (catch Exception e
-        (notify-error! (.getMessage e) exit?)))))
+        (let [cmd-str (str/join " " tokens)
+              err-msg (format "Failed to execute '%s': %s" cmd-str (.getMessage e))]
+          (if notify?
+            (notify-error! err-msg exit?)
+            (do
+              (log! err-msg :error)
+              (when exit? (System/exit 1))))
+          nil)))))
 
 (defn- replace [text pattern color]
   (str/replace text (re-pattern (str pattern)) (format "<span color='%s'>%s</span>" color pattern)))
@@ -203,9 +230,6 @@
        (empty? out) nil                                     ; exit rofi
        (number? out-parsed) out-parsed
        :else (rofi-number-input! prompt (rofi-dynamic-width prompt))))))
-
-(defn- lines->vec [string]
-  (vec (str/split-lines string)))
 
 (defn rofi-indexes->inputs 
   "Helper for rofi-menu that returns indexes → format -i. Converts selected menu items"
@@ -506,6 +530,7 @@
   (tap> :hello))
 
 (comment
+  (exec! "ls" {:lines? true :exit? false})
   (log! "default")
   (log! "default" :error)
   (log! ["This is an error message with an exception" (Exception. "Test Exception")])

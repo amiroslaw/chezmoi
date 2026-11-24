@@ -64,7 +64,7 @@
 
 (defn- log [selected]
   {:pre [(or (string? selected) (seq? selected))]}
-  (let [json (-> (exec! (format "pueue log --json --full --all")) ;; it can be listed by group or ids
+  (let [json (-> (exec! "pueue log --json --full --all") ;; it can be listed by group or ids
                  (json/parse-string true))
         logs (map json->log (map last json))
         filtered-logs (if (string? selected)
@@ -76,26 +76,24 @@
 (defn- copy
   "Copy the URL of the selected tasks into the clipboard."
   [selected] {:pre [(seq? selected)]}
-  (sh {:in (cmds->urls selected)} "wl-copy"))
-  ; (sh {:in (cmds->urls selected)} "clipster -c"))
-;(sh {:in (cmds->urls selected) } "xclip -selection clipboard" ); freeze with xclip
+  (exec! "wl-copy" {:in (cmds->urls selected)}))
 
 (defn- open
   "Open the URL of the selected tasks in the default browser."
   [selected] {:pre [(seq? selected)]}
-  (exec! (format "%s %s" (System/getenv "BROWSER") (cmds->urls selected)) {:exit? true :background? true}))
+  (exec! (System/getenv "BROWSER") (cmds->urls selected) {:background? true}))
 
 (defn- make-playlist
   "Creates an mpv playlist for tasks in a specific group."
   [group]
   {:pre [(string? group)]}
-  (exec! (format "mpv.lua --makeQueue --input %s" group)))
+  (exec! "mpv.lua --makeQueue --input" group))
 
 (defn- kill [selected]
   {:pre [(or (string? selected) (seq? selected))]}
   (if (sequential? selected)
-    (exec! (format "pueue kill %s " (tasks->ids selected)))
-    (exec! (format "pueue kill -g %s " selected))))
+    (exec! "pueue kill" (tasks->ids selected))
+    (exec! "pueue kill -g" selected)))
 
 (defn- kill-any [_]
   (let [running-task (filter #(= (:status %) :Running) @TASKS)]
@@ -109,34 +107,34 @@
   {:pre [(or (string? selected) (seq? selected))]}
   (if (sequential? selected)
     (do
-      (exec! (format "pueue restart -i %s " (tasks->ids selected)))
-      (exec! (format "pueue start %s " (tasks->ids selected))))
+      (exec! "pueue restart -i" (tasks->ids selected))
+      (exec! "pueue start" (tasks->ids selected)))
     (do
-      (exec! (format "pueue restart -i -g %s " selected))
-      (exec! (format "pueue start -g %s " selected)))))
+      (exec! "pueue restart -i -g" selected)
+      (exec! "pueue start -g" selected))))
 
 (defn- reset
   "Remove all jobs in a group, first kill them if necessary."
   [_]
-  (exec! (format "pueue reset --force")))
+  (exec! "pueue reset --force"))
 
 (defn- delete
   "Remove tasks from the list. Running or paused tasks need to be killed first."
   [selected]
   {:pre [(seq? selected)]}
-  (exec! (format "pueue remove %s " (tasks->ids selected))))
+  (exec! "pueue remove" (tasks->ids selected)))
 
 (defn- clean
   "Remove all finished (with failed and killed) tasks from the list"
   [group]
   {:pre [(string? group)]}
-  (exec! (format "pueue clean -g %s" group)))
+  (exec! "pueue clean -g" group))
 
 (defn- clean-successful
   "Remove all successful finished tasks from the list"
   [group]
   {:pre [(string? group)]}
-  (exec! (format "pueue clean --successful-only -g %s" group)))
+  (exec! "pueue clean --successful-only -g" group))
 
 (defn- execute-action [action selected]
   {:pre [(or (string? selected) (seq? selected))]}
