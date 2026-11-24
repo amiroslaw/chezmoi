@@ -10,6 +10,7 @@
 (def voxtype-dir
   (str (fs/path (fs/home) ".local/state/voxtype/failed-audio")))
 
+; (def default-model "parakeet-ultra-Q4_K_M.gguf") ;; in vex type 2.0 change to gguf, but it runs on CPU
 (def default-model "parakeet-ultra-Q8_0.gguf") ;; in vex type 2.0 change to gguf, but it runs on CPU
 
 (def media-exts #{"wav" "mp3" "ogg" "flac" "m4a" "mp4" "mkv" "webm" "mov"})
@@ -47,6 +48,7 @@
 
 (defn copy-to-clipboard! [text]
   (exec! "wl-copy" {:in text}))
+; (shell ["wl-copy"] {:in text})) 
 
 (defn resolve-target
   "Returns {:path <Path> :force-convert? <bool>} or nil if not found."
@@ -76,8 +78,8 @@
         (try
           (println "Transcribing with" (first target-flags) (second target-flags) "file:" (fs/file-name path))
           (let [cmd (into ["voxtype" "--quiet"] (concat target-flags ["transcribe" wav-path]))
-                {:keys [out exit]} (exec! cmd {:out-map? true :exit? false :log? true})]
-            (when (zero? exit)
+                out (exec! cmd {:exit? false})]
+            (when out
               (let [transcript (-> out str/trim str/split-lines last str/trim)]
                 (copy-to-clipboard! transcript)
                 (notify! "Copied to clipboard:" transcript)

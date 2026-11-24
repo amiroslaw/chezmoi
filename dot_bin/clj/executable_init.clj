@@ -102,6 +102,9 @@
   - Blocking success: output string (or vector of lines if :lines? true, or map if :out-map? true).
   - Blocking error: exits program if :exit? true; returns nil (or full map if :out-map? true) if :exit? false. You can do in a script (when (exec! 'ls') ..)
   - Background mode: returns the running Process object."
+  ;; TODO  input block script
+
+  ; (exec! "wl-copy" {:in "test" :exit? false})
   [& args]
   (let [opts?      (map? (first args))
         opts-last? (and (not opts?) (map? (last args)))
@@ -116,12 +119,14 @@
     (when log?
       (log! (format "%s\noptions: %s" (str/join " " tokens) opts)))
     (try
-      (let [proc-opts (cond-> (if background?
-                                {:out (or out :inherit) :err (or err :inherit)}
-                                {:out (or out :string) :err (or err :string)})
+      (let [proc-opts (cond-> (cond
+                                in          {:out (or out :discard) :err (or err :discard)}
+                                background? {:out (or out :inherit) :err (or err :inherit)}
+                                :else       {:out (or out :string)  :err (or err :string)})
                         in  (assoc :in in)
                         dir (assoc :dir dir)
                         env (assoc :extra-env env))]
+        (print proc-opts)
         (if background?
           (process tokens proc-opts)
           (let [{p-out :out p-err :err p-exit :exit :as res} @(process tokens proc-opts)]
