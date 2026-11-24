@@ -100,7 +100,7 @@
 
   Returns:
   - Blocking success: output string (or vector of lines if :lines? true, or map if :out-map? true).
-  - Blocking error: exits program if :exit? true; returns nil (or full map if :out-map? true) if :exit? false.
+  - Blocking error: exits program if :exit? true; returns nil (or full map if :out-map? true) if :exit? false. You can do in a script (when (exec! 'ls') ..)
   - Background mode: returns the running Process object."
   [& args]
   (let [opts?      (map? (first args))

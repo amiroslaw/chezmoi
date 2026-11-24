@@ -1,16 +1,16 @@
 #!/usr/bin/env bb
+
 ;; TODO: add summary
 ;; save out to file?
 
 (require '[babashka.cli :as cli]
          '[babashka.fs :as fs]
-         '[babashka.process :as ps :refer [shell sh process check]]
          '[clojure.string :as str])
 
 (def voxtype-dir
   (str (fs/path (fs/home) ".local/state/voxtype/failed-audio")))
 
-(def default-model "parakeet-tdt-0.6b-v3-int8") ;; in vex type 2.0 change to gguf, but it runs on CPU
+(def default-model "parakeet-ultra-Q8_0.gguf") ;; in vex type 2.0 change to gguf, but it runs on CPU
 
 (def media-exts #{"wav" "mp3" "ogg" "flac" "m4a" "mp4" "mkv" "webm" "mov"})
 
@@ -32,8 +32,7 @@
   [input-path]
   (let [tmp-wav (str (fs/create-temp-file {:prefix "voxtype-" :suffix ".wav"}))]
     (println "Converting to 16kHz mono WAV:" (fs/file-name input-path))
-    (shell {:out :string :err :string}
-           "ffmpeg" "-y" "-i" (str input-path)
+    (exec! "ffmpeg" "-y" "-i" (str input-path)
            "-ar" "16000" "-ac" "1" "-c:a" "pcm_s16le" tmp-wav)
     [tmp-wav #(fs/delete-if-exists tmp-wav)]))
 
@@ -47,7 +46,7 @@
       (convert-to-16k-wav input-path))))
 
 (defn copy-to-clipboard! [text]
-  (shell ["wl-copy"] {:in text}))
+  (exec! "wl-copy" {:in text}))
 
 (defn resolve-target
   "Returns {:path <Path> :force-convert? <bool>} or nil if not found."
@@ -77,18 +76,12 @@
         (try
           (println "Transcribing with" (first target-flags) (second target-flags) "file:" (fs/file-name path))
           (let [cmd (into ["voxtype" "--quiet"] (concat target-flags ["transcribe" wav-path]))
-                {:keys [out err exit]} @(ps/process cmd {:out :string :err :string})
-                transcript (-> out str/trim str/split-lines last str/trim)]
-            (if (zero? exit)
-              (do
+                {:keys [out exit]} (exec! cmd {:out-map? true :exit? false :log? true})]
+            (when (zero? exit)
+              (let [transcript (-> out str/trim str/split-lines last str/trim)]
                 (copy-to-clipboard! transcript)
                 (notify! "Copied to clipboard:" transcript)
-                (println "\nCopied to clipboard:\n" transcript))
-              (do
-                (binding [*out* *err*]
-                  (notify-error! "voxtype failed:")
-                  (println "voxtype failed:\n" err))
-                (System/exit exit))))
+                (println "\nCopied to clipboard:\n" transcript))))
           (finally
             (cleanup!))))
       (do
