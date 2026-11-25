@@ -1,6 +1,10 @@
 % shortcuts
 @ util
 
+# App Run or edit a local binary from ~/.local/bin or ~/.bin ::apprun
+<app> 
+$ app: bb -e '(->> ["~/.local/bin" "~/.bin"] (map babashka.fs/expand-home) (filter babashka.fs/directory?) (mapcat babashka.fs/list-dir) (filter babashka.fs/executable?) (map babashka.fs/file-name) distinct sort (run! println))'
+
 #kindle2anki
 java -jar "$HOME/.local/bin/kindle2anki.jar" --config.path="$HOME/.config/kindle2anki/kindle-vocab"
 

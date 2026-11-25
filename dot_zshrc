@@ -136,6 +136,7 @@ source <(navi widget zsh) # ctrl-g
 # source ~/.config/broot/launcher/bash/br
 source ~/.config/broot/broot.zsh
 source "/home/miro/.local/share/zsh/site-functions/_soulseek-rs" # soulseek-rs completions
+eval "$(grepai completion zsh)"
 
 command_not_found_handle() {
 # don't run if not in a container

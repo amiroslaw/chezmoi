@@ -26,6 +26,24 @@ export FZF_VIEW_ALL_OPTS='--preview "if [ -d {} ]; then tree -C -L 1 {}; elif [[
 export FZF_FILE_OPTS='--preview "if [[ {} =~ \.(jpg|jpeg|png|gif|bmp|webp|avif|svg|tiff|ico)$ ]]; then timg -p i -g 60x30 {} 2>/dev/null || echo \"Image: {}\"; else bat --style=numbers --color=always --line-range :500 {}; fi"'
 OPTS=''
 
+# listing bin folder
+bin-widget() {
+  local cmd
+  # cmd=$(command ls -1 ~/.local/bin/ | fzf --height=40% --reverse)
+	cmd=$(
+		{
+		  [[ -d ~/.local/bin ]] && command ls -1 ~/.local/bin
+		  [[ -d ~/.bin ]] && command ls -1 ~/.bin
+		} | sort -u | fzf --height=40% --reverse
+	  )
+  if [[ -n "$cmd" ]]; then
+    LBUFFER+="$cmd "
+  fi
+  zle reset-prompt
+}
+zle     -N   bin-widget
+bindkey '\eh' bin-widget
+
 # The code at the top and the bottom of this file is the same as in completion.zsh.
 # Refer to that file for explanation.
 if 'zmodload' 'zsh/parameter' 2>'/dev/null' && (( ${+options} )); then

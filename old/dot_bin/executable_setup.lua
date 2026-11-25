@@ -1,6 +1,8 @@
 #!/usr/bin/luajit
 local SETUP_PATH = os.getenv 'SETUP'
 
+-- financial tool; it reads form adoc file
+
 -- add transaction 
 if arg[1] then
 	local assets = M(M.tabulate(io.lines(SETUP_PATH)))

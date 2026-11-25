@@ -87,6 +87,7 @@ alias nt="navi --tldr"
 
 # aliases using query; waits for execution 
 # TODO change navi aliases to pattern PPCCC 5 characters where 2 are from a program name and 3 from a command
+# example → # command title  ::PPCCC
 navialias() {
  local cmd=$(navi --print --query "::$1" --best-match)
   if [ -n "$cmd" ]; then
@@ -95,6 +96,7 @@ navialias() {
 }
 
 # navi
+alias app='navialias apprun'
 alias sysstat='navialias sdsta'
 alias sysrestart='navialias sdres'
 alias sysstop='navialias sdsto'
@@ -325,8 +327,9 @@ alias mapom='mvn help:effective-pom'
 # {{{ GIT
 # https://github.com/Bash-it/bash-it/blob/master/aliases/available/git.aliases.bash
 alias lg='lazygit'
-alias addup='git add -u'
-alias addall='git add .'
+alias gaddup='git add -u'
+alias gaddall='git add .'
+alias gclone='git clone'
 alias gbranch='git branch'
 # alias gcheck='git checkout'
 alias gcheck='checkout.lua .'
@@ -747,6 +750,27 @@ bindkey -M isearch " " magic-space    # normal space during searches
 # alias ta='todo.sh add +x '
 # alias tt='todo.sh ls @t'
 # alias td='todo.sh done '
+
+# lb() {
+#   local out key cmd
+#   out=$(
+#     {
+#       [[ -d ~/.local/bin ]] && command ls -1 ~/.local/bin
+#       [[ -d ~/.bin ]] && command ls -1 ~/.bin
+#     } | sort -u | fzf --expect=tab,ctrl-e --header="Enter: run | Tab/Ctrl-E: edit in prompt"
+#   )
+#   key=${out%%$'\n'*}
+#   cmd=${out#*$'\n'}
+#
+#   [[ -z "$cmd" || "$cmd" == "$key" ]] && return
+#
+#   if [[ "$key" == "tab" || "$key" == "ctrl-e" ]]; then
+#     print -z "$cmd "
+#   else
+#     "$cmd"
+#   fi
+# }
+
 #}}}
 
 
